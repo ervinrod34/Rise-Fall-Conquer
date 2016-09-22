@@ -12,6 +12,7 @@ public class MyGdxGame extends ApplicationAdapter {
 	//Texture img;
 	private map.Map mBoard;
 	private OrthographicCamera oGameCam;
+	private Navigator nav;
 	
 	@Override
 	public void create () {
@@ -19,6 +20,8 @@ public class MyGdxGame extends ApplicationAdapter {
 		//img = new Texture("badlogic.jpg");
 		mBoard = new map.Map();
 		oGameCam = new OrthographicCamera(1280, 720);
+		nav = new Navigator(oGameCam, batch);
+		Gdx.input.setInputProcessor(nav);
 		oGameCam.update();
 	}
 
@@ -30,7 +33,7 @@ public class MyGdxGame extends ApplicationAdapter {
 		mBoard.drawMap(batch);
 		//batch.draw(img, 0, 0);
 		batch.end();
-		this.inputHandle();
+		nav.inputHandle();
 	}
 	
 	@Override
@@ -43,21 +46,5 @@ public class MyGdxGame extends ApplicationAdapter {
 	/**
 	 * Handles player input
 	 */
-	public void inputHandle(){
-		int iCamSpeed = 5;
-		if(Gdx.input.isKeyPressed(Input.Keys.RIGHT)){
-			oGameCam.translate(iCamSpeed, 0);
-		}
-		if(Gdx.input.isKeyPressed(Input.Keys.LEFT)){
-			oGameCam.translate(-iCamSpeed, 0);
-		}
-		if(Gdx.input.isKeyPressed(Input.Keys.UP)){
-			oGameCam.translate(0, iCamSpeed);
-		}
-		if(Gdx.input.isKeyPressed(Input.Keys.DOWN)){
-			oGameCam.translate(0, -iCamSpeed);
-		}
-		batch.setProjectionMatrix(oGameCam.combined);
-		oGameCam.update();
-	}
+
 }
