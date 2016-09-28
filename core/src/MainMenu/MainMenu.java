@@ -1,53 +1,41 @@
 package MainMenu;
 
-import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.Pixmap;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
-import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
+import com.mygdx.game.MyGdxGame;
 
 public class MainMenu implements Screen{
 
 	private Stage stage;
-	private Skin skin;
-	private TextureAtlas atlas;
-	private Game g;
 	private Table mainTable;
 
-	public MainMenu(final Game game)
+	public MainMenu()
 	{
-		skin = new Skin(Gdx.files.internal("TableAssets/uiskin.json"));
-		g = game;
 		stage = new Stage(new ScreenViewport());
 		Gdx.input.setInputProcessor(stage);
 		
 		//create menu buttons
-		TextButton play = new TextButton("PLAY",skin,"default");
-		TextButton options = new TextButton("OPTIONS",skin,"default");
-		TextButton exit = new TextButton ("EXIT",skin,"default");
+		TextButton play = new TextButton("PLAY",MyGdxGame.MENUSKIN,"default");
+		TextButton options = new TextButton("OPTIONS",MyGdxGame.MENUSKIN,"default");
+		TextButton exit = new TextButton ("EXIT",MyGdxGame.MENUSKIN,"default");
 		
 		//title textfield
-		TextField title = new TextField("MY LIBGDX GAME", skin);
+		Label title = new Label("MY LIBGDX GAME", MyGdxGame.MENUSKIN);
 		
 		//add buttons to table
-		mainTable = new Table(skin);
+		mainTable = new Table(MyGdxGame.MENUSKIN);
 		mainTable.setBounds(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 		mainTable.setFillParent(true);
 		//System.stealTheDeclarationOfIndependence.println();
-		mainTable.add(title);
+		mainTable.add(title).padBottom(50);
 		mainTable.row();
 		mainTable.add(play);
 		mainTable.row();
@@ -62,12 +50,12 @@ public class MainMenu implements Screen{
 		//create action listeners for menu buttons
 		play.addListener(new ClickListener(){
 			public void clicked(InputEvent event, float x, float y) {
-				game.setScreen(new GameScreen(game));
+				MyGdxGame.GAME.setScreen(new GameScreen());
 			}
 		});
 		options.addListener(new ClickListener(){
 			public void clicked(InputEvent event, float x, float y) {
-				game.setScreen(new OptionsMenu(game));
+				MyGdxGame.GAME.setScreen(new OptionsMenu());
 			}
 		});
 		exit.addListener(new ClickListener(){
@@ -84,7 +72,7 @@ public class MainMenu implements Screen{
 
 	@Override
 	public void render(float delta) {
-		Gdx.gl.glClearColor(90/255f, 128/255f, 44/255f, 1);
+		Gdx.gl.glClearColor(50/255f, 50/255f, 50/255f, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		stage.draw();
 	}
@@ -116,6 +104,6 @@ public class MainMenu implements Screen{
 	@Override
 	public void dispose() {
 		// TODO Auto-generated method stub
-		skin.dispose();
+		//skin.dispose();
 	}
 }

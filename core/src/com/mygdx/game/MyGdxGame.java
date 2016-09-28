@@ -1,20 +1,23 @@
 package com.mygdx.game;
 
 import com.badlogic.gdx.Game;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 
 import MainMenu.MainMenu;
 import test.suite.TestSuiteRunner;
 
 public class MyGdxGame extends Game {
-	SpriteBatch batch;
-	private Game game;
+	
+	public static Game GAME;
+	public static Skin MENUSKIN;
+	
 	@Override
 	public void create () {
 		TestSuiteRunner.runTests();
-		game = this;
-		batch = new SpriteBatch();
-		setScreen(new MainMenu(this));
+		GAME = this;
+		MENUSKIN = new Skin(Gdx.files.internal("TableAssets/uiskin.json"));
+		setScreen(new MainMenu());
 	}
 
 	@Override
@@ -24,7 +27,6 @@ public class MyGdxGame extends Game {
 	
 	@Override
 	public void dispose () {
-		batch.dispose();
 	}
 	
 	/**
