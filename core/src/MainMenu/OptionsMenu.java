@@ -30,8 +30,9 @@ public class OptionsMenu implements Screen{
 		g = game;
 		stage = new Stage(new ScreenViewport());
 		Gdx.input.setInputProcessor(stage);
-		createSimpleSkin();
+		skin = new Skin(Gdx.files.internal("TableAssets/uiskin.json"));
 		
+		//create menu button
 		TextButton menu = new TextButton("MENU",skin);
 		Table mainTable = new Table(skin);
 		mainTable.setBounds(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
@@ -41,6 +42,7 @@ public class OptionsMenu implements Screen{
 		mainTable.add(menu);
 		mainTable.row();
 		
+		//add labels
 		//add table to stage
 		stage.addActor(mainTable);
 		
@@ -67,7 +69,8 @@ public class OptionsMenu implements Screen{
 
 	@Override
 	public void resize(int width, int height) {
-		stage.getViewport().update(width, height, true);
+		// TODO Auto-generated method stub
+		
 	}
 
 	@Override
@@ -92,29 +95,5 @@ public class OptionsMenu implements Screen{
 	public void dispose() {
 		// TODO Auto-generated method stub
 		
-	}
-
-	private void createSimpleSkin()
-	{
-	  //Create a font
-	  atlas = new TextureAtlas("button.pack");
-	  BitmapFont font = new BitmapFont();
-	  skin = new Skin(atlas);
-	  skin.add("default", font);
-	 
-	  //Create a texture
-	  Pixmap pixmap = new Pixmap((int)Gdx.graphics.getWidth()/4,(int)Gdx.graphics.getHeight()/10,Pixmap.Format.RGB888);
-	  pixmap.setColor(Color.WHITE);
-	  pixmap.fill();
-	  skin.add("background",new Texture(pixmap));
-	  
-	  //Create a button style
-	  TextButtonStyle textButtonStyle = new TextButtonStyle();
-	  textButtonStyle.up = skin.newDrawable("background", Color.GRAY);
-	  textButtonStyle.down = skin.newDrawable("background", Color.DARK_GRAY);
-	  textButtonStyle.checked = skin.newDrawable("background", Color.DARK_GRAY);
-	  textButtonStyle.over = skin.newDrawable("background", Color.LIGHT_GRAY);
-	  textButtonStyle.font = skin.getFont("default");
-	  skin.add("default", textButtonStyle);
 	}
 }
