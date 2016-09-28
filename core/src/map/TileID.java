@@ -1,6 +1,10 @@
 package map;
 
+import java.io.File;
+
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.utils.GdxRuntimeException;
 
 /**
  * Stores all tile identifiers for the map grid
@@ -24,8 +28,12 @@ public enum TileID {
 	 * @param filename	The path to the img file
 	 */
 	TileID(String filename){
-		//TODO Handle errors finding file
-		this.Img = new Texture(filename);
+		String assetpath = "assets" + File.separator;
+		try{
+			this.Img = new Texture(assetpath + filename);//Gdx.files.internal(assetpath + filename));
+		}catch(GdxRuntimeException e){
+			Gdx.app.error(this.name(), "Could not load texture: " + Gdx.files.internal(assetpath + filename).file().getAbsolutePath());
+		}
 	}
 	/**
 	 * Gives the texture for the given TileID

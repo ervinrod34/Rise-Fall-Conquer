@@ -39,15 +39,13 @@ public class GameScreen implements Screen{
 		createSimpleSkin();
 		
 		TextButton menu = new TextButton("MENU", skin);
-		menu.setWidth(100);
-		menu.setHeight(100);
 		stage = new Stage(new ScreenViewport());
 	    gameTable = new Table(skin);
 		gameTable.setBounds(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 		gameTable.setFillParent(true);
 		gameTable.top();
 		menu.setPosition(0,0);
-		gameTable.add(menu);
+		gameTable.add(menu).width(100).height(25);
 		gameTable.row();
 		stage.addActor(gameTable);
 		
@@ -87,8 +85,7 @@ public class GameScreen implements Screen{
 
 	@Override
 	public void resize(int width, int height) {
-		// TODO Auto-generated method stub
-		
+		stage.getViewport().update(width, height, true);
 	}
 
 	@Override
@@ -111,8 +108,8 @@ public class GameScreen implements Screen{
 
 	@Override
 	public void dispose() {
-		// TODO Auto-generated method stub
-		
+		batch.dispose();
+		mBoard.disposeMap();
 	}
 	
 	

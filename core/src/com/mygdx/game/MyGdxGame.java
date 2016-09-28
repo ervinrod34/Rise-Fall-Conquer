@@ -4,13 +4,14 @@ import com.badlogic.gdx.Game;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 import MainMenu.MainMenu;
+import test.suite.TestSuiteRunner;
 
 public class MyGdxGame extends Game {
 	SpriteBatch batch;
-	private map.Map mBoard;
 	private Game game;
 	@Override
 	public void create () {
+		TestSuiteRunner.runTests();
 		game = this;
 		batch = new SpriteBatch();
 		setScreen(new MainMenu(this));
@@ -24,7 +25,6 @@ public class MyGdxGame extends Game {
 	@Override
 	public void dispose () {
 		batch.dispose();
-		mBoard.disposeMap();
 	}
 	
 	/**
