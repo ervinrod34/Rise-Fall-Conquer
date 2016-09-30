@@ -8,7 +8,7 @@ public class Tile {
 	TileID Id;
 	private Vector2 Location;
 	private Vector2 GridLocation;
-	
+	private ResourceID rId;
 	/**
 	 * Creates a new tile
 	 * 
@@ -21,13 +21,52 @@ public class Tile {
 		this.Location = new Vector2(x,y);
 		this.GridLocation = new Vector2(0,0);
 	}
-
+	/**
+	 * Creates a new tile
+	 * 
+	 * @param id	The type of tile creating
+	 * @param x		The x location
+	 * @param y		The y location
+	 */
+	public Tile(int id, float x, float y) {
+		for(TileID tId : TileID.values()){
+			if(id == tId.getId()){
+				this.Id = tId;
+				break;
+			}
+		}
+		this.Location = new Vector2(x,y);
+		this.GridLocation = new Vector2(0,0);
+	}
+	/**
+	 * Creates a new tile
+	 * 
+	 * @param id	The type of tile creating
+	 * @param x		The x location
+	 * @param y		The y location
+	 */
+	public Tile(int id, int resId, float x, float y) {
+		for(TileID tId : TileID.values()){
+			if(id == tId.getId()){
+				this.Id = tId;
+				break;
+			}
+		}
+		for(ResourceID rId : ResourceID.values()){
+			if(resId == rId.getId()){
+				this.rId = rId;
+				break;
+			}
+		}
+		this.Location = new Vector2(x,y);
+		this.GridLocation = new Vector2(0,0);
+	}
 	/**
 	 * Returns the img for the given tile
 	 * 
 	 * @return
 	 */
-	public Texture getImg() {
+	public Texture getTileImg() {
 		return this.Id.getImg();
 	}
 	/**
@@ -60,6 +99,12 @@ public class Tile {
 	 */
 	public void setGridLocation(float x, float y) {
 		GridLocation.set(x, y);
+	}
+	public Texture getResourceImg() {
+		return rId.getImg();
+	}
+	public ResourceID getResource() {
+		return rId;
 	}
 
 }

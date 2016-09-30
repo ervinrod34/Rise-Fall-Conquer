@@ -10,6 +10,8 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.mygdx.game.Navigator;
 
+import map.Tile;
+
 public class GameScreen implements Screen{
 	SpriteBatch batch;
 	private map.Map mBoard;
@@ -27,7 +29,8 @@ public class GameScreen implements Screen{
 		
 		//set camera position
 		oGameCam = new OrthographicCamera(1280, 720);
-		oGameCam.position.set(oGameCam.viewportWidth /2,oGameCam.viewportHeight /2,0);
+		Tile home = mBoard.getRandomHomeTile();
+		oGameCam.position.set(home.getLocation().x,home.getLocation().y,0);
 		oGameCam.update();
 		
 		//set up input processors, arrow keys, mouse click

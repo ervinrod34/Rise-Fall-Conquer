@@ -14,26 +14,31 @@ import com.badlogic.gdx.utils.GdxRuntimeException;
  */
 public enum TileID {
 	
-	GRASS ("Tile_Grass.png"),
-	DESERT ("Tile_Desert.png"),
-	ICE ("Tile_Ice.png"),
-	MOUNTAIN ("Tile_Mountain.png"),
-	MOUNTAIN_ICE ("Tile_Mountain_Ice.png"),
-	WATER ("Tile_Water.png");
+	WATER (1, "Tile_Water.png"),
+	GRASS (2, "Tile_Grass.png"),
+	DESERT (3, "Tile_Desert.png"),
+	ICE (4, "Tile_Ice.png"),
+	MOUNTAIN (5, "Tile_Mountain.png"),
+	MOUNTAIN_ICE (6, "Tile_Mountain_Ice.png"),
+	CITY (7, "Tile_Home.png"),
+	TOWN (8, "Tile_City.png");
 	
 	private Texture Img;
+	private int Id;
+	
 	/**
 	 * Constructor for the TileID enums
 	 * 
 	 * @param filename	The path to the img file
 	 */
-	TileID(String filename){
+	TileID(int id, String filename){
 		String assetpath = "assets" + File.separator;
 		try{
 			this.Img = new Texture(assetpath + filename);//Gdx.files.internal(assetpath + filename));
 		}catch(GdxRuntimeException e){
 			Gdx.app.error(this.name(), "Could not load texture: " + Gdx.files.internal(assetpath + filename).file().getAbsolutePath());
 		}
+		this.Id = id;
 	}
 	/**
 	 * Gives the texture for the given TileID
@@ -41,6 +46,13 @@ public enum TileID {
 	 */
 	public Texture getImg() {
 		return Img;
+	}
+	/**
+	 * Gives the MapId for the given TileID
+	 * @return
+	 */
+	public int getId() {
+		return Id;
 	}
 	/**
 	 * Gives a random TileID

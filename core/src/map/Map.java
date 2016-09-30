@@ -1,31 +1,39 @@
 package map;
 
+import java.util.ArrayList;
+import java.util.Random;
+
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.utils.Json;
+import com.badlogic.gdx.utils.JsonValue;
+import com.badlogic.gdx.utils.JsonWriter.OutputType;
 
 /**
- * Generates a grid map, and handles populating it with resources and other items
+ * Generates a grid map, and handles populating it with resources and other
+ * items
  * 
  * @author Porter
  *
  */
-public class Map{
+public class Map {
 
-	//Values for map size
+	// Values for map size
 	private static final int XSIZE = 50;
 	private static final int YSIZE = 50;
-	
-	//Values for the tile sizes
+
+	// Values for the tile sizes
 	private static final int TILEWIDTH = 54;
 	private static final int TILEHEIGHT = 63;
-	
-	private Tile [][] grid;
-	
+
+	private Tile[][] grid;
+
 	private BitmapFont Font;
-	
+
 	/**
-	 * Creates the map where the game will take place 
+	 * Creates the map where the game will take place
 	 */
 	public Map() {
 		this.createGrid();
@@ -33,48 +41,95 @@ public class Map{
 		Font.getData().setScale(0.5f, 0.5f);
 		Font.setColor(Color.BLACK);
 	}
-	
+
+	/**
+	 * Gives a random home tile on the map
+	 * 
+	 * @return
+	 */
+	public Tile getRandomHomeTile(){
+		ArrayList<Tile> HomeTiles = new ArrayList<Tile>();
+		for (int x = 0; x < grid.length; x++) {
+			for (int y = 0; y < grid[0].length; y++) {
+				if(grid[x][y].getResource() != null && grid[x][y].getResource() == ResourceID.HOME){
+					HomeTiles.add(grid[x][y]);
+				}
+			}
+		}
+		Random rand = new Random();
+		return HomeTiles.get(rand.nextInt(HomeTiles.size()));
+	}
+	/**
+	 * Reads in the map.json file
+	 * 
+	 * @param filepath
+	 * @return
+	 */
+	private ArrayList<Tiled_Layer> readTiledJson(String filepath) {
+		Json json = new Json();
+		JsonValue root = json.fromJson(null, Gdx.files.internal(filepath));
+		JsonValue layers = root.get("layers");
+		String tmpJson = layers.toJson(OutputType.json);
+		ArrayList<JsonValue> jList = json.fromJson(ArrayList.class, tmpJson);
+		ArrayList<Tiled_Layer> tList = new ArrayList<Tiled_Layer>();
+		for(JsonValue j : jList){
+			tmpJson = j.toJson(OutputType.json);
+			tList.add(json.fromJson(Tiled_Layer.class, tmpJson));
+		}
+		return tList;
+	}
+
 	/**
 	 * Creates the grid
 	 */
-	private void createGrid(){
-		grid = new Tile [XSIZE][YSIZE];
-		for(int x = 0; x < XSIZE; x++){
-			for(int y = 0; y < YSIZE; y++){
-				//Make random tiles
-				TileID randType = TileID.getRandomTileID();
-				//Shift odd rows of hexagon's to the right
-				if(y % 2 == 1){
-					grid[x][y] = new Tile(randType, x*TILEWIDTH + TILEWIDTH/2, y*(TILEHEIGHT * 3/4));
-				}else{
-					grid[x][y] = new Tile(randType, x*TILEWIDTH, y*(TILEHEIGHT * 3/4));
+	private void createGrid() {
+		ArrayList<Tiled_Layer> tLayers = readTiledJson("Map_1.json");
+		int[][] data = tLayers.get(0).getmapData();
+		int[][] rdata = tLayers.get(1).getmapData();
+		int xSize = data[0].length;
+		int ySize = data.length;
+		grid = new Tile[xSize][ySize];
+		for (int x = 0; x < xSize; x++) {
+			for (int y = 0; y < ySize; y++) {
+				// Shift odd rows of hexagon's to the right
+				if (y % 2 == 1) {
+					grid[x][y] = new Tile(data[x][y], rdata[x][y], x * TILEWIDTH + TILEWIDTH / 2, y * (TILEHEIGHT * 3 / 4));
+				} else {
+					grid[x][y] = new Tile(data[x][y], rdata[x][y], x * TILEWIDTH, y * (TILEHEIGHT * 3 / 4));
 				}
 				grid[x][y].setGridLocation(x, y);
 			}
 		}
 	}
+
 	/**
 	 * Draws the whole map
 	 * 
 	 * @param batch
 	 */
-	public void drawMap(SpriteBatch batch){
-		for(int x = 0; x < XSIZE; x++){
-			for(int y = 0; y < YSIZE; y++){
-				batch.draw(grid[x][y].getImg(), grid[x][y].getLocation().x, grid[x][y].getLocation().y);
-//				Font.draw(batch, (int)grid[x][y].getGridLocation().x + "," + (int)grid[x][y].getGridLocation().y,
-//						grid[x][y].getLocation().x + 10, grid[x][y].getLocation().y + TILEHEIGHT/2 + 5);
+	public void drawMap(SpriteBatch batch) {
+		for (int x = 0; x < XSIZE; x++) {
+			for (int y = 0; y < YSIZE; y++) {
+				batch.draw(grid[x][y].getTileImg(), grid[x][y].getLocation().x, grid[x][y].getLocation().y);
+				if(grid[x][y].getResource() != null){
+					batch.draw(grid[x][y].getResourceImg(), grid[x][y].getLocation().x, grid[x][y].getLocation().y);
+				}
+				// Font.draw(batch, (int)grid[x][y].getGridLocation().x + "," +
+				// (int)grid[x][y].getGridLocation().y,
+				// grid[x][y].getLocation().x + 10, grid[x][y].getLocation().y +
+				// TILEHEIGHT/2 + 5);
 			}
 		}
 	}
+
 	/**
 	 * Disposes of all textures in map
 	 */
-	public void disposeMap(){
-		for(int x = 0; x < XSIZE; x++){
-			for(int y = 0; y < YSIZE; y++){
-				if(grid[x][y].getImg() != null){
-					grid[x][y].getImg().dispose();
+	public void disposeMap() {
+		for (int x = 0; x < XSIZE; x++) {
+			for (int y = 0; y < YSIZE; y++) {
+				if (grid[x][y].getTileImg() != null) {
+					grid[x][y].getTileImg().dispose();
 				}
 			}
 		}
