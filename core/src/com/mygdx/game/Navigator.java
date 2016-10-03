@@ -90,8 +90,9 @@ public class Navigator implements InputProcessor {
 				stage.addActor(gameTable);
 			}
 		}
-		oGameCam.update();
 		batch.setProjectionMatrix(oGameCam.combined);
+		oGameCam.update();
+		//batch.setProjectionMatrix(oGameCam.combined);
 		
 	}
 
@@ -116,8 +117,11 @@ public class Navigator implements InputProcessor {
 	@Override
 	public boolean touchDown(int screenX, int screenY, int pointer, int button) {
 		//last position button clicked down
-		lastTouch.set(screenX, screenY,0);
-		return true;
+		if(Gdx.input.isButtonPressed(Input.Buttons.MIDDLE)) {
+			lastTouch.set(screenX, screenY,0);
+			return true;
+		}
+		return false;
 	}
 
 	@Override
@@ -143,9 +147,10 @@ public class Navigator implements InputProcessor {
 		    
 		    //set new lastTouch
 		    lastTouch = newTouch;
+		    return true;
 		}
-		
-		return true;
+
+		return false;
 	}
 
 	@Override
