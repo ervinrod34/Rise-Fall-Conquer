@@ -5,8 +5,12 @@ import java.util.Random;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.JsonValue;
 import com.badlogic.gdx.utils.JsonWriter.OutputType;
@@ -29,7 +33,6 @@ public class Map {
 	private static final int TILEHEIGHT = 63;
 
 	private Tile[][] grid;
-
 	private BitmapFont Font;
 
 	/**
@@ -120,6 +123,48 @@ public class Map {
 				// TILEHEIGHT/2 + 5);
 			}
 		}
+	}
+	
+	/*
+	 * This only draws tiles within the viewport
+	 */
+	public void drawView(SpriteBatch batch, OrthographicCamera oGameCam) {
+		
+		//scale viewport according to zoom
+        float width = oGameCam.viewportWidth * oGameCam.zoom;
+        float height = oGameCam.viewportHeight * oGameCam.zoom;
+        
+        //this prevents us from seeing tiles load in
+        width+=(TILEWIDTH*2);
+        height+=(TILEHEIGHT*2);
+        
+           //makes a vector3 that moves the center of camera to the bottom left of viewport
+           Vector3 camPos = new Vector3(oGameCam.position.x - width/2
+                   ,oGameCam.position.y - height/2, 0);
+           
+           //make a rectangle based on above vector3
+           Rectangle camRect = new Rectangle(camPos.x, camPos.y
+                   , width, height);
+
+           //loop through the tile grid
+           for (int x = 0 ; x < XSIZE; x++) {
+               for (int y = 0; y < YSIZE; y++) {
+                   
+            	   //make a rectangle based on a given tile from the grid
+                   Rectangle tileRect = new Rectangle(grid[x][y].getLocation().x, grid[x][y].getLocation().y
+                           ,grid[x][y].getTileImg().getWidth(), grid[x][y].getTileImg().getHeight());
+                   
+                   //check if tile is in viewport
+                   if(camRect.contains(tileRect)) {
+                       batch.draw(grid[x][y].getTileImg(), grid[x][y].getLocation().x, grid[x][y].getLocation().y);
+                      
+                       //if there's a resource, draw it
+                       if(grid[x][y].getResource() != null){
+                           batch.draw(grid[x][y].getResourceImg(), grid[x][y].getLocation().x, grid[x][y].getLocation().y);
+                       }
+                   }
+               }
+           }
 	}
 
 	/**

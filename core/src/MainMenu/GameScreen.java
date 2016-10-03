@@ -53,7 +53,8 @@ public class GameScreen implements Screen{
 		Gdx.gl.glClearColor(90/255f, 128/255f, 44/255f, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		batch.begin();
-		mBoard.drawMap(batch);
+		//mBoard.drawMap(batch);
+		mBoard.drawView(batch, oGameCam);
 		batch.end();
 		nav.inputHandle();
 		stage.draw();

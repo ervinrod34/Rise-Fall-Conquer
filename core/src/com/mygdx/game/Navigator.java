@@ -5,6 +5,9 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -16,9 +19,13 @@ import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import MainMenu.MainMenu;
 
 public class Navigator implements InputProcessor {
+	//set the maximum zoom in and out value here
 	private static double MAX_ZOOM = 0.20;
+	private static double MAX_ZOOM_OUT = 1;
 
-	private double zoomValue;
+	private double zoomValue;	//how much or how quickly to zoom
+	private Vector3 lastTouch;	//holds pos. of last button press
+
 	private OrthographicCamera oGameCam;
 	private SpriteBatch batch;
 
@@ -26,7 +33,8 @@ public class Navigator implements InputProcessor {
 	private Table gameTable;
 
 	public Navigator(OrthographicCamera oGameCam, SpriteBatch batch, Stage stage) {
-		zoomValue = 0.02;
+		zoomValue = 0.06;
+		lastTouch = new Vector3();
 		this.batch = new SpriteBatch();
 		this.batch = batch;
 
@@ -53,17 +61,21 @@ public class Navigator implements InputProcessor {
 	}
 
 	public void inputHandle() {
-		int iCamSpeed = 5;
-		if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
+		int iCamSpeed = 10;
+		int mouseX = Gdx.input.getX();
+		int mouseY = Gdx.input.getY();
+		Vector3 mousePos = new Vector3(mouseX, mouseY, 0);
+		
+		if (Gdx.input.isKeyPressed(Input.Keys.RIGHT) || (mousePos.x >= (Gdx.graphics.getWidth() - 15))) {
 			oGameCam.translate(iCamSpeed, 0);
 		}
-		if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
+		if (Gdx.input.isKeyPressed(Input.Keys.LEFT) || (mousePos.x <= 15)) {
 			oGameCam.translate(-iCamSpeed, 0);
 		}
-		if (Gdx.input.isKeyPressed(Input.Keys.UP)) {
+		if (Gdx.input.isKeyPressed(Input.Keys.UP)|| (mousePos.y <= 15)) {
 			oGameCam.translate(0, iCamSpeed);
 		}
-		if (Gdx.input.isKeyPressed(Input.Keys.DOWN)) {
+		if (Gdx.input.isKeyPressed(Input.Keys.DOWN)|| (mousePos.y >= (Gdx.graphics.getHeight() - 15))) {
 			oGameCam.translate(0, -iCamSpeed);
 		}
 		if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
@@ -78,8 +90,9 @@ public class Navigator implements InputProcessor {
 				stage.addActor(gameTable);
 			}
 		}
-		batch.setProjectionMatrix(oGameCam.combined);
 		oGameCam.update();
+		batch.setProjectionMatrix(oGameCam.combined);
+		
 	}
 
 	@Override
@@ -102,8 +115,9 @@ public class Navigator implements InputProcessor {
 
 	@Override
 	public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-		// TODO Auto-generated method stub
-		return false;
+		//last position button clicked down
+		lastTouch.set(screenX, screenY,0);
+		return true;
 	}
 
 	@Override
@@ -114,8 +128,24 @@ public class Navigator implements InputProcessor {
 
 	@Override
 	public boolean touchDragged(int screenX, int screenY, int pointer) {
-		// TODO Auto-generated method stub
-		return false;
+		//check if middle mouse press (for navigation)
+		if(Gdx.input.isButtonPressed(Input.Buttons.MIDDLE)) {
+		    
+			//get the latest mouse position
+			Vector3 newTouch = new Vector3(screenX, screenY,0);
+			
+			//calculate difference between last touch and
+			//most recent touch
+		    Vector3 delta = newTouch.cpy().sub(lastTouch);
+		    
+		    //move camera to new position
+		    oGameCam.translate(-delta.x, delta.y);
+		    
+		    //set new lastTouch
+		    lastTouch = newTouch;
+		}
+		
+		return true;
 	}
 
 	@Override
@@ -126,9 +156,8 @@ public class Navigator implements InputProcessor {
 
 	@Override
 	public boolean scrolled(int amount) {
-		// TODO Auto-generated method stub
-		// 1 is down
-		// -1 is ups
+		// 1 is scroll down
+		// -1 is scroll up
 		if (amount == 1) {
 			zoomIn();
 			return true;
@@ -141,21 +170,33 @@ public class Navigator implements InputProcessor {
 		return false;
 	}
 
+	/*
+	 * Zoom out the camera
+	 */
 	public void zoomOut() {
-
-		oGameCam.zoom += zoomValue;
+		if(oGameCam.zoom <= MAX_ZOOM_OUT)
+			oGameCam.zoom += zoomValue;
 	}
 
+	/*
+	 * Zoom in the camera
+	 */
 	public void zoomIn() {
 		if (oGameCam.zoom >= MAX_ZOOM)
 			oGameCam.zoom -= zoomValue;
 	}
 
+	/*
+	 * returns the zoom value
+	 */
 	public double getZoomValue() {
 		return zoomValue;
 	}
 
-	public void setZoomValue(double zoomValue) {
+	/*
+	 * sets the zoom value
+	 */
+	public void setZoomValue(float zoomValue) {
 		this.zoomValue = zoomValue;
 	}
 }
