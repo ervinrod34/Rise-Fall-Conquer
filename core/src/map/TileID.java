@@ -5,6 +5,7 @@ import java.io.File;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.utils.GdxRuntimeException;
+import com.mygdx.game.MyGdxGame;
 
 /**
  * Stores all tile identifiers for the map grid
@@ -19,9 +20,7 @@ public enum TileID {
 	DESERT (3, "Tile_Desert.png"),
 	ICE (4, "Tile_Ice.png"),
 	MOUNTAIN (5, "Tile_Mountain.png"),
-	MOUNTAIN_ICE (6, "Tile_Mountain_Ice.png"),
-	CITY (7, "Tile_Home.png"),
-	TOWN (8, "Tile_City.png");
+	MOUNTAIN_ICE (6, "Tile_Mountain_Ice.png");
 	
 	private Texture Img;
 	private int Id;
@@ -32,11 +31,11 @@ public enum TileID {
 	 * @param filename	The path to the img file
 	 */
 	TileID(int id, String filename){
-		String assetpath = "assets" + File.separator;
+		String path = MyGdxGame.ASSET_PATH + "images" + File.separator + "tiles" + File.separator + filename;
 		try{
-			this.Img = new Texture(assetpath + filename);//Gdx.files.internal(assetpath + filename));
+			this.Img = new Texture(Gdx.files.internal(path));
 		}catch(GdxRuntimeException e){
-			Gdx.app.error(this.name(), "Could not load texture: " + Gdx.files.internal(assetpath + filename).file().getAbsolutePath());
+			Gdx.app.error(this.name(), "Could not load texture: " + Gdx.files.internal(path).file().getAbsolutePath());
 		}
 		this.Id = id;
 	}

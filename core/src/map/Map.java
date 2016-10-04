@@ -1,5 +1,6 @@
 package map;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -11,9 +12,12 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.utils.GdxRuntimeException;
 import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.JsonValue;
 import com.badlogic.gdx.utils.JsonWriter.OutputType;
+import com.mygdx.game.MyGdxGame;
 
 /**
  * Generates a grid map, and handles populating it with resources and other
@@ -70,7 +74,14 @@ public class Map {
 	 */
 	private ArrayList<Tiled_Layer> readTiledJson(String filepath) {
 		Json json = new Json();
-		JsonValue root = json.fromJson(null, Gdx.files.internal(filepath));
+		JsonValue root = null;
+		String path = MyGdxGame.ASSET_PATH + "maps" + File.separator + filepath;
+		try{
+			root = json.fromJson(null,Gdx.files.internal(path));
+		}catch(GdxRuntimeException e){
+			Gdx.app.error(this.getClass().getName(), "Could not load texture: " + Gdx.files.internal(path).file().getAbsolutePath());
+		}
+		//JsonValue root = json.fromJson(null, Gdx.files.internal(filepath));
 		JsonValue layers = root.get("layers");
 		String tmpJson = layers.toJson(OutputType.json);
 		ArrayList<JsonValue> jList = json.fromJson(ArrayList.class, tmpJson);

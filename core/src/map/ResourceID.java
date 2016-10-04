@@ -5,11 +5,19 @@ import java.io.File;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.utils.GdxRuntimeException;
+import com.mygdx.game.MyGdxGame;
 
 public enum ResourceID {
 
 	HOME(65, "Tile_Home.png", "Tile_Home.png", "Tile_Home.png", "Tile_Home.png"),
-	TOWN(66, "Tile_City.png", "Tile_City.png", "Tile_City.png", "Tile_City.png");
+	TOWN(66, "Tile_City.png", "Tile_City.png", "Tile_City.png", "Tile_City.png"),
+	COAL(67, "Tile_Coal.png", "Tile_Coal1.png", "Tile_Coal2.png"),
+	FISH(68, "Tile_Fish.png", "Tile_Fish1.png", "Tile_Fish2.png"),
+	GOLD(69, "Tile_Gold.png", "Tile_Gold1.png", "Tile_Gold2.png", "Tile_Gold3.png", "Tile_Gold4.png", "Tile_Gold5.png"),
+	MEAT(70, "Tile_Meat.png", "Tile_Meat1.png", "Tile_Meat2.png"),
+	TEMP(71, "Tile_Temp.png", "Tile_Temp1.png", "Tile_Temp2.png", "Tile_Temp3.png"),
+	WHEAT(72, "Tile_Wheat.png", "Tile_Wheat1.png", "Tile_Wheat2.png"),
+	WOOD(73, "Tile_Wood.png", "Tile_Wood1.png", "Tile_Wood2.png");
 
 	private Texture Img;
 	private int Id;
@@ -23,14 +31,14 @@ public enum ResourceID {
 	 *            The path to the img file
 	 */
 	ResourceID(int id, String... upgrades) {
-		String assetpath = "assets" + File.separator;
+		String path = MyGdxGame.ASSET_PATH + "images" + File.separator + "resources" + File.separator;
 		this.upgrades = new Texture[upgrades.length];
 		for (int i = 0; i < upgrades.length; i++) {
 			try {
-				this.upgrades[i] = new Texture(assetpath + upgrades[i]);
+				this.upgrades[i] = new Texture(Gdx.files.internal(path + upgrades[i]));
 			} catch (GdxRuntimeException e) {
 				Gdx.app.error(this.name(), "Could not load texture: "
-						+ Gdx.files.internal(assetpath + upgrades[i]).file().getAbsolutePath());
+						+ Gdx.files.internal(path + upgrades[i]).file().getAbsolutePath());
 			}
 		}
 		this.upgradeCount = 0;
