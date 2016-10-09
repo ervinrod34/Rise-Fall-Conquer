@@ -1,7 +1,11 @@
 package map;
 
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector2;
+
+import box2dLight.PointLight;
+import box2dLight.RayHandler;
 
 public class Tile {
 
@@ -9,6 +13,9 @@ public class Tile {
 	private Vector2 Location;
 	private Vector2 GridLocation;
 	private ResourceID rId;
+	private PointLight pLight;
+	private int Claim;
+	
 	/**
 	 * Creates a new tile
 	 * 
@@ -16,10 +23,11 @@ public class Tile {
 	 * @param x		The x location
 	 * @param y		The y location
 	 */
-	public Tile(TileID id, float x, float y) {
+	public Tile(TileID id, float x, float y, RayHandler rayHandler) {
 		this.Id = id;
 		this.Location = new Vector2(x,y);
 		this.GridLocation = new Vector2(0,0);
+		setupPointLight(rayHandler);
 	}
 	/**
 	 * Creates a new tile
@@ -28,7 +36,7 @@ public class Tile {
 	 * @param x		The x location
 	 * @param y		The y location
 	 */
-	public Tile(int id, float x, float y) {
+	public Tile(int id, float x, float y, RayHandler rayHandler) {
 		for(TileID tId : TileID.values()){
 			if(id == tId.getId()){
 				this.Id = tId;
@@ -37,6 +45,7 @@ public class Tile {
 		}
 		this.Location = new Vector2(x,y);
 		this.GridLocation = new Vector2(0,0);
+		setupPointLight(rayHandler);
 	}
 	/**
 	 * Creates a new tile
@@ -45,7 +54,7 @@ public class Tile {
 	 * @param x		The x location
 	 * @param y		The y location
 	 */
-	public Tile(int id, int resId, float x, float y) {
+	public Tile(int id, int resId, float x, float y, RayHandler rayHandler) {
 		for(TileID tId : TileID.values()){
 			if(id == tId.getId()){
 				this.Id = tId;
@@ -60,6 +69,34 @@ public class Tile {
 		}
 		this.Location = new Vector2(x,y);
 		this.GridLocation = new Vector2(0,0);
+		setupPointLight(rayHandler);
+	}
+	/**
+	 * Sets up the point light for the tile
+	 * @param rayHandler
+	 */
+	private void setupPointLight(RayHandler rayHandler){
+		pLight = new PointLight(rayHandler,10, new Color((1/(float)255)*255f, (1/(float)255)*241f, (1/(float)255)*224f, 1),50,0,0);
+		Vector2 LocationCenter = new Vector2();
+		LocationCenter.set(this.Location.x + this.getTileImg().getWidth()/2, this.Location.y + this.getTileImg().getHeight()/2);
+		pLight.setPosition(LocationCenter);
+		pLight.setSoft(true);
+		pLight.setActive(false);
+	}
+	/**
+	 * Sets the tile light to on or off
+	 * @param value
+	 */
+	public void setLight(boolean value){
+		pLight.setActive(value);
+	}
+	/**
+	 * returns true if light is on
+	 * 
+	 * @return
+	 */
+	public boolean isLightOn(){
+		return pLight.isActive();
 	}
 	/**
 	 * Returns the img for the given tile
@@ -105,6 +142,12 @@ public class Tile {
 	}
 	public ResourceID getResource() {
 		return rId;
+	}
+	public int getClaim() {
+		return Claim;
+	}
+	public void setClaim(int claim) {
+		Claim = claim;
 	}
 
 }

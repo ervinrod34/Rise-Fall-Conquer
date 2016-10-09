@@ -12,12 +12,14 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.GdxRuntimeException;
 import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.JsonValue;
 import com.badlogic.gdx.utils.JsonWriter.OutputType;
 import com.mygdx.game.MyGdxGame;
+
+import box2dLight.RayHandler;
 
 /**
  * Generates a grid map, and handles populating it with resources and other
@@ -39,16 +41,32 @@ public class Map {
 	private Tile[][] grid;
 	private BitmapFont Font;
 
+	// Light manager 
+	private RayHandler rayHandler;
+	
 	/**
 	 * Creates the map where the game will take place
 	 */
-	public Map() {
+	public Map(OrthographicCamera oGameCam) {
+		this.createLighting(oGameCam);
 		this.createGrid();
 		Font = new BitmapFont();
 		Font.getData().setScale(0.5f, 0.5f);
 		Font.setColor(Color.BLACK);
 	}
 
+	/**
+	 * Sets the lighting for the map
+	 * @param oGameCam
+	 */
+	private void createLighting(OrthographicCamera oGameCam){
+		World world = new World(new Vector2(0,0),false);
+		rayHandler = new RayHandler(world);
+		rayHandler.setCombinedMatrix(oGameCam);
+		rayHandler.setAmbientLight((1/(float)255)*5f, (1/(float)255)*5f, (1/(float)255)*5f, 1);
+		RayHandler.useDiffuseLight(true);
+	}
+	
 	/**
 	 * Gives a random home tile on the map
 	 * 
@@ -58,13 +76,16 @@ public class Map {
 		ArrayList<Tile> HomeTiles = new ArrayList<Tile>();
 		for (int x = 0; x < grid.length; x++) {
 			for (int y = 0; y < grid[0].length; y++) {
-				if(grid[x][y].getResource() != null && grid[x][y].getResource() == ResourceID.HOME){
+				if(grid[x][y].getResource() != null && grid[x][y].getResource() == ResourceID.HOME && grid[x][y].getClaim() == 0){
 					HomeTiles.add(grid[x][y]);
 				}
 			}
 		}
-		Random rand = new Random();
-		return HomeTiles.get(rand.nextInt(HomeTiles.size()));
+		if(HomeTiles.size() != 0){
+			Random rand = new Random();
+			return HomeTiles.get(rand.nextInt(HomeTiles.size()));
+		}
+		return null;
 	}
 	/**
 	 * Reads in the map.json file
@@ -107,15 +128,24 @@ public class Map {
 			for (int y = 0; y < ySize; y++) {
 				// Shift odd rows of hexagon's to the right
 				if (y % 2 == 1) {
-					grid[x][y] = new Tile(data[x][y], rdata[x][y], x * TILEWIDTH + TILEWIDTH / 2, y * (TILEHEIGHT * 3 / 4));
+					grid[x][y] = new Tile(data[x][y], rdata[x][y], x * TILEWIDTH + TILEWIDTH / 2, y * (TILEHEIGHT * 3 / 4), rayHandler);
 				} else {
-					grid[x][y] = new Tile(data[x][y], rdata[x][y], x * TILEWIDTH, y * (TILEHEIGHT * 3 / 4));
+					grid[x][y] = new Tile(data[x][y], rdata[x][y], x * TILEWIDTH, y * (TILEHEIGHT * 3 / 4), rayHandler);
 				}
 				grid[x][y].setGridLocation(x, y);
 			}
 		}
 	}
 
+	/**
+	 * Draws the lighting for the map
+	 * 
+	 * @param oGameCam
+	 */
+	public void drawMapLighting(OrthographicCamera oGameCam){
+		rayHandler.setCombinedMatrix(oGameCam);
+		rayHandler.updateAndRender();
+	}
 	/**
 	 * Draws the whole map
 	 * 
@@ -135,9 +165,10 @@ public class Map {
 			}
 		}
 	}
-	
-	/*
+	/**
 	 * This only draws tiles within the viewport
+	 * @param batch
+	 * @param oGameCam
 	 */
 	public void drawView(SpriteBatch batch, OrthographicCamera oGameCam) {
 		
@@ -187,7 +218,13 @@ public class Map {
 				if (grid[x][y].getTileImg() != null) {
 					grid[x][y].getTileImg().dispose();
 				}
+				if (grid[x][y].getResourceImg() != null) {
+					grid[x][y].getResourceImg().dispose();
+				}
 			}
 		}
+	}
+	public RayHandler getrayHandler(){
+		return rayHandler;
 	}
 }

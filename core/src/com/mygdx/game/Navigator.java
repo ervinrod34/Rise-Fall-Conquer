@@ -60,8 +60,8 @@ public class Navigator implements InputProcessor {
 		});
 	}
 
-	public void inputHandle() {
-		int iCamSpeed = 10;
+	public void inputHandle(float delta) {
+		float iCamSpeed = 300 * delta;
 		int mouseX = Gdx.input.getX();
 		int mouseY = Gdx.input.getY();
 		Vector3 mousePos = new Vector3(mouseX, mouseY, 0);
@@ -90,9 +90,9 @@ public class Navigator implements InputProcessor {
 				stage.addActor(gameTable);
 			}
 		}
-		batch.setProjectionMatrix(oGameCam.combined);
-		oGameCam.update();
 		//batch.setProjectionMatrix(oGameCam.combined);
+		oGameCam.update();
+		batch.setProjectionMatrix(oGameCam.combined);
 		
 	}
 
