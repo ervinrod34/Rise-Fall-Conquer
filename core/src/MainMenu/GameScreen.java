@@ -3,6 +3,7 @@ package MainMenu;
 import java.util.ArrayList;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
@@ -18,6 +19,8 @@ import factions.Faction;
 import factions.PlayerFaction;
 import map.DayNightCycle;
 import map.Tile;
+import tools.BasicAnimation;
+import tools.BasicAnimationID;
 
 public class GameScreen implements Screen{
 	SpriteBatch batch;
@@ -26,6 +29,7 @@ public class GameScreen implements Screen{
 	private Navigator nav;
 	private Stage stage;
 	private ArrayList<Faction> factions;
+    
 	
 	public GameScreen()
 	{
@@ -68,7 +72,7 @@ public class GameScreen implements Screen{
 	public void render(float delta) {
 		nav.inputHandle(delta);
 		//draw map on GameScreen
-		Gdx.gl.glClearColor(90/255f, 128/255f, 44/255f, 1);
+		Gdx.gl.glClearColor(36/255f, 97/255f, 123/255f, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		batch.begin();
 		//mBoard.drawMap(batch);
@@ -123,6 +127,8 @@ public class GameScreen implements Screen{
 				//Set the other factions to normal
 				faction = new Faction(FactId, home);
 			}
+			//Add a animation to the home tile
+			home.setbAnimation(BasicAnimationID.PARTICLE_SLEEP);
 			factions.add(faction);
 			home = mBoard.getRandomHomeTile();
 			FactId++;

@@ -20,6 +20,8 @@ import com.badlogic.gdx.utils.JsonWriter.OutputType;
 import com.mygdx.game.MyGdxGame;
 
 import box2dLight.RayHandler;
+import tools.BasicAnimation;
+import tools.BasicAnimationID;
 
 /**
  * Generates a grid map, and handles populating it with resources and other
@@ -171,42 +173,52 @@ public class Map {
 	 * @param oGameCam
 	 */
 	public void drawView(SpriteBatch batch, OrthographicCamera oGameCam) {
-		
-		//scale viewport according to zoom
-        float width = oGameCam.viewportWidth * oGameCam.zoom;
-        float height = oGameCam.viewportHeight * oGameCam.zoom;
-        
-        //this prevents us from seeing tiles load in
-        width+=(TILEWIDTH*2);
-        height+=(TILEHEIGHT*2);
-        
-           //makes a vector3 that moves the center of camera to the bottom left of viewport
-           Vector3 camPos = new Vector3(oGameCam.position.x - width/2
-                   ,oGameCam.position.y - height/2, 0);
-           
-           //make a rectangle based on above vector3
-           Rectangle camRect = new Rectangle(camPos.x, camPos.y
-                   , width, height);
 
-           //loop through the tile grid
-           for (int x = 0 ; x < XSIZE; x++) {
-               for (int y = 0; y < YSIZE; y++) {
-                   
-            	   //make a rectangle based on a given tile from the grid
-                   Rectangle tileRect = new Rectangle(grid[x][y].getLocation().x, grid[x][y].getLocation().y
-                           ,grid[x][y].getTileImg().getWidth(), grid[x][y].getTileImg().getHeight());
-                   
-                   //check if tile is in viewport
-                   if(camRect.contains(tileRect)) {
-                       batch.draw(grid[x][y].getTileImg(), grid[x][y].getLocation().x, grid[x][y].getLocation().y);
-                      
-                       //if there's a resource, draw it
-                       if(grid[x][y].getResource() != null){
-                           batch.draw(grid[x][y].getResourceImg(), grid[x][y].getLocation().x, grid[x][y].getLocation().y);
-                       }
-                   }
-               }
-           }
+		// scale viewport according to zoom
+		float width = oGameCam.viewportWidth * oGameCam.zoom;
+		float height = oGameCam.viewportHeight * oGameCam.zoom;
+
+		// this prevents us from seeing tiles load in
+		width += (TILEWIDTH * 2);
+		height += (TILEHEIGHT * 2);
+
+		// makes a vector3 that moves the center of camera to the bottom left of
+		// viewport
+		Vector3 camPos = new Vector3(oGameCam.position.x - width / 2, oGameCam.position.y - height / 2, 0);
+
+		// make a rectangle based on above vector3
+		Rectangle camRect = new Rectangle(camPos.x, camPos.y, width, height);
+
+		ArrayList<BasicAnimation> animations = new ArrayList<BasicAnimation>();
+		// loop through the tile grid
+		for (int x = 0; x < XSIZE; x++) {
+			for (int y = 0; y < YSIZE; y++) {
+
+				// make a rectangle based on a given tile from the grid
+				Rectangle tileRect = new Rectangle(grid[x][y].getLocation().x, grid[x][y].getLocation().y,
+						grid[x][y].getTileImg().getWidth(), grid[x][y].getTileImg().getHeight());
+
+				// check if tile is in viewport
+				if (camRect.contains(tileRect)) {
+					batch.draw(grid[x][y].getTileImg(), grid[x][y].getLocation().x, grid[x][y].getLocation().y);
+
+					// if there's a resource, draw it
+					if (grid[x][y].getResource() != null) {
+						batch.draw(grid[x][y].getResourceImg(), grid[x][y].getLocation().x, grid[x][y].getLocation().y);
+					}
+					
+					// if there's a animation, draw it
+					if (grid[x][y].getbAnimation() != null) {
+						animations.add(grid[x][y].getbAnimation());
+						//grid[x][y].getbAnimation().draw(batch);
+					}
+				}
+			}
+		}
+		
+		for(BasicAnimation a : animations){
+			a.draw(batch);
+		}
 	}
 
 	/**

@@ -6,6 +6,8 @@ import com.badlogic.gdx.math.Vector2;
 
 import box2dLight.PointLight;
 import box2dLight.RayHandler;
+import tools.BasicAnimation;
+import tools.BasicAnimationID;
 
 public class Tile {
 
@@ -13,6 +15,7 @@ public class Tile {
 	private Vector2 Location;
 	private Vector2 GridLocation;
 	private ResourceID rId;
+	private BasicAnimation bAnimation;
 	private PointLight pLight;
 	private int Claim;
 	
@@ -148,6 +151,18 @@ public class Tile {
 	}
 	public void setClaim(int claim) {
 		Claim = claim;
+	}
+	public BasicAnimation getbAnimation() {
+		return bAnimation;
+	}
+	public void setbAnimation(BasicAnimationID id) {
+		float x = Location.x + this.getTileImg().getWidth()/2;
+		float y = Location.y + this.getTileImg().getHeight()/2;
+		if(id.getAnimatedSheet() != null){
+			x -= id.getAnimatedSheet().getHeight()/2;
+			y -= id.getAnimatedSheet().getHeight()/2;
+		}
+		this.bAnimation = new BasicAnimation(id,x,y);
 	}
 
 }
