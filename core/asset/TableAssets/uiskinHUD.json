@@ -1,0 +1,23 @@
+{
+com.badlogic.gdx.graphics.g2d.BitmapFont: { default-font: { file: default.fnt } },
+com.badlogic.gdx.graphics.Color: {
+	green: { a: 1, b: 0, g: 1, r: 0 },
+	white: { a: 1, b: 1, g: 1, r: 1 },
+	red: { a: 1, b: 0, g: 0, r: 1 },
+	black: { a: 1, b: 0, g: 0, r: 0 },
+},
+com.badlogic.gdx.scenes.scene2d.ui.Skin$TintedDrawable: {
+	dialogDim: { name: white, color: { r: 0, g: 0, b: 0, a: 0.45 } },
+},
+com.badlogic.gdx.scenes.scene2d.ui.Label$LabelStyle: {
+	default: { font: default-font, fontColor: white, background: default-rect },
+	hmm: { font: default-font, fontColor: green, background: default-window}
+},
+com.badlogic.gdx.scenes.scene2d.ui.ImageButton$ImageButtonStyle: {
+	default: { down: custom1down, up: custom1up },
+	EndTurn: { down: custom2down, up: custom2up },
+	Gold: { down: customGoldDown, up: customGold },
+	Food: { down: customFoodDown, up: customFood },
+	Wood: { down: customWoodDown, up: customWood },
+},
+}

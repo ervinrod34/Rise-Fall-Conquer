@@ -3,23 +3,25 @@ package MainMenu;
 import java.util.ArrayList;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Timer;
 import com.badlogic.gdx.utils.Timer.Task;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
+import com.mygdx.game.MyGdxGame;
 import com.mygdx.game.Navigator;
 
+import CustomWidgets.GameBar;
 import factions.Faction;
 import factions.PlayerFaction;
 import map.DayNightCycle;
 import map.Tile;
-import tools.BasicAnimation;
 import tools.BasicAnimationID;
 
 public class GameScreen implements Screen{
@@ -29,10 +31,11 @@ public class GameScreen implements Screen{
 	private Navigator nav;
 	private Stage stage;
 	private ArrayList<Faction> factions;
+    private int totalTurns;
     
-	
-	public GameScreen()
-	{
+	private GameBar bar;
+	private DayNightCycle dnCycle;
+	public GameScreen(){
 		//set up stage and table
 		stage = new Stage(new ScreenViewport());
 		batch = new SpriteBatch();
@@ -50,17 +53,56 @@ public class GameScreen implements Screen{
 		ipm.addProcessor(stage);
 		Gdx.input.setInputProcessor(ipm);
 		
-		//TODO remove timer and update after round over
+		
 		//Day night cycle that updates every .1 seconds
-		final DayNightCycle dnCycle = new DayNightCycle(mBoard);
-		Timer time = new Timer();
-		time.scheduleTask(new Task(){
-			@Override
-			public void run(){
-				dnCycle.update();
+		dnCycle = new DayNightCycle(mBoard);
+		
+		// Set total turns to 0
+		totalTurns = 0;
+		
+		bar = new GameBar();
+		this.stage.addActor(bar.getTopBar());
+		
+		//Setup all click listeners for top bar
+		bar.setOptionsClickListener(new ClickListener(){
+			public void clicked(InputEvent event, float x, float y) {
+				MyGdxGame.GAME.setScreen(new MainMenu());
 			}
+		});
+		bar.setEndTurnClickListener(new ClickListener(){
+			public void clicked(InputEvent event, float x, float y) {
+				final Timer time = new Timer();
+				time.scheduleTask(new Task(){
+					@Override
+					public void run(){
+						// Stop transition after 4 hours
+						if(dnCycle.getTime() % 40 == 0){
+							time.stop();
+						}
+						// Update time
+						dnCycle.update();
+					}
+					}
+				,0f,.1f);
+				// Increment total turns
+				bar.setTurns(++totalTurns);
 			}
-		,0f,.1f);
+		});
+		bar.setFoodClickListener(new ClickListener(){
+			public void clicked(InputEvent event, float x, float y) {
+				Gdx.app.log("Food Button", "Clicked");
+			}
+		});
+		bar.setWoodClickListener(new ClickListener(){
+			public void clicked(InputEvent event, float x, float y) {
+				Gdx.app.log("Wood Button", "Clicked");
+			}
+		});
+		bar.setGoldClickListener(new ClickListener(){
+			public void clicked(InputEvent event, float x, float y) {
+				Gdx.app.log("Gold Button", "Clicked");
+			}
+		});
 	}
 
 	@Override
@@ -70,6 +112,12 @@ public class GameScreen implements Screen{
 
 	@Override
 	public void render(float delta) {
+		if(bar != null){
+			bar.setTime12Format(dnCycle.getTime()/10);
+			bar.setFood(0, 1);
+			bar.setWood(0, 0);
+			bar.setGold(0, -1);
+		}
 		nav.inputHandle(delta);
 		//draw map on GameScreen
 		Gdx.gl.glClearColor(36/255f, 97/255f, 123/255f, 1);
@@ -78,14 +126,15 @@ public class GameScreen implements Screen{
 		//mBoard.drawMap(batch);
 		mBoard.drawView(batch, oGameCam);
 		batch.end();
-		stage.draw();
 		mBoard.drawMapLighting(oGameCam);
+		stage.draw();
 	}
 
 	@Override
 	public void resize(int width, int height) {
 		// TODO Auto-generated method stub
 		stage.getViewport().update(width,height,true);
+		bar.update();
 	}
 
 	@Override

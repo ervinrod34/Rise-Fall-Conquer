@@ -14,6 +14,7 @@ public class MyGdxGame extends Game {
 	
 	public static Game GAME;
 	public static Skin MENUSKIN;
+	public static Skin MENUSKINHUD;
 	public static final String ASSET_PATH = "asset" + File.separator;
 	
 	@Override
@@ -23,6 +24,12 @@ public class MyGdxGame extends Game {
 		String path = MyGdxGame.ASSET_PATH + "TableAssets" + File.separator + "uiskin.json";
 		try{
 			MENUSKIN = new Skin(Gdx.files.internal(path));
+		}catch(GdxRuntimeException e){
+			Gdx.app.error(this.getClass().getName(), "Could not load texture: " + Gdx.files.internal(path).file().getAbsolutePath());
+		}
+		path = MyGdxGame.ASSET_PATH + "TableAssets" + File.separator + "uiskinHUD.json";
+		try{
+			MENUSKINHUD = new Skin(Gdx.files.internal(path));
 		}catch(GdxRuntimeException e){
 			Gdx.app.error(this.getClass().getName(), "Could not load texture: " + Gdx.files.internal(path).file().getAbsolutePath());
 		}
