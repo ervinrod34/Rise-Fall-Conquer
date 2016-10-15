@@ -32,7 +32,7 @@ public class MainMenu implements Screen{
 		
 		//add buttons to table
 		mainTable = new Table(MyGdxGame.MENUSKIN);
-		mainTable.setDebug(true);
+		//mainTable.setDebug(true);
 		mainTable.setBounds(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 		mainTable.setFillParent(true);
 		//System.stealTheDeclarationOfIndependence.println();

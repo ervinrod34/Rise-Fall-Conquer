@@ -8,8 +8,6 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.maps.Map;
-import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
@@ -37,6 +35,7 @@ public class GameScreen implements Screen{
     
 	private GameBar bar;
 	private DayNightCycle dnCycle;
+	
 	public GameScreen(){
 		//set up stage and table
 		stage = new Stage(new ScreenViewport());
@@ -126,6 +125,9 @@ public class GameScreen implements Screen{
 		batch.begin();
 		//mBoard.drawMap(batch);
 		mBoard.drawView(batch, oGameCam);
+		for(Faction fac : factions){
+			fac.drawTerritory(batch);
+		}
 		batch.end();
 		mBoard.drawMapLighting(oGameCam);
 		stage.draw();
@@ -172,10 +174,10 @@ public class GameScreen implements Screen{
 			Faction faction = null;
 			if(FactId == 1){
 				//Set the first faction to a player owned one
-				faction = new PlayerFaction(FactId, home);
+				faction = new PlayerFaction(FactId, home, mBoard);
 			}else{
 				//Set the other factions to normal
-				faction = new Faction(FactId, home);
+				faction = new Faction(FactId, home, mBoard);
 			}
 			//Add a animation to the home tile
 			home.setbAnimation(BasicAnimationID.PARTICLE_SLEEP);

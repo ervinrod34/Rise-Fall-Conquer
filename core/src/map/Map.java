@@ -32,6 +32,9 @@ import tools.BasicAnimationID;
  */
 public class Map {
 
+	public enum Directions{
+		LEFT, RIGHT, UPLEFT, UPRIGHT, DOWNLEFT, DOWNRIGHT;
+	}
 	// Values for map size
 	private static final int XSIZE = 50;
 	private static final int YSIZE = 50;
@@ -107,6 +110,7 @@ public class Map {
 		//JsonValue root = json.fromJson(null, Gdx.files.internal(filepath));
 		JsonValue layers = root.get("layers");
 		String tmpJson = layers.toJson(OutputType.json);
+		@SuppressWarnings("unchecked")
 		ArrayList<JsonValue> jList = json.fromJson(ArrayList.class, tmpJson);
 		ArrayList<Tiled_Layer> tList = new ArrayList<Tiled_Layer>();
 		for(JsonValue j : jList){
@@ -251,5 +255,121 @@ public class Map {
 			}
 		}
 		return false;
+	}
+	
+	/**
+	 * Gives the clicked tile
+	 * 
+	 * @param xyz
+	 * @return
+	 */
+	public Tile getClickedTile2(Vector2 xyz) {
+		for (int x = 0; x < XSIZE; x++) {
+			for (int y = 0; y < YSIZE; y++) {
+				if(grid[x][y].containsPoint(xyz)) {
+					return grid[x][y];
+				}
+			}
+		}
+		return null;
+	}
+	
+	/**
+	 * Get all neighbor tiles for the given tile 
+	 * @param t
+	 * @return
+	 */
+	public ArrayList<Tile> getNeighborTiles(Tile t){
+		ArrayList<Tile> list = new ArrayList<Tile>();
+		for(Directions d : Directions.values()){
+			Tile t2 = getNeighborTile(t, d);
+			if(t2 != null){
+				list.add(t2);
+			}
+		}
+		return list;
+	}
+	
+	/**
+	 * Gives the neighbor tile for the given direction
+	 * 
+	 * @param t
+	 * @param d
+	 * @return
+	 */
+	public Tile getNeighborTile(Tile t, Directions d){
+		for (int x = 0; x < XSIZE; x++) {
+			for (int y = 0; y < YSIZE; y++) {
+				if(grid[x][y] == t){
+					if(y % 2 == 0){
+						// Even row
+						try {
+							switch (d) {
+							case LEFT:
+								return grid[x-1][y];
+							case RIGHT:
+								return grid[x+1][y];
+							case UPLEFT:
+								return grid[x-1][y-1];
+							case UPRIGHT:
+								return grid[x][y-1];
+							case DOWNLEFT:
+								return grid[x-1][y+1];
+							case DOWNRIGHT:
+								return grid[x][y+1];
+							}
+						} catch (ArrayIndexOutOfBoundsException e) {
+							return null;
+						}
+					}else{
+						// Odd row
+						try {
+							switch (d) {
+							case LEFT:
+								return grid[x-1][y];
+							case RIGHT:
+								return grid[x+1][y];
+							case UPLEFT:
+								return grid[x][y-1];
+							case UPRIGHT:
+								return grid[x+1][y-1];
+							case DOWNLEFT:
+								return grid[x][y+1];
+							case DOWNRIGHT:
+								return grid[x+1][y+1];
+							}
+						} catch (ArrayIndexOutOfBoundsException e) {
+							return null;
+						}
+					}
+				}
+			}
+		}
+		Gdx.app.error(this.getClass().getName(), "Given tile was not found in map board!");
+		return null;
+	}
+	
+	/**
+	 * Get all tiles in range of given tile
+	 * 
+	 * @param t	Starting tile
+	 * @param range	The distance
+	 * @param rangeList	Give it null
+	 * @return	An arraylist of all the tiles in the range
+	 */
+	public ArrayList<Tile> getTilesInRange(Tile t, int range, ArrayList<Tile> rangeList){
+		if(range <= 0 || t == null){
+			return null;
+		}
+		if(rangeList == null){
+			rangeList = new ArrayList<Tile>();
+		}
+		for(Tile t2 : getNeighborTiles(t)){
+			getTilesInRange(t2, range - 1, rangeList);
+			if(rangeList.contains(t2) == false){
+				rangeList.add(t2);
+			}
+		}
+		return rangeList;
 	}
 }

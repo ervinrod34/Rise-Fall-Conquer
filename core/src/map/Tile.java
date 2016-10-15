@@ -2,9 +2,8 @@ package map;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.math.Polygon;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.math.Vector3;
 
 import box2dLight.PointLight;
 import box2dLight.RayHandler;
@@ -20,7 +19,8 @@ public class Tile {
 	private BasicAnimation bAnimation;
 	private PointLight pLight;
 	private int Claim;
-	private Rectangle rect;
+	//private Rectangle rect;
+	private Polygon rect;
 	/**
 	 * Creates a new tile
 	 * 
@@ -33,7 +33,15 @@ public class Tile {
 		this.Location = new Vector2(x,y);
 		this.GridLocation = new Vector2(0,0);
 		setupPointLight(rayHandler);
-		rect = new Rectangle(x,y,54,63);
+		//rect = new Rectangle(x,y,54,63);
+		rect = new Polygon(new float[]{
+				x + 27, y + 1,
+				x + 54, y + 17,
+				x + 54, y + 47,
+				x + 27, y + 63,
+				x + 1, y + 47,
+				x + 1, y + 17
+		});
 	}
 	/**
 	 * Creates a new tile
@@ -52,7 +60,15 @@ public class Tile {
 		this.Location = new Vector2(x,y);
 		this.GridLocation = new Vector2(0,0);
 		setupPointLight(rayHandler);
-		rect = new Rectangle(x,y,54,63);
+		//rect = new Rectangle(x,y,54,63);
+		rect = new Polygon(new float[]{
+				x + 27, y + 1,
+				x + 54, y + 17,
+				x + 54, y + 47,
+				x + 27, y + 63,
+				x + 1, y + 47,
+				x + 1, y + 17
+		});
 	}
 	/**
 	 * Creates a new tile
@@ -77,7 +93,15 @@ public class Tile {
 		this.Location = new Vector2(x,y);
 		this.GridLocation = new Vector2(0,0);
 		setupPointLight(rayHandler);
-		rect = new Rectangle(x,y,54,63);
+		//rect = new Rectangle(x,y,54,63);
+		rect = new Polygon(new float[]{
+				x + 27, y + 1,
+				x + 54, y + 17,
+				x + 54, y + 47,
+				x + 27, y + 63,
+				x + 1, y + 47,
+				x + 1, y + 17
+		});
 	}
 	/**
 	 * Sets up the point light for the tile
@@ -97,6 +121,13 @@ public class Tile {
 	 */
 	public void setLight(boolean value){
 		pLight.setActive(value);
+	}
+	/**
+	 * Sets the tile light to on or off
+	 * @param value
+	 */
+	public void setLightRadius(float value){
+		pLight.setDistance(value * 50);
 	}
 	/**
 	 * returns true if light is on
