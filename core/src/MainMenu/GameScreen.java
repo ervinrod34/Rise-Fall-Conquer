@@ -9,6 +9,8 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.maps.Map;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.Timer;
 import com.badlogic.gdx.utils.Timer.Task;
@@ -44,11 +46,13 @@ public class GameScreen implements Screen{
 		oGameCam.update();
 		
 		//set up input processors, arrow keys, mouse click
-		nav = new Navigator(oGameCam, batch, stage);
+		nav = new Navigator(oGameCam, batch, stage, mBoard);
 		InputMultiplexer ipm = new InputMultiplexer();
 		ipm.addProcessor(nav);
 		ipm.addProcessor(stage);
 		Gdx.input.setInputProcessor(ipm);
+		
+		//click tiles
 		
 		//TODO remove timer and update after round over
 		//Day night cycle that updates every .1 seconds

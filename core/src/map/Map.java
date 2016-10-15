@@ -239,4 +239,17 @@ public class Map {
 	public RayHandler getrayHandler(){
 		return rayHandler;
 	}
+	
+	public boolean getClickedTile(Vector2 xyz) {
+		for (int x = 0; x < XSIZE; x++) {
+			for (int y = 0; y < YSIZE; y++) {
+				if(grid[x][y].containsPoint(xyz)) {
+					grid[x][y].setLight(true);
+					grid[x][y].setbAnimation(BasicAnimationID.PARTICLE_SPARKS);
+					return true;
+				}
+			}
+		}
+		return false;
+	}
 }

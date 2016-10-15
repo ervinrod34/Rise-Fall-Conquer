@@ -17,6 +17,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
 import MainMenu.MainMenu;
+import map.Map;
 
 public class Navigator implements InputProcessor {
 	//set the maximum zoom in and out value here
@@ -32,7 +33,9 @@ public class Navigator implements InputProcessor {
 	private Stage stage;
 	private Table gameTable;
 
-	public Navigator(OrthographicCamera oGameCam, SpriteBatch batch, Stage stage) {
+	private Map m;
+	
+	public Navigator(OrthographicCamera oGameCam, SpriteBatch batch, Stage stage, Map map) {
 		zoomValue = 0.06;
 		lastTouch = new Vector3();
 		this.batch = new SpriteBatch();
@@ -42,6 +45,7 @@ public class Navigator implements InputProcessor {
 		this.oGameCam = oGameCam;
 
 		this.stage = stage;
+		this.m = map;
 		//Create Main Menu button
 		TextButton menu = new TextButton("Main Menu", MyGdxGame.MENUSKIN);
 
@@ -65,7 +69,6 @@ public class Navigator implements InputProcessor {
 		int mouseX = Gdx.input.getX();
 		int mouseY = Gdx.input.getY();
 		Vector3 mousePos = new Vector3(mouseX, mouseY, 0);
-		
 		if (Gdx.input.isKeyPressed(Input.Keys.RIGHT) || (mousePos.x >= (Gdx.graphics.getWidth() - 15))) {
 			oGameCam.translate(iCamSpeed, 0);
 		}
@@ -117,6 +120,13 @@ public class Navigator implements InputProcessor {
 	@Override
 	public boolean touchDown(int screenX, int screenY, int pointer, int button) {
 		//last position button clicked down
+		Vector3 vect = oGameCam.unproject(new Vector3(screenX,screenY,0));
+		Vector2 mPos = new Vector2(vect.x,vect.y);
+		System.out.println("Screenx :" + vect.x + " Screen Y:" + vect.y);
+		if (Gdx.input.isButtonPressed(Input.Buttons.RIGHT)) {
+			System.out.println(m.getClickedTile(mPos));
+			return true;
+		}
 		if(Gdx.input.isButtonPressed(Input.Buttons.MIDDLE)) {
 			lastTouch.set(screenX, screenY,0);
 			return true;

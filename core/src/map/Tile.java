@@ -2,7 +2,9 @@ package map;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.math.Vector3;
 
 import box2dLight.PointLight;
 import box2dLight.RayHandler;
@@ -18,7 +20,7 @@ public class Tile {
 	private BasicAnimation bAnimation;
 	private PointLight pLight;
 	private int Claim;
-	
+	private Rectangle rect;
 	/**
 	 * Creates a new tile
 	 * 
@@ -31,6 +33,7 @@ public class Tile {
 		this.Location = new Vector2(x,y);
 		this.GridLocation = new Vector2(0,0);
 		setupPointLight(rayHandler);
+		rect = new Rectangle(x,y,54,63);
 	}
 	/**
 	 * Creates a new tile
@@ -49,6 +52,7 @@ public class Tile {
 		this.Location = new Vector2(x,y);
 		this.GridLocation = new Vector2(0,0);
 		setupPointLight(rayHandler);
+		rect = new Rectangle(x,y,54,63);
 	}
 	/**
 	 * Creates a new tile
@@ -73,6 +77,7 @@ public class Tile {
 		this.Location = new Vector2(x,y);
 		this.GridLocation = new Vector2(0,0);
 		setupPointLight(rayHandler);
+		rect = new Rectangle(x,y,54,63);
 	}
 	/**
 	 * Sets up the point light for the tile
@@ -163,6 +168,14 @@ public class Tile {
 			y -= id.getAnimatedSheet().getHeight()/2;
 		}
 		this.bAnimation = new BasicAnimation(id,x,y);
+	}
+	
+	public boolean containsPoint(Vector2 v)
+	{
+		if(rect.contains(v))
+			return true;
+		else
+			return false;
 	}
 
 }
