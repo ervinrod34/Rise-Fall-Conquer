@@ -6,12 +6,15 @@ package map;
  */
 public class DayNightCycle {
 
-	private static int time = 0;
-	private static float value = 0;
+	private int time = 10;
+	private float value = 0;
 	private map.Map mBoard;
 	
 	public DayNightCycle(map.Map mBoard) {
 		this.mBoard = mBoard;
+	}
+	public int getTime(){
+		return time;
 	}
 	/**
 	 * Updates the day night cycle to the next tick
@@ -20,7 +23,7 @@ public class DayNightCycle {
 		int timeTotal = 240;
 		int maxRGB = 255;
 		if(time == timeTotal){
-			time = 0;
+			time = 10;
 			value = 0;
 		}
 		// If past halfway start making it darker
