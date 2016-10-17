@@ -182,6 +182,9 @@ public class Tile {
 	public ResourceID getResource() {
 		return rId;
 	}
+	public TileID getTileId() {
+		return this.Id;
+	}
 	public int getClaim() {
 		return Claim;
 	}
@@ -208,5 +211,4 @@ public class Tile {
 		else
 			return false;
 	}
-
 }

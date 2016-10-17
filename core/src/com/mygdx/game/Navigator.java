@@ -7,15 +7,18 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.Vector;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 
+import CustomWidgets.TileOptions;
 import MainMenu.MainMenu;
 import map.Map;
 import map.Tile;
@@ -158,10 +161,11 @@ public class Navigator implements InputProcessor {
 		//last position button clicked down
 		Vector3 vect = oGameCam.unproject(new Vector3(screenX,screenY,0));
 		Vector2 mPos = new Vector2(vect.x,vect.y);
-		System.out.println("Screenx :" + vect.x + " Screen Y:" + vect.y);
+		//right click tiles
 		if (Gdx.input.isButtonPressed(Input.Buttons.RIGHT)) {
-			System.out.println(m.getClickedTile(mPos));
-			//return true;
+			Tile t = m.getClickedTile2(mPos);
+			TileOptions op = new TileOptions(t);
+			stage.addActor(op.getTable());
 		}
 		//Testing path movement
 		if(Gdx.input.isButtonPressed(Input.Buttons.MIDDLE)){

@@ -5,7 +5,10 @@ import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.mygdx.game.MyGdxGame;
+
+import map.ResourceID;
 
 public class WidgetResource {
 
@@ -28,7 +31,7 @@ public class WidgetResource {
 		tContainer.add(lValueIncrement);
 		tContainer.add().width(5);
 	}
-	
+
 	/**
 	 * The main container for the widget
 	 * @return

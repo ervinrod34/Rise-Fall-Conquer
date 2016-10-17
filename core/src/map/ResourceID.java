@@ -72,4 +72,8 @@ public enum ResourceID {
 	public static TileID getRandomTileID() {
 		return TileID.values()[(int) (Math.random() * TileID.values().length)];
 	}
+	
+	public void upgradeTile(){
+		System.out.println("Upgrade me!");
+	}
 }

@@ -5,6 +5,7 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
@@ -26,6 +27,7 @@ public class MainMenu implements Screen{
 		TextButton play = new TextButton("PLAY",MyGdxGame.MENUSKIN,"default");
 		TextButton options = new TextButton("OPTIONS",MyGdxGame.MENUSKIN,"default");
 		TextButton exit = new TextButton ("EXIT",MyGdxGame.MENUSKIN,"default");
+		Dialog tileOptions = new Dialog("TILE OPTIONS",MyGdxGame.MENUSKIN,"default");
 		
 		//title textfield
 		Label title = new Label("MY LIBGDX GAME", MyGdxGame.MENUSKIN);
