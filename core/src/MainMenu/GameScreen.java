@@ -21,12 +21,15 @@ import CustomWidgets.GameBar;
 import factions.Faction;
 import factions.PlayerFaction;
 import map.DayNightCycle;
+import map.MiniMap;
 import map.Tile;
 import tools.BasicAnimationID;
 
 public class GameScreen implements Screen{
 	SpriteBatch batch;
+	SpriteBatch batchMiniMap;
 	private map.Map mBoard;
+	private map.MiniMap miniMap;
 	private OrthographicCamera oGameCam;
 	private Navigator nav;
 	private Stage stage;
@@ -35,6 +38,10 @@ public class GameScreen implements Screen{
     
 	private GameBar bar;
 	private DayNightCycle dnCycle;
+	
+	public static final int WIDTH = 1280;
+	public static final int HEIGHT = 720;
+	public static final int SCALE = 12;
 	
 	public GameScreen(){
 		//set up stage and table
@@ -47,6 +54,15 @@ public class GameScreen implements Screen{
 		oGameCam.position.set(factions.get(0).getHomeTile().getLocation().x,factions.get(0).getHomeTile().getLocation().y,0);
 		oGameCam.update();
 		
+//		/*********** MINIMAP *********/
+//		batchMiniMap = new SpriteBatch();
+//		miniMap = new OrthographicCamera(WIDTH,HEIGHT);
+//		miniMap.zoom = SCALE;
+//		miniMap.update();
+//		/******************************/
+		
+		miniMap = new MiniMap(mBoard);
+	
 		//set up input processors, arrow keys, mouse click
 		nav = new Navigator(oGameCam, batch, stage, mBoard);
 		InputMultiplexer ipm = new InputMultiplexer();
@@ -122,13 +138,23 @@ public class GameScreen implements Screen{
 		//draw map on GameScreen
 		Gdx.gl.glClearColor(36/255f, 97/255f, 123/255f, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+			
+		//Draw Main Map
 		batch.begin();
-		//mBoard.drawMap(batch);
 		mBoard.drawView(batch, oGameCam);
 		for(Faction fac : factions){
 			fac.drawTerritory(batch);
 		}
 		batch.end();
+		
+//		//Draw the Mini Map
+//		batchMiniMap.setProjectionMatrix(miniMap.combined);
+//		batchMiniMap.begin();
+//		mBoard.drawMap(batchMiniMap);
+//		batchMiniMap.end();
+		
+		miniMap.MiniMapRender();
+		
 		mBoard.drawMapLighting(oGameCam);
 		stage.draw();
 	}

@@ -42,6 +42,9 @@ public class Map {
 	// Values for the tile sizes
 	private static final int TILEWIDTH = 54;
 	private static final int TILEHEIGHT = 63;
+	private static final int X_OFFSET = (1280/2)*12;
+	private static final int Y_OFFSET = (720/2)*12;
+	
 
 	private Tile[][] grid;
 	private BitmapFont Font;
@@ -160,9 +163,13 @@ public class Map {
 	public void drawMap(SpriteBatch batch) {
 		for (int x = 0; x < XSIZE; x++) {
 			for (int y = 0; y < YSIZE; y++) {
-				batch.draw(grid[x][y].getTileImg(), grid[x][y].getLocation().x, grid[x][y].getLocation().y);
+				batch.draw(grid[x][y].getTileImg()
+						, (grid[x][y].getLocation().x)- X_OFFSET
+						, (grid[x][y].getLocation().y)- Y_OFFSET );
 				if(grid[x][y].getResource() != null){
-					batch.draw(grid[x][y].getResourceImg(), grid[x][y].getLocation().x, grid[x][y].getLocation().y);
+					batch.draw(grid[x][y].getResourceImg()
+							, grid[x][y].getLocation().x - X_OFFSET
+							, grid[x][y].getLocation().y - Y_OFFSET);
 				}
 				// Font.draw(batch, (int)grid[x][y].getGridLocation().x + "," +
 				// (int)grid[x][y].getGridLocation().y,
