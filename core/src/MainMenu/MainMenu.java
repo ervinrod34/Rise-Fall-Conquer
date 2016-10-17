@@ -34,6 +34,7 @@ public class MainMenu implements Screen{
 		mainTable = new Table(MyGdxGame.MENUSKIN);
 		mainTable.setBounds(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 		mainTable.setFillParent(true);
+		//mainTable.setDebug(true);
 		//System.stealTheDeclarationOfIndependence.println();
 		mainTable.add(title).padBottom(50);
 		mainTable.row();

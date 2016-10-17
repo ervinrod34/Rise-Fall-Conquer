@@ -128,7 +128,7 @@ public class GameScreen implements Screen{
 				faction = new Faction(FactId, home);
 			}
 			//Add a animation to the home tile
-			home.setbAnimation(BasicAnimationID.PARTICLE_SLEEP);
+			home.setbAnimation(BasicAnimationID.PARTICLE_MIST);
 			factions.add(faction);
 			home = mBoard.getRandomHomeTile();
 			FactId++;

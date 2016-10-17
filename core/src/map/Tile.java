@@ -12,8 +12,8 @@ import tools.BasicAnimationID;
 public class Tile {
 
 	TileID Id;
-	private Vector2 Location;
-	private Vector2 GridLocation;
+	private Vector2 Location; //x y coordinates
+	private Vector2 GridLocation; //
 	private ResourceID rId;
 	private BasicAnimation bAnimation;
 	private PointLight pLight;
