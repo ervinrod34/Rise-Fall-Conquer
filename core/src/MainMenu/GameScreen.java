@@ -3,36 +3,47 @@ package MainMenu;
 import java.util.ArrayList;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Timer;
 import com.badlogic.gdx.utils.Timer.Task;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
+import com.mygdx.game.MyGdxGame;
 import com.mygdx.game.Navigator;
 
+import CustomWidgets.GameBar;
 import factions.Faction;
 import factions.PlayerFaction;
 import map.DayNightCycle;
+import map.MiniMap;
 import map.Tile;
-import tools.BasicAnimation;
 import tools.BasicAnimationID;
 
 public class GameScreen implements Screen{
 	SpriteBatch batch;
+	SpriteBatch batchMiniMap;
 	private map.Map mBoard;
+	private map.MiniMap miniMap;
 	private OrthographicCamera oGameCam;
 	private Navigator nav;
 	private Stage stage;
 	private ArrayList<Faction> factions;
+    private int totalTurns;
     
+	private GameBar bar;
+	private DayNightCycle dnCycle;
 	
-	public GameScreen()
-	{
+	public static final int WIDTH = 1280;
+	public static final int HEIGHT = 720;
+	public static final int SCALE = 12;
+	
+	public GameScreen(){
 		//set up stage and table
 		stage = new Stage(new ScreenViewport());
 		batch = new SpriteBatch();
@@ -43,24 +54,71 @@ public class GameScreen implements Screen{
 		oGameCam.position.set(factions.get(0).getHomeTile().getLocation().x,factions.get(0).getHomeTile().getLocation().y,0);
 		oGameCam.update();
 		
+//		/*********** MINIMAP *********/
+//		batchMiniMap = new SpriteBatch();
+//		miniMap = new OrthographicCamera(WIDTH,HEIGHT);
+//		miniMap.zoom = SCALE;
+//		miniMap.update();
+//		/******************************/
+		
+		miniMap = new MiniMap(mBoard);
+	
 		//set up input processors, arrow keys, mouse click
-		nav = new Navigator(oGameCam, batch, stage);
+		nav = new Navigator(oGameCam, batch, stage, mBoard);
 		InputMultiplexer ipm = new InputMultiplexer();
 		ipm.addProcessor(nav);
 		ipm.addProcessor(stage);
 		Gdx.input.setInputProcessor(ipm);
-		
-		//TODO remove timer and update after round over
+
 		//Day night cycle that updates every .1 seconds
-		final DayNightCycle dnCycle = new DayNightCycle(mBoard);
-		Timer time = new Timer();
-		time.scheduleTask(new Task(){
-			@Override
-			public void run(){
-				dnCycle.update();
+		dnCycle = new DayNightCycle(mBoard);
+		
+		// Set total turns to 0
+		totalTurns = 0;
+		
+		bar = new GameBar();
+		this.stage.addActor(bar.getTopBar());
+		
+		//Setup all click listeners for top bar
+		bar.setOptionsClickListener(new ClickListener(){
+			public void clicked(InputEvent event, float x, float y) {
+				MyGdxGame.GAME.setScreen(new MainMenu());
 			}
+		});
+		bar.setEndTurnClickListener(new ClickListener(){
+			public void clicked(InputEvent event, float x, float y) {
+				final Timer time = new Timer();
+				time.scheduleTask(new Task(){
+					@Override
+					public void run(){
+						// Stop transition after 4 hours
+						if(dnCycle.getTime() % 40 == 0){
+							time.stop();
+						}
+						// Update time
+						dnCycle.update();
+					}
+					}
+				,0f,.1f);
+				// Increment total turns
+				bar.setTurns(++totalTurns);
 			}
-		,0f,.1f);
+		});
+		bar.setFoodClickListener(new ClickListener(){
+			public void clicked(InputEvent event, float x, float y) {
+				Gdx.app.log("Food Button", "Clicked");
+			}
+		});
+		bar.setWoodClickListener(new ClickListener(){
+			public void clicked(InputEvent event, float x, float y) {
+				Gdx.app.log("Wood Button", "Clicked");
+			}
+		});
+		bar.setGoldClickListener(new ClickListener(){
+			public void clicked(InputEvent event, float x, float y) {
+				Gdx.app.log("Gold Button", "Clicked");
+			}
+		});
 	}
 
 	@Override
@@ -70,22 +128,42 @@ public class GameScreen implements Screen{
 
 	@Override
 	public void render(float delta) {
+		if(bar != null){
+			bar.setTime12Format(dnCycle.getTime()/10);
+			bar.setFood(0, 1);
+			bar.setWood(0, 0);
+			bar.setGold(0, -1);
+		}
 		nav.inputHandle(delta);
 		//draw map on GameScreen
 		Gdx.gl.glClearColor(36/255f, 97/255f, 123/255f, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+			
+		//Draw Main Map
 		batch.begin();
-		//mBoard.drawMap(batch);
 		mBoard.drawView(batch, oGameCam);
+		for(Faction fac : factions){
+			fac.drawTerritory(batch);
+		}
 		batch.end();
-		stage.draw();
+		
+//		//Draw the Mini Map
+//		batchMiniMap.setProjectionMatrix(miniMap.combined);
+//		batchMiniMap.begin();
+//		mBoard.drawMap(batchMiniMap);
+//		batchMiniMap.end();
+		
+		miniMap.MiniMapRender();
+		
 		mBoard.drawMapLighting(oGameCam);
+		stage.draw();
 	}
 
 	@Override
 	public void resize(int width, int height) {
 		// TODO Auto-generated method stub
 		stage.getViewport().update(width,height,true);
+		bar.update();
 	}
 
 	@Override
@@ -122,10 +200,10 @@ public class GameScreen implements Screen{
 			Faction faction = null;
 			if(FactId == 1){
 				//Set the first faction to a player owned one
-				faction = new PlayerFaction(FactId, home);
+				faction = new PlayerFaction(FactId, home, mBoard);
 			}else{
 				//Set the other factions to normal
-				faction = new Faction(FactId, home);
+				faction = new Faction(FactId, home, mBoard);
 			}
 			//Add a animation to the home tile
 			home.setbAnimation(BasicAnimationID.PARTICLE_MIST);
