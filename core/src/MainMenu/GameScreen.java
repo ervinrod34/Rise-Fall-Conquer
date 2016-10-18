@@ -21,6 +21,7 @@ import com.mygdx.game.Navigator;
 import CustomWidgets.GameBar;
 import factions.Faction;
 import factions.PlayerFaction;
+import factions.ScoreBoard;
 import map.DayNightCycle;
 import map.MiniMap;
 import map.Tile;
@@ -36,6 +37,8 @@ public class GameScreen implements Screen{
 	private Stage stage;
 	private ArrayList<Faction> factions;
     private int totalTurns;
+    private ScoreBoard scoreBoard;
+    
     
 	private GameBar bar;
 	private DayNightCycle dnCycle;
@@ -55,13 +58,7 @@ public class GameScreen implements Screen{
 		oGameCam.position.set(factions.get(0).getHomeTile().getLocation().x,factions.get(0).getHomeTile().getLocation().y,0);
 		oGameCam.update();
 		
-//		/*********** MINIMAP *********/
-//		batchMiniMap = new SpriteBatch();
-//		miniMap = new OrthographicCamera(WIDTH,HEIGHT);
-//		miniMap.zoom = SCALE;
-//		miniMap.update();
-//		/******************************/
-		
+		//initialize minimap, passing the map
 		miniMap = new MiniMap(mBoard);
 	
 		//set up input processors, arrow keys, mouse click
@@ -150,15 +147,10 @@ public class GameScreen implements Screen{
 		}
 		batch.end();
 		
-//		//Draw the Mini Map
-//		batchMiniMap.setProjectionMatrix(miniMap.combined);
-//		batchMiniMap.begin();
-//		mBoard.drawMap(batchMiniMap);
-//		batchMiniMap.end();
-		
-		miniMap.MiniMapRender();
-		
 		mBoard.drawMapLighting(oGameCam);
+		
+		//draw minimap on top of map
+		miniMap.MiniMapRender();
 		stage.draw();
 	}
 
@@ -194,19 +186,26 @@ public class GameScreen implements Screen{
 	}
 	/**
 	 * Creates the factions for the game
+	 * as well as the Score Board
 	 */
 	public void generateFactions(){
+		ScoreBoard scoreBoard = new ScoreBoard();
 		factions = new ArrayList<Faction>();
 		Tile home = mBoard.getRandomHomeTile();
 		int FactId = 1;
+		
 		while(home != null){
 			Faction faction = null;
 			if(FactId == 1){
 				//Set the first faction to a player owned one
 				faction = new PlayerFaction(FactId, home, mBoard, Color.BLUE);
+				//add a score entry for the player faction
+				scoreBoard.addScore(faction.getScore());
 			}else{
 				//Set the other factions to normal
-				faction = new Faction(FactId, home, mBoard, Color.RED);
+				faction = new PlayerFaction(FactId, home, mBoard, Color.RED);
+				//add a score entry for a nonplayer faction
+				scoreBoard.addScore(faction.getScore());
 			}
 			//Add a animation to the home tile
 			home.setbAnimation(BasicAnimationID.PARTICLE_SLEEP);

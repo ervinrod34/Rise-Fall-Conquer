@@ -22,7 +22,9 @@ public class Faction {
 	private Tile HomeTile;
 	// List of claimed tiles by the faction
 	private ArrayList<Tile> ClaimedTiles;
-	
+	// this faction's score
+	Score score;
+
 	private Color cTerritory;
 	
 	private Map mBoard;
@@ -30,12 +32,20 @@ public class Faction {
 	public Faction(int id, Tile homeTile, Map m, Color c) {
 		this.Id = id;
 		this.mBoard = m;
+		score = new Score(id);
 		ClaimedTiles = new ArrayList<Tile>();
 		this.HomeTile = homeTile;
 		this.claimTile(HomeTile);
 		cTerritory = c;
 	}
 
+	/**
+	 * Gets the faction's score
+	 * @return
+	 */
+	public Score getScore() {
+		return score;
+	}
 	/**
 	 * Claims the specified tile for the faction
 	 * @param tile
@@ -69,5 +79,5 @@ public class Faction {
 	public Tile getHomeTile() {
 		return HomeTile;
 	}
-
+	
 }
