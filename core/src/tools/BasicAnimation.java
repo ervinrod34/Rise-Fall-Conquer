@@ -64,8 +64,8 @@ public class BasicAnimation{
 			currentFrame = animation.getKeyFrame(stateTime, true);
 			batch.draw(currentFrame, Location.x, Location.y);
 		}else{
-			pEffect.update(Gdx.graphics.getDeltaTime());
 			pEffect.setPosition(Location.x, Location.y);
+			pEffect.update(Gdx.graphics.getDeltaTime());
 			pEffect.draw(batch);
 			if(pEffect.isComplete()){
 				pEffect.reset();

@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -49,7 +50,7 @@ public class GameScreen implements Screen{
 		batch = new SpriteBatch();
 		//set camera position
 		oGameCam = new OrthographicCamera(1280, 720);
-		mBoard = new map.Map(oGameCam);
+		mBoard = new map.Map(oGameCam, "Map_2.json");
 		this.generateFactions();
 		oGameCam.position.set(factions.get(0).getHomeTile().getLocation().x,factions.get(0).getHomeTile().getLocation().y,0);
 		oGameCam.update();
@@ -72,7 +73,9 @@ public class GameScreen implements Screen{
 
 		//Day night cycle that updates every .1 seconds
 		dnCycle = new DayNightCycle(mBoard);
-		
+		while(dnCycle.getTime() % 81 != 0){
+			dnCycle.update();
+		}
 		// Set total turns to 0
 		totalTurns = 0;
 		
@@ -200,13 +203,13 @@ public class GameScreen implements Screen{
 			Faction faction = null;
 			if(FactId == 1){
 				//Set the first faction to a player owned one
-				faction = new PlayerFaction(FactId, home, mBoard);
+				faction = new PlayerFaction(FactId, home, mBoard, Color.BLUE);
 			}else{
 				//Set the other factions to normal
-				faction = new Faction(FactId, home, mBoard);
+				faction = new Faction(FactId, home, mBoard, Color.RED);
 			}
 			//Add a animation to the home tile
-			home.setbAnimation(BasicAnimationID.PARTICLE_MIST);
+			home.setbAnimation(BasicAnimationID.PARTICLE_SLEEP);
 			factions.add(faction);
 			home = mBoard.getRandomHomeTile();
 			FactId++;

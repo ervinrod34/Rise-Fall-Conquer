@@ -1,5 +1,7 @@
 package factions;
 
+import com.badlogic.gdx.graphics.Color;
+
 import map.Map;
 import map.Tile;
 /**
@@ -10,8 +12,8 @@ import map.Tile;
  */
 public class PlayerFaction extends Faction{
 
-	public PlayerFaction(int id, Tile homeTile, Map m) {
-		super(id, homeTile, m);
+	public PlayerFaction(int id, Tile homeTile, Map m, Color c) {
+		super(id, homeTile, m, c);
 	}
 
 	/**

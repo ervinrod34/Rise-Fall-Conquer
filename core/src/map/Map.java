@@ -55,9 +55,9 @@ public class Map {
 	/**
 	 * Creates the map where the game will take place
 	 */
-	public Map(OrthographicCamera oGameCam) {
+	public Map(OrthographicCamera oGameCam, String filename) {
 		this.createLighting(oGameCam);
-		this.createGrid();
+		this.createGrid(filename);
 		Font = new BitmapFont();
 		Font.getData().setScale(0.5f, 0.5f);
 		Font.setColor(Color.BLACK);
@@ -126,8 +126,8 @@ public class Map {
 	/**
 	 * Creates the grid
 	 */
-	private void createGrid() {
-		ArrayList<Tiled_Layer> tLayers = readTiledJson("Map_1.json");
+	private void createGrid(String filename) {
+		ArrayList<Tiled_Layer> tLayers = readTiledJson(filename);
 		int[][] data = tLayers.get(0).getmapData();
 		int[][] rdata = tLayers.get(1).getmapData();
 		int xSize = data[0].length;

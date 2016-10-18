@@ -27,13 +27,13 @@ public class Faction {
 	
 	private Map mBoard;
 	
-	public Faction(int id, Tile homeTile, Map m) {
+	public Faction(int id, Tile homeTile, Map m, Color c) {
 		this.Id = id;
 		this.mBoard = m;
 		ClaimedTiles = new ArrayList<Tile>();
 		this.HomeTile = homeTile;
 		this.claimTile(HomeTile);
-		cTerritory = Color.BLUE;
+		cTerritory = c;
 	}
 
 	/**
