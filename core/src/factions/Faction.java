@@ -12,7 +12,7 @@ import map.TileID;
  * Used to manage the unit, resources, and tiles owned by a faction
  * 
  * @author Porter
- *
+ * @co-author Ervin
  */
 public class Faction {
 
@@ -29,6 +29,26 @@ public class Faction {
 	
 	private Map mBoard;
 	
+	/**
+	 * The total resources variables
+	 */
+	private int totalFood;
+	private int totalWood;
+	private int totalGold;
+	
+	/**
+	 * The resources per turn variables
+	 */
+	private int foodPerTurn;
+	private int woodPerTurn;
+	private int goldPerTurn;
+	
+	/**
+	 * Construct a new Faction
+	 * @param id The faction's id
+	 * @param homeTile The faction's home tile
+	 * @param m The map where the faction is
+	 */
 	public Faction(int id, Tile homeTile, Map m, Color c) {
 		this.Id = id;
 		this.mBoard = m;
@@ -36,7 +56,16 @@ public class Faction {
 		ClaimedTiles = new ArrayList<Tile>();
 		this.HomeTile = homeTile;
 		this.claimTile(HomeTile);
+		
+		//initialize resources variables
+		this.totalFood = 0;
+		this.totalWood = 0;
+		this.totalGold = 0;
+		this.foodPerTurn= 0;
+		this.woodPerTurn = 0;
+		this.goldPerTurn = 0;
 		cTerritory = c;
+
 	}
 
 	/**
@@ -76,8 +105,109 @@ public class Faction {
 			batch.setColor(c);
 		}
 	}
+	
+	/**
+	 * Returns the faction's home tile.
+	 * @return A Tile object
+	 */
 	public Tile getHomeTile() {
 		return HomeTile;
 	}
 	
+	/**
+	 * Updates the values of the player's resources.
+	 * Called by: GameScreen.java, after a turn cycle.
+	 */
+	public void updateResources() {
+		//resets the value of the resources per turn to 0 whenever this method is called
+		this.foodPerTurn = 0;
+		this.woodPerTurn = 0;
+		this.goldPerTurn = 0;
+		
+		//scans the ArrayList of claimed tiles for resources
+		for(int i = 0; i < this.ClaimedTiles.size(); i++) {
+			Tile currentTile = this.ClaimedTiles.get(i);
+			if(currentTile.getClass().toString().equalsIgnoreCase("ResourceID")) {
+				switch(currentTile.getResource()) {
+				case FISH:
+					this.foodPerTurn += currentTile.getResource().getBonus();
+					break;
+				case MEAT:
+					this.foodPerTurn += currentTile.getResource().getBonus();
+					break;
+				case TEMP:
+					this.foodPerTurn += currentTile.getResource().getBonus();
+					break;
+				case WHEAT:
+					this.foodPerTurn += currentTile.getResource().getBonus();
+					break;
+				case COAL:
+					this.woodPerTurn += currentTile.getResource().getBonus();
+					break;
+				case WOOD:
+					this.woodPerTurn += currentTile.getResource().getBonus();
+					break;
+				case GOLD:
+					this.goldPerTurn += currentTile.getResource().getBonus();
+					break;
+				default:
+					break;
+				}
+			}
+			
+		}
+		//adds the resources per turn to the total
+		this.totalFood += this.foodPerTurn;
+		this.totalWood += this.woodPerTurn;
+		this.totalGold += this.goldPerTurn;
+	}
+	
+	/**
+	 * Returns the faction's total wood.
+	 * @return An int value
+	 */
+	public int getTotalWood() {
+		return this.totalWood;
+	}
+	
+	/**
+	 * Returns the faction's total food.
+	 * @return An int value
+	 */
+	public int getTotalFood() {
+		return this.totalFood;
+	}
+	
+	/**
+	 * Returns the faction's total gold.
+	 * @return An int value
+	 */
+	public int getTotalGold() {
+		return this.totalGold;
+	}
+	
+	/**
+	 * Returns this faction's wood per turn.
+	 * @return An int value
+	 */
+	public int getWoodPerTurn() {
+		return this.totalWood;
+	}
+	
+	/**
+	 * Returns this faction's food per turn.
+	 * @return An int value
+	 */
+	public int getFoodPerTurn() {
+		return this.totalFood;
+	}
+	
+	/**
+	 * Returns this faction's gold per turn.
+	 * @return An int value
+	 */
+	public int getGoldPerTurn() {
+		return this.totalGold;
+	}
+
 }

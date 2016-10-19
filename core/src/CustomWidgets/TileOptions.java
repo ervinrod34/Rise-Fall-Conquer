@@ -75,7 +75,8 @@ public class TileOptions {
 	public void setUpgradeListener(){
 		upgrade.addListener(new ClickListener() {
 			public void clicked(InputEvent e,float x,float y){
-				Gdx.app.log(this.getClass().getName(),"IM SO HAPPY RIGHT NOW, I'M BEING UPGRADED");
+				tile.getResource().upgradeTile();
+				//Gdx.app.log(this.getClass().getName(),"IM SO HAPPY RIGHT NOW, I'M BEING UPGRADED");
 			}
 		});
 	}

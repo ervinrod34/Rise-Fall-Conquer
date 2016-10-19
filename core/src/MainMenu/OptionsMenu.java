@@ -1,11 +1,14 @@
 package MainMenu;
 
+import java.util.ArrayList;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Slider;
 import com.badlogic.gdx.scenes.scene2d.ui.CheckBox;
@@ -21,9 +24,31 @@ import com.mygdx.game.MyGdxGame;
 public class OptionsMenu implements Screen{
 
 	private Stage stage;
-	private TextureAtlas atlas;
-	private Table mainTable;
-
+	//private TextureAtlas atlas;
+	//private Table mainTable;
+	
+	
+	private Label difficultyLabel;
+	//private SelectBox<String> difficulty;
+	private String selectedDifficulty;
+	//private ArrayList<TextButton> difficultiesList;
+	
+	private Label resolutionLabel;
+	//private SelectBox<String> resolution;
+	//private TextButton[] resolutionsList;
+	
+	private Label volumeLabel;
+	//private Slider volume; 
+	
+	private Label lightLabel;
+	//private CheckBox light;
+	private boolean lightClicked;
+	
+	private Label animationLabel;
+	//private CheckBox animation;
+	private boolean animationClicked;
+	
+	
 	public OptionsMenu(){
 		stage = new Stage(new ScreenViewport());
 		Gdx.input.setInputProcessor(stage);
@@ -31,28 +56,44 @@ public class OptionsMenu implements Screen{
 		//create menu button
 		TextButton menu = new TextButton("MENU",MyGdxGame.MENUSKIN);
 		
+		//TODO: Create clickable selection objects.
 		//Drop down menu for game difficulty
-		Label difficultyLabel = new Label("DIFFICULTY:", MyGdxGame.MENUSKIN);
-		SelectBox<String> difficulty = new SelectBox<String>(MyGdxGame.MENUSKIN);
+		this.difficultyLabel = new Label("DIFFICULTY:", MyGdxGame.MENUSKIN);
+		final SelectBox<String> difficulty = new SelectBox<String>(MyGdxGame.MENUSKIN);
 		difficulty.setItems("Conqueror", "Hard", "Normal", "Easy");
+		//this.selectedDifficulty = difficulty.getSelected();
+		/*this.difficultiesList = new ArrayList<TextButton>();
+		this.difficultiesList.add(new TextButton("Conqueror", MyGdxGame.MENUSKIN));
+		this.difficultiesList.add(new TextButton("Hard", MyGdxGame.MENUSKIN));
+		this.difficultiesList.add(new TextButton("Normal", MyGdxGame.MENUSKIN));
+		this.difficultiesList.add(new TextButton("Easy", MyGdxGame.MENUSKIN));
+		//for(int i = 0; i < this.difficultiesList.size(); i++) {
+		this.difficulty.setItems(this.difficultiesList.get(0), this.difficultiesList.get(1),
+								 this.difficultiesList.get(2), this.difficultiesList.get(3));
+		//}*/
 		
 		//Create drop down menu to change resolution
-		Label resolutionLabel = new Label("GRAPHICS:", MyGdxGame.MENUSKIN);
-		SelectBox<String> resolution = new SelectBox<String>(MyGdxGame.MENUSKIN);
+		this.resolutionLabel = new Label("GRAPHICS:", MyGdxGame.MENUSKIN);
+		final SelectBox<String> resolution = new SelectBox<String>(MyGdxGame.MENUSKIN);
 		resolution.setItems("High", "Medium", "Low");
 		
+		
 		//Create a Bar that changes the music volume
-		Label volumeLabel = new Label("VOLUME:", MyGdxGame.MENUSKIN);
-		Slider volume = new Slider(0, 100, 50, false, MyGdxGame.MENUSKIN);
+		this.volumeLabel = new Label("VOLUME:", MyGdxGame.MENUSKIN);
+		final Slider volume = new Slider(0, 100, 10, false, MyGdxGame.MENUSKIN);
 		
 		//Checkbox to turn lighting on/off
-		Label lightLabel = new Label("LIGHT(ON/OFF):", MyGdxGame.MENUSKIN);
-		CheckBox light = new CheckBox(null, MyGdxGame.MENUSKIN);
+		this.lightLabel = new Label("LIGHT:", MyGdxGame.MENUSKIN);
+		final CheckBox light = new CheckBox(null, MyGdxGame.MENUSKIN);
 		
 		//Checkbox for animation
-		Label animationLabel = new Label("ANIMATION(ON/OFF)", MyGdxGame.MENUSKIN);
-		CheckBox animation = new CheckBox(null, MyGdxGame.MENUSKIN);
+		this.animationLabel = new Label("ANIMATION:", MyGdxGame.MENUSKIN);
+		final CheckBox animation = new CheckBox(null, MyGdxGame.MENUSKIN);
 		
+		
+		/**
+		 * Creates tables for the widgets.
+		 */
 		Table mainTable = new Table(MyGdxGame.MENUSKIN);
 		mainTable.setBounds(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 		mainTable.setFillParent(true);
@@ -60,53 +101,105 @@ public class OptionsMenu implements Screen{
 		menu.setPosition(200, 200);
 		mainTable.add(menu);
 		mainTable.row();
-		
 		Table centerTable = new Table(MyGdxGame.MENUSKIN);
 		centerTable.setBounds(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 		centerTable.setFillParent(true);
 		centerTable.center();
 		
+		/**
+		 * Adds the widgets to the tables.
+		 */
+		//difficulty
 		centerTable.row();
-		centerTable.add(difficultyLabel);
+		centerTable.add(this.difficultyLabel);
 		centerTable.add(difficulty);
 		
+		//resolution
 		centerTable.row();
-		centerTable.add(resolutionLabel);
+		centerTable.add(this.resolutionLabel);
 		centerTable.add(resolution);
 		
+		//volume
 		centerTable.row();
-		centerTable.add(volumeLabel);
+		centerTable.add(this.volumeLabel);
 		centerTable.add(volume);
 		
+		//light
 		centerTable.row();
-		centerTable.add(lightLabel);
+		centerTable.add(this.lightLabel);
 		centerTable.add(light);
 		
+		//animation
 		centerTable.row();
-		centerTable.add(animationLabel);
+		centerTable.add(this.animationLabel);
 		centerTable.add(animation);
 		
 		stage.addActor(mainTable);
 		stage.addActor(centerTable);
 		
-		//create action listeners for menu buttons
+		/**
+		 * Create action listeners for menu button.
+		 */
 		menu.addListener(new ClickListener(){
 			public void clicked(InputEvent event, float x, float y) {
 				MyGdxGame.GAME.setScreen(new MainMenu());
 			}
 		});
 		
+		/** 
+		 * Creates an action listener for the difficulty SelectBox.
+		 * TODO: When clicking an item in the selectBox, must be clickable.
+		 *       Checks the value of the selected item, calls the method that will
+		 *       update game settings. For now, just print!!
+		 * 		 
+		 */
+		difficulty.addListener(new ChangeListener(){
+			public void changed(ChangeEvent event, Actor actor) {
+				System.out.println(difficulty.getSelected());
+				/*if(difficulty.getSelected().equalsIgnoreCase("Conqueror")) {
+					System.out.println("You chose Conqueror level! You'll die.");
+				} else if (difficulty.getSelected().equalsIgnoreCase("Hard")) {
+					System.out.println("Hard Level!");
+				} else if (difficulty.getSelected().equalsIgnoreCase("Normal")) {
+					System.out.println("Normal Level!");
+				} else if (difficulty.getSelected().equalsIgnoreCase("Easy")) {
+					System.out.println("Easy Level!");
+				}*/
+			}	
+		});
 		
-		//Listeners for VOLUME and RESOLUTION
+		/**
+		 * Create an action listener for the resolution SelectBox.
+		 */
 		resolution.addListener(new ChangeListener(){
 			public void changed(ChangeEvent event, Actor actor) {
 				// TODO change the resolution
+				System.out.println(resolution.getSelected());
 			}
 		});
 		
 		volume.addListener(new ChangeListener(){
 			public void changed(ChangeEvent event, Actor actor) {
 				// TODO change the volumes
+			}
+		});
+		
+		light.addListener(new ChangeListener(){
+			public void changed(ChangeEvent event, Actor actor) {
+				if(lightClicked == false) {
+					lightClicked = true;
+					System.out.println("Lights ON");
+				} else {
+					lightClicked = false;
+					System.out.println("Lights OFF");
+				}
+				
+			}
+		});
+		
+		animation.addListener(new InputListener(){
+			public void clicked(InputEvent event, float x, float y, int pointer, int button) {
+				System.out.println("Clicked");
 			}
 		});
 	}

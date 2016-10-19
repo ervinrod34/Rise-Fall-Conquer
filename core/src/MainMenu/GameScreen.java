@@ -87,6 +87,7 @@ public class GameScreen implements Screen{
 		});
 		bar.setEndTurnClickListener(new ClickListener(){
 			public void clicked(InputEvent event, float x, float y) {
+				factions.get(0).updateResources();
 				final Timer time = new Timer();
 				time.scheduleTask(new Task(){
 					@Override
@@ -130,9 +131,10 @@ public class GameScreen implements Screen{
 	public void render(float delta) {
 		if(bar != null){
 			bar.setTime12Format(dnCycle.getTime()/10);
-			bar.setFood(0, 1);
-			bar.setWood(0, 0);
-			bar.setGold(0, -1);
+			Faction player = this.factions.get(0);
+			bar.setFood(player.getTotalFood(), player.getFoodPerTurn());
+			bar.setWood(player.getTotalWood(), player.getWoodPerTurn());
+			bar.setGold(player.getTotalGold(), player.getGoldPerTurn());
 		}
 		nav.inputHandle(delta);
 		//draw map on GameScreen
