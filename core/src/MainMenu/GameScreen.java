@@ -62,7 +62,7 @@ public class GameScreen implements Screen{
 		miniMap = new MiniMap(mBoard);
 	
 		//set up input processors, arrow keys, mouse click
-		nav = new Navigator(oGameCam, batch, stage, mBoard);
+		nav = new Navigator(oGameCam, batch, stage, mBoard, (PlayerFaction) factions.get(0));
 		InputMultiplexer ipm = new InputMultiplexer();
 		ipm.addProcessor(nav);
 		ipm.addProcessor(stage);

@@ -20,6 +20,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 
 import CustomWidgets.TileOptions;
 import MainMenu.MainMenu;
+import factions.PlayerFaction;
 import map.Map;
 import map.Tile;
 
@@ -42,13 +43,15 @@ public class Navigator implements InputProcessor {
 	private TileOptions op;
 	
 	private boolean isOpen;
-
+	private PlayerFaction pf;
+	
 	//Testing path movement
 	private Tile StartTile;
 	private ArrayList<Tile> MovementList;
 	private int MaxMovementRange = 5;
 	
-	public Navigator(OrthographicCamera oGameCam, SpriteBatch batch, Stage stage, Map map) {
+	public Navigator(OrthographicCamera oGameCam, SpriteBatch batch, Stage stage, Map map, PlayerFaction pf) {
+		this.pf = pf;
 		isOpen = false;
 		zoomValue = 0.06;
 		lastTouch = new Vector3();
@@ -173,7 +176,7 @@ public class Navigator implements InputProcessor {
 			}
 			if(isOpen == false){
 				Tile t = m.getClickedTile2(mPos);
-				op = new TileOptions(t);
+				op = new TileOptions(t, this.pf);
 				stage.addActor(op.gettOptions());
 				op.setIsOpen(true);
 				isOpen=true;

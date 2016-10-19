@@ -1,16 +1,16 @@
 package CustomWidgets;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.scenes.scene2d.Actor;
+import java.util.ArrayList;
+
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.ui.Cell;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.scenes.scene2d.ui.SelectBox;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
-import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.mygdx.game.MyGdxGame;
 
+import factions.PlayerFaction;
 import map.ResourceID;
 import map.Tile;
 
@@ -19,23 +19,24 @@ public class TileOptions {
 	
 	private Label resName, tileName, desc;
 	private TextButton exit, upgrade;
-	private TextButton[] buttons;
+	private ArrayList<TextButton> buttons;
 	private Table tOptions, holder, container, buttonsTable;
 	private Tile tile;
 	private boolean isOpen;
+	private PlayerFaction pf;
 	
-	public TileOptions(Tile t){
-		
+	public TileOptions(Tile t, PlayerFaction pf){
+		this.pf = pf;
 		isOpen = false;	
 		tile = t;
-		setContainer(new Table());
-		getContainer().setFillParent(true);
-		tOptions = new Table();
+		setContainer(new Table(MyGdxGame.MENUSKIN));
+		//getContainer().setFillParent(true);
+		tOptions = new Table(MyGdxGame.MENUSKIN);
 		tOptions.setFillParent(true);
-		holder = new Table();
+		holder = new Table(MyGdxGame.MENUSKIN);
 		holder.setFillParent(true);
-		buttonsTable = new Table();
-		buttonsTable.setFillParent(true);
+		buttonsTable = new Table(MyGdxGame.MENUSKIN);
+		//buttonsTable.setFillParent(true);
 		
 		Label background = new Label("", MyGdxGame.MENUSKINHUD);
 		
@@ -54,15 +55,27 @@ public class TileOptions {
 		exit = new TextButton("EXIT",MyGdxGame.MENUSKIN);
 		upgrade = new TextButton("UPGRADE",MyGdxGame.MENUSKIN);
 		
-		buttons = new TextButton[9];
+		buttons = new ArrayList<TextButton>();
+		ArrayList<Cell> cells = new ArrayList<Cell>();
 		int i = 0;
 		for(ResourceID r : ResourceID.values()){
-			buttons[i] = new TextButton(r.name(),MyGdxGame.MENUSKIN);
-			buttons[i].setName(r.name());
-			buttonsTable.add(buttons[i]);
+			buttons.add(new TextButton(r.name(),MyGdxGame.MENUSKIN));
+			buttons.get(i).setName(r.name());
+			cells.add(buttonsTable.add(buttons.get(i)));
 			if((i+1)%2 ==0)
 				buttonsTable.row();
 			i++;
+		}
+		
+		// Resize buttons
+		float maxSize = buttons.get(0).getWidth();
+		for(TextButton b : buttons){
+			if(b.getWidth() > maxSize){
+				maxSize = b.getWidth();
+			}
+		}
+		for(Cell c : cells){
+			c.width(maxSize);
 		}
 		
 		//add items to table
@@ -76,13 +89,11 @@ public class TileOptions {
 		getContainer().row();
 		
 		holder.add(getContainer());
-		holder.add().width(0);
-		holder.add(buttonsTable).right();
+		holder.add(buttonsTable);
 		
-		settOptions(new Table());
-		gettOptions().stack(background,holder);
+		settOptions(new Table(MyGdxGame.MENUSKIN));
 		gettOptions().setFillParent(true);
-		gettOptions().invalidateHierarchy();
+		gettOptions().stack(background, holder);
 		
 		//set listeners for buttons
 		this.setExitListener();
@@ -125,8 +136,9 @@ public class TileOptions {
 			b.addListener(new ClickListener(){
 				public void clicked(InputEvent e, float x, float y){
 					for(ResourceID r : ResourceID.values()){
-						if(b.getName().equals(r.name())){
+						if(b.getName().equals(r.name()) && tile.getClaim() == 0){
 							tile.setResourceID(r);
+							pf.claimTile(tile);
 						}
 					}
 				}
