@@ -182,6 +182,9 @@ public class Tile {
 	public ResourceID getResource() {
 		return rId;
 	}
+	public void setResourceID(ResourceID r){
+		rId = r;
+	}
 	public TileID getTileId() {
 		return this.Id;
 	}
