@@ -41,7 +41,7 @@ public class TileOptions {
 		
 		//Setting resource name and tile name, adding both to table
 		try{
-			resName = new Label(tile.getResource().name() + " ",MyGdxGame.MENUSKIN);
+			resName = new Label(tile.getResourceID().name() + " ",MyGdxGame.MENUSKIN);
 			getContainer().add(resName);
 			getContainer().row();
 		} catch(NullPointerException e){}
@@ -112,7 +112,9 @@ public class TileOptions {
 	public void setUpgradeListener(){
 		upgrade.addListener(new ClickListener() {
 			public void clicked(InputEvent e,float x,float y){
-				tile.getResource().upgradeTile();
+				if(tile.getResource() != null){
+					tile.getResource().upgradeTile();
+				}
 				//Gdx.app.log(this.getClass().getName(),"IM SO HAPPY RIGHT NOW, I'M BEING UPGRADED");
 			}
 		});

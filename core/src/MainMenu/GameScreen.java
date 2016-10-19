@@ -87,7 +87,9 @@ public class GameScreen implements Screen{
 		});
 		bar.setEndTurnClickListener(new ClickListener(){
 			public void clicked(InputEvent event, float x, float y) {
-				factions.get(0).updateResources();
+				for(Faction f : factions){
+					f.updateResources();
+				}
 				final Timer time = new Timer();
 				time.scheduleTask(new Task(){
 					@Override

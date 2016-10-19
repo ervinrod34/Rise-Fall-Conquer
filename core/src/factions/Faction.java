@@ -127,8 +127,8 @@ public class Faction {
 		//scans the ArrayList of claimed tiles for resources
 		for(int i = 0; i < this.ClaimedTiles.size(); i++) {
 			Tile currentTile = this.ClaimedTiles.get(i);
-			if(currentTile.getClass().toString().equalsIgnoreCase("ResourceID")) {
-				switch(currentTile.getResource()) {
+			if(currentTile.getResource() != null) {
+				switch(currentTile.getResourceID()) {
 				case FISH:
 					this.foodPerTurn += currentTile.getResource().getBonus();
 					break;

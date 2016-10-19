@@ -1,7 +1,6 @@
 package map;
 
 import java.io.File;
-import java.util.Random;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
@@ -22,9 +21,9 @@ public enum ResourceID {
 
 	private Texture Img;
 	private int Id;
-	private int upgradeCount;
+	//private int upgradeCount;
 	private Texture[] upgrades;
-	private int bonus;
+	//private int bonus;
 	
 	/**
 	 * Constructor for the ResourceID enums
@@ -43,12 +42,7 @@ public enum ResourceID {
 						+ Gdx.files.internal(path + upgrades[i]).file().getAbsolutePath());
 			}
 		}
-		this.upgradeCount = 0;
-		this.Img = this.upgrades[upgradeCount];
 		this.Id = id;
-		
-		Random rand = new Random();
-		this.bonus = 5 * (rand.nextInt(5) + 1);
 	}
 
 	/**
@@ -78,41 +72,7 @@ public enum ResourceID {
 		return TileID.values()[(int) (Math.random() * TileID.values().length)];
 	}
 	
-	/**
-	 * Returns the bonus of this resource
-	 * @return
-	 */
-	public int getBonus() {
-		return this.bonus;
-	}
-	
-	/**
-	 * Update the bonus given by this resource per turn.
-	 */
-	public void updateBonus() {
-		if(this.upgradeCount > 0) {
-			this.bonus = this.bonus + (this.upgradeCount * 10);
-		}
-	}
-	
-	/**
-	 * Upgrades the upgradeCount, updates the bonus return by this resource
-	 * and change the image based on the level of the upgrade
-	 * 
-	 */
-	public void upgradeTile(){
-		//System.out.println("Upgrade me!");
-		try {
-			if(this.upgradeCount < this.upgrades.length) {
-				this.upgradeCount++;
-				this.updateBonus();
-				this.Img = this.upgrades[this.upgradeCount];
-			}
-			else {
-				System.out.println("Can't upgrade anymore.");
-			}
-		} catch (IndexOutOfBoundsException o) {
-			
-		}
+	public Texture[] getUpgrades(){
+		return upgrades;
 	}
 }
