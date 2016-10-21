@@ -21,6 +21,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 
 import CustomWidgets.TileOptions;
 import MainMenu.MainMenu;
+import factions.PlayerFaction;
 import map.Map;
 import map.Tile;
 
@@ -39,13 +40,20 @@ public class Navigator implements InputProcessor {
 	private Table gameTable;
 
 	private Map m;
-
+	
+	private TileOptions op;
+	
+	private boolean isOpen;
+	private PlayerFaction pf;
+	
 	//Testing path movement
 	private Tile StartTile;
 	private ArrayList<Tile> MovementList;
 	private int MaxMovementRange = 5;
 	
-	public Navigator(OrthographicCamera oGameCam, SpriteBatch batch, Stage stage, Map map) {
+	public Navigator(OrthographicCamera oGameCam, SpriteBatch batch, Stage stage, Map map, PlayerFaction pf) {
+		this.pf = pf;
+		isOpen = false;
 		zoomValue = 0.06;
 		lastTouch = new Vector3();
 		this.batch = new SpriteBatch();
@@ -167,11 +175,18 @@ public class Navigator implements InputProcessor {
 		//last position button clicked down
 		Vector3 vect = oGameCam.unproject(new Vector3(screenX,screenY,0));
 		Vector2 mPos = new Vector2(vect.x,vect.y);
-		//right click tiles
+		//right click tiles, display options for tile
 		if (Gdx.input.isButtonPressed(Input.Buttons.RIGHT)) {
-			Tile t = m.getClickedTile2(mPos);
-			TileOptions op = new TileOptions(t);
-			stage.addActor(op.getTable());
+			if(op!=null && op.getIsOpen()==false){
+				isOpen = false;
+			}
+			if(isOpen == false){
+				Tile t = m.getClickedTile2(mPos);
+				op = new TileOptions(t, this.pf);
+				stage.addActor(op.gettOptions());
+				op.setIsOpen(true);
+				isOpen=true;
+			}
 		}
 		//Testing path movement
 		if(Gdx.input.isButtonPressed(Input.Buttons.MIDDLE)){

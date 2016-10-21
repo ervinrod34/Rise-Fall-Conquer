@@ -9,6 +9,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
@@ -103,7 +104,7 @@ public class Map {
 		ArrayList<Tile> HomeTiles = new ArrayList<Tile>();
 		for (int x = 0; x < grid.length; x++) {
 			for (int y = 0; y < grid[0].length; y++) {
-				if(grid[x][y].getResource() != null && grid[x][y].getResource() == ResourceID.HOME && grid[x][y].getClaim() == 0){
+				if(grid[x][y].getResource() != null && grid[x][y].getResourceID() == ResourceID.HOME && grid[x][y].getClaim() == 0){
 					HomeTiles.add(grid[x][y]);
 				}
 			}
@@ -186,9 +187,9 @@ public class Map {
 						, (grid[x][y].getLocation().x)- X_OFFSET
 						, (grid[x][y].getLocation().y)- Y_OFFSET );
 				if(grid[x][y].getResource() != null){
-					batch.draw(grid[x][y].getResourceImg()
-							, grid[x][y].getLocation().x - X_OFFSET
-							, grid[x][y].getLocation().y - Y_OFFSET);
+						batch.draw(grid[x][y].getResourceImg()
+								, grid[x][y].getLocation().x - X_OFFSET
+								, grid[x][y].getLocation().y - Y_OFFSET);
 				}
 				// Font.draw(batch, (int)grid[x][y].getGridLocation().x + "," +
 				// (int)grid[x][y].getGridLocation().y,
@@ -197,6 +198,26 @@ public class Map {
 			}
 		}
 	}
+	
+	/**
+	 * Draws makers, mostly for visibility on minimap
+	 * @param batch
+	 */
+	public void drawMarkers(ShapeRenderer sh) {
+		for (int x = 0; x < XSIZE; x++) {
+			for (int y = 0; y < YSIZE; y++) {
+				if(grid[x][y].getResource() != null){
+					if(grid[x][y].getResource().getID().getId()==65)
+						sh.setColor(Color.BLUE);
+					else
+						sh.setColor(Color.RED);
+			        sh.rect( grid[x][y].getLocation().x - X_OFFSET
+			        		, grid[x][y].getLocation().y - Y_OFFSET, 100, 100);
+				}
+			}
+		}
+	}
+	
 	/**
 	 * This only draws tiles within the viewport
 	 * @param batch

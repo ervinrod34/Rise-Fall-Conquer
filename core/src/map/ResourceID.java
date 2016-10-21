@@ -21,9 +21,10 @@ public enum ResourceID {
 
 	private Texture Img;
 	private int Id;
-	private int upgradeCount;
+	//private int upgradeCount;
 	private Texture[] upgrades;
-
+	//private int bonus;
+	
 	/**
 	 * Constructor for the ResourceID enums
 	 * 
@@ -41,8 +42,6 @@ public enum ResourceID {
 						+ Gdx.files.internal(path + upgrades[i]).file().getAbsolutePath());
 			}
 		}
-		this.upgradeCount = 0;
-		this.Img = this.upgrades[upgradeCount];
 		this.Id = id;
 	}
 
@@ -52,7 +51,7 @@ public enum ResourceID {
 	 * @return
 	 */
 	public Texture getImg() {
-		return Img;
+		return this.Img;
 	}
 
 	/**
@@ -61,7 +60,7 @@ public enum ResourceID {
 	 * @return
 	 */
 	public int getId() {
-		return Id;
+		return this.Id;
 	}
 
 	/**
@@ -73,7 +72,7 @@ public enum ResourceID {
 		return TileID.values()[(int) (Math.random() * TileID.values().length)];
 	}
 	
-	public void upgradeTile(){
-		System.out.println("Upgrade me!");
+	public Texture[] getUpgrades(){
+		return upgrades;
 	}
 }
