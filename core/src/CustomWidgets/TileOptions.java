@@ -30,13 +30,11 @@ public class TileOptions {
 		isOpen = false;	
 		tile = t;
 		setContainer(new Table(MyGdxGame.MENUSKIN));
-		//getContainer().setFillParent(true);
 		tOptions = new Table(MyGdxGame.MENUSKIN);
 		tOptions.setFillParent(true);
 		holder = new Table(MyGdxGame.MENUSKIN);
 		holder.setFillParent(true);
 		buttonsTable = new Table(MyGdxGame.MENUSKIN);
-		//buttonsTable.setFillParent(true);
 		
 		Label background = new Label("", MyGdxGame.MENUSKINHUD);
 		
@@ -95,7 +93,7 @@ public class TileOptions {
 		gettOptions().setFillParent(true);
 		gettOptions().stack(background, holder);
 		
-		//set listeners for buttons
+			//set listeners for buttons
 		this.setExitListener();
 		this.setUpgradeListener();
 		this.setButtonListeners();
