@@ -103,7 +103,7 @@ public class Map {
 		ArrayList<Tile> HomeTiles = new ArrayList<Tile>();
 		for (int x = 0; x < grid.length; x++) {
 			for (int y = 0; y < grid[0].length; y++) {
-				if(grid[x][y].getResource() != null && grid[x][y].getResource() == ResourceID.HOME && grid[x][y].getClaim() == 0){
+				if(grid[x][y].getResource() != null && grid[x][y].getResourceID() == ResourceID.HOME && grid[x][y].getClaim() == 0){
 					HomeTiles.add(grid[x][y]);
 				}
 			}

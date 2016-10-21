@@ -15,7 +15,7 @@ public class Tile {
 	TileID Id;
 	private Vector2 Location; //x y coordinates
 	private Vector2 GridLocation; //
-	private ResourceID rId;
+	private Resource rId;
 	private BasicAnimation bAnimation;
 	private PointLight pLight;
 	private int Claim;
@@ -86,7 +86,7 @@ public class Tile {
 		}
 		for(ResourceID rId : ResourceID.values()){
 			if(resId == rId.getId()){
-				this.rId = rId;
+				this.setResourceID(rId);
 				break;
 			}
 		}
@@ -179,7 +179,32 @@ public class Tile {
 	public Texture getResourceImg() {
 		return rId.getImg();
 	}
-	public ResourceID getResource() {
+	/**
+	 * Get resource id for tile
+	 * @return
+	 */
+	public ResourceID getResourceID() {
+		if(this.rId == null){
+			return null;
+		}
+		return rId.getID();
+	}
+	/**
+	 * Set the resource for the tile
+	 * @param r
+	 */
+	public void setResourceID(ResourceID r){
+		if(this.rId == null){
+			this.rId = new Resource(r);
+		}else{
+			rId.setID(r);
+		}
+	}
+	/**
+	 * Get the tile resource
+	 * @return
+	 */
+	public Resource getResource() {
 		return rId;
 	}
 	public TileID getTileId() {

@@ -65,7 +65,7 @@ public class GameScreen implements Screen{
 		miniMap = new MiniMap(mBoard);
 	
 		//set up input processors, arrow keys, mouse click
-		nav = new Navigator(oGameCam, batch, stage, mBoard);
+		nav = new Navigator(oGameCam, batch, stage, mBoard, (PlayerFaction) factions.get(0));
 		InputMultiplexer ipm = new InputMultiplexer();
 		ipm.addProcessor(nav);
 		ipm.addProcessor(stage);
@@ -90,6 +90,9 @@ public class GameScreen implements Screen{
 		});
 		bar.setEndTurnClickListener(new ClickListener(){
 			public void clicked(InputEvent event, float x, float y) {
+				for(Faction f : factions){
+					f.updateResources();
+				}
 				final Timer time = new Timer();
 				time.scheduleTask(new Task(){
 					@Override
@@ -133,9 +136,10 @@ public class GameScreen implements Screen{
 	public void render(float delta) {
 		if(bar != null){
 			bar.setTime12Format(dnCycle.getTime()/10);
-			bar.setFood(0, 1);
-			bar.setWood(0, 0);
-			bar.setGold(0, -1);
+			Faction player = this.factions.get(0);
+			bar.setFood(player.getTotalFood(), player.getFoodPerTurn());
+			bar.setWood(player.getTotalWood(), player.getWoodPerTurn());
+			bar.setGold(player.getTotalGold(), player.getGoldPerTurn());
 		}
 		nav.inputHandle(delta);
 		//draw map on GameScreen
