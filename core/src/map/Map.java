@@ -45,7 +45,10 @@ public class Map {
 	private static final int X_OFFSET = (1280/2)*12;
 	private static final int Y_OFFSET = (720/2)*12;
 	
-
+	// Map width and height
+	private int mWidth = XSIZE*TILEWIDTH;
+	private int mHeight = YSIZE*TILEHEIGHT;
+	
 	private Tile[][] grid;
 	private BitmapFont Font;
 
@@ -62,6 +65,22 @@ public class Map {
 		Font.getData().setScale(0.5f, 0.5f);
 		Font.setColor(Color.BLACK);
 	}
+	
+	/**
+	 * Get the width of the map
+	 * @return
+	 */
+	public int getmWidth() {
+		return mWidth;
+	}
+
+	/**
+	 * Get the height of the map
+	 */
+	public int getmHeight() {
+		return mHeight;
+	}
+
 
 	/**
 	 * Sets the lighting for the map

@@ -20,7 +20,7 @@ public class Score {
 	 * modify the value of this score
 	 */
 	public void setScoreVal(int scoreVal) {
-		this.scoreVal = scoreVal;
+		this.scoreVal += scoreVal;
 	}
 
 	/*
