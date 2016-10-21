@@ -7,6 +7,7 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
@@ -117,6 +118,11 @@ public class Navigator implements InputProcessor {
 				stage.addActor(gameTable);
 			}
 		}
+		
+        oGameCam.position.x = MathUtils.clamp(oGameCam.position.x
+        		, 0, m.getmWidth() );
+        oGameCam.position.y = MathUtils.clamp(oGameCam.position.y
+        		, 0, m.getmWidth()-200);
 		
 		//Testing path movement
 		if(StartTile != null){

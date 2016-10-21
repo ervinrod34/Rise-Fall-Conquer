@@ -9,6 +9,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
@@ -57,6 +58,8 @@ public class GameScreen implements Screen{
 		this.generateFactions();
 		oGameCam.position.set(factions.get(0).getHomeTile().getLocation().x,factions.get(0).getHomeTile().getLocation().y,0);
 		oGameCam.update();
+		
+		scoreBoard.printScoreBoard();
 		
 		//initialize minimap, passing the map
 		miniMap = new MiniMap(mBoard);
@@ -193,7 +196,7 @@ public class GameScreen implements Screen{
 	 * as well as the Score Board
 	 */
 	public void generateFactions(){
-		ScoreBoard scoreBoard = new ScoreBoard();
+		scoreBoard = new ScoreBoard();
 		factions = new ArrayList<Faction>();
 		Tile home = mBoard.getRandomHomeTile();
 		int FactId = 1;

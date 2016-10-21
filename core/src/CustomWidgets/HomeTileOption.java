@@ -32,6 +32,8 @@ public class HomeTileOption {
 		this.pf = pf;
 		isOpen = false;
 		
+		ArrayList<Cell> cells = new ArrayList<Cell>();
+		ArrayList<TextButton> b = new ArrayList<TextButton>();
 		//create all tables to be used
 		setContainer(new Table(MyGdxGame.MENUSKIN));
 		tOptions = new Table(MyGdxGame.MENUSKIN);
@@ -59,18 +61,21 @@ public class HomeTileOption {
 		exit = new TextButton("EXIT",MyGdxGame.MENUSKIN);
 		upgrade = new TextButton("UPGRADE",MyGdxGame.MENUSKIN);
 		buildWorker = new TextButton("BUILD WORKER",MyGdxGame.MENUSKIN);
+		b.add(exit);
+		b.add(upgrade);
+		b.add(buildWorker);
 		
-		//add all items to Master Tables
+		float maxWidth = 0;
 		//add items to table
 		getContainer().add(tileName);
 		getContainer().row();
 		getContainer().add(desc);
 		getContainer().row();
-		getContainer().add(upgrade);
+		cells.add(getContainer().add(upgrade));
 		getContainer().row();
-		getContainer().add(buildWorker);
+		cells.add(getContainer().add(buildWorker));
 		getContainer().row();
-		getContainer().add(exit);
+		cells.add(getContainer().add(exit));
 		getContainer().row();
 		holder.add(getContainer());
 		holder.add(buttonsTable);
@@ -79,6 +84,16 @@ public class HomeTileOption {
 		tOptions.setFillParent(true);
 		tOptions.stack(background, holder);
 		
+		
+		float maxSize = b.get(0).getWidth();
+		for(TextButton bt : b){
+			if(bt.getWidth() > maxSize){
+				maxSize = bt.getWidth();
+			}
+		}
+		for(Cell c : cells){
+			c.width(maxSize);
+		}
 			//set listeners for buttons
 		this.setExitListener();
 		this.setUpgradeListener();
