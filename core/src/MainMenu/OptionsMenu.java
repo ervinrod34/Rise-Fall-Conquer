@@ -27,25 +27,16 @@ public class OptionsMenu implements Screen{
 	//private TextureAtlas atlas;
 	//private Table mainTable;
 	
-	
 	private Label difficultyLabel;
-	//private SelectBox<String> difficulty;
-	private String selectedDifficulty;
-	//private ArrayList<TextButton> difficultiesList;
 	
 	private Label resolutionLabel;
-	//private SelectBox<String> resolution;
-	//private TextButton[] resolutionsList;
 	
-	private Label volumeLabel;
-	//private Slider volume; 
+	private Label volumeLabel; 
 	
 	private Label lightLabel;
-	//private CheckBox light;
 	private boolean lightClicked;
 	
 	private Label animationLabel;
-	//private CheckBox animation;
 	private boolean animationClicked;
 	
 	
@@ -56,26 +47,17 @@ public class OptionsMenu implements Screen{
 		//create menu button
 		TextButton menu = new TextButton("MENU",MyGdxGame.MENUSKIN);
 		
-		//TODO: Create clickable selection objects.
-		//Drop down menu for game difficulty
+		//Create a Slider to choose the game difficulty
 		this.difficultyLabel = new Label("DIFFICULTY:", MyGdxGame.MENUSKIN);
-		final SelectBox<String> difficulty = new SelectBox<String>(MyGdxGame.MENUSKIN);
-		difficulty.setItems("Conqueror", "Hard", "Normal", "Easy");
-		//this.selectedDifficulty = difficulty.getSelected();
-		/*this.difficultiesList = new ArrayList<TextButton>();
-		this.difficultiesList.add(new TextButton("Conqueror", MyGdxGame.MENUSKIN));
-		this.difficultiesList.add(new TextButton("Hard", MyGdxGame.MENUSKIN));
-		this.difficultiesList.add(new TextButton("Normal", MyGdxGame.MENUSKIN));
-		this.difficultiesList.add(new TextButton("Easy", MyGdxGame.MENUSKIN));
-		//for(int i = 0; i < this.difficultiesList.size(); i++) {
-		this.difficulty.setItems(this.difficultiesList.get(0), this.difficultiesList.get(1),
-								 this.difficultiesList.get(2), this.difficultiesList.get(3));
-		//}*/
+		final Slider difficulty = new Slider(0, 3, 1, false, MyGdxGame.MENUSKIN);
 		
-		//Create drop down menu to change resolution
+		final Label selectedDifficulty = new Label("Easy", MyGdxGame.MENUSKIN);
+		
+		//Create a Slider to choose the resolution settings
 		this.resolutionLabel = new Label("GRAPHICS:", MyGdxGame.MENUSKIN);
-		final SelectBox<String> resolution = new SelectBox<String>(MyGdxGame.MENUSKIN);
-		resolution.setItems("High", "Medium", "Low");
+		final Slider resolution = new Slider(0, 2, 1, false, MyGdxGame.MENUSKIN);
+		resolution.setValue(MyGdxGame.RESOLUTION);
+		final Label selectedResolution = new Label("0", MyGdxGame.MENUSKIN);
 		
 		
 		//Create a Bar that changes the music volume
@@ -113,11 +95,13 @@ public class OptionsMenu implements Screen{
 		centerTable.row();
 		centerTable.add(this.difficultyLabel);
 		centerTable.add(difficulty);
+		centerTable.add(selectedDifficulty);
 		
 		//resolution
 		centerTable.row();
 		centerTable.add(this.resolutionLabel);
 		centerTable.add(resolution);
+		centerTable.add(selectedResolution);
 		
 		//volume
 		centerTable.row();
@@ -146,35 +130,29 @@ public class OptionsMenu implements Screen{
 			}
 		});
 		
-		/** 
-		 * Creates an action listener for the difficulty SelectBox.
-		 * TODO: When clicking an item in the selectBox, must be clickable.
-		 *       Checks the value of the selected item, calls the method that will
-		 *       update game settings. For now, just print!!
-		 * 		 
-		 */
+
 		difficulty.addListener(new ChangeListener(){
 			public void changed(ChangeEvent event, Actor actor) {
-				System.out.println(difficulty.getSelected());
-				/*if(difficulty.getSelected().equalsIgnoreCase("Conqueror")) {
-					System.out.println("You chose Conqueror level! You'll die.");
-				} else if (difficulty.getSelected().equalsIgnoreCase("Hard")) {
-					System.out.println("Hard Level!");
-				} else if (difficulty.getSelected().equalsIgnoreCase("Normal")) {
-					System.out.println("Normal Level!");
-				} else if (difficulty.getSelected().equalsIgnoreCase("Easy")) {
-					System.out.println("Easy Level!");
-				}*/
+				//System.out.println(difficulty.getSelected());
 			}	
 		});
 		
-		/**
-		 * Create an action listener for the resolution SelectBox.
-		 */
 		resolution.addListener(new ChangeListener(){
 			public void changed(ChangeEvent event, Actor actor) {
-				// TODO change the resolution
-				System.out.println(resolution.getSelected());
+					int intVal = Math.round(resolution.getValue());
+					CharSequence temp = null;
+					//selectedResolution.setText(temp);
+					//System.out.println("Slider value: " + intVal);
+					
+					if(intVal == 0) {
+						temp = "Low ";
+					} else if (intVal == 1) {
+						temp = "Med ";
+					} else {
+						temp = "High";
+					}
+					selectedResolution.setText(temp);
+					MyGdxGame.RESOLUTION = resolution.getValue();
 			}
 		});
 		

@@ -125,6 +125,7 @@ public class TileOptions {
 			public void clicked(InputEvent e,float x,float y){
 				if(tile.getResource() != null){
 					tile.getResource().upgradeTile();
+					pf.updateResourcesPerTurn();
 				}
 				//Gdx.app.log(this.getClass().getName(),"IM SO HAPPY RIGHT NOW, I'M BEING UPGRADED");
 			}
@@ -141,6 +142,7 @@ public class TileOptions {
 							pf.claimTile(tile);
 						}
 					}
+					
 				}
 			});
 		}

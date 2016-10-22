@@ -6,12 +6,30 @@ import com.badlogic.gdx.graphics.Texture;
 
 public class Resource {
 
+	/**
+	 * The ResourceID
+	 */
 	private ResourceID id;
+	
+	/**
+	 * The image used by this Resource
+	 */
 	private Texture Img;
 	
+	/**
+	 * The level of upgrade of this Resource
+	 */
 	private int upgradeCount;
+	
+	/**
+	 * The bonus this resource provides
+	 */
 	private int bonus;
 	
+	/**
+	 * Constructs a Resource object with a ResourceID.
+	 * @param id A ResourceID
+	 */
 	public Resource(ResourceID id) {
 		this.id = id;
 		this.upgradeCount = 0;
@@ -58,14 +76,26 @@ public class Resource {
 		}
 	}
 
+	/**
+	 * Returns the image of this Resource
+	 * @return A Texture object
+	 */
 	public Texture getImg() {
 		return Img;
 	}
 
+	/**
+	 * Change the image of this resource.
+	 * @param img A reference to a Texture object
+	 */
 	public void setImg(Texture img) {
 		Img = img;
 	}
 	
+	/**
+	 * Returns the ResourceID of this Resource.
+	 * @return A ResourceID
+	 */
 	public ResourceID getID(){
 		return id;
 	}
