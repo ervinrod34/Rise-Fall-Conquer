@@ -34,10 +34,8 @@ public class OptionsMenu implements Screen{
 	private Label volumeLabel; 
 	
 	private Label lightLabel;
-	private boolean lightClicked;
 	
 	private Label animationLabel;
-	private boolean animationClicked;
 	
 	
 	public OptionsMenu(){
@@ -50,39 +48,45 @@ public class OptionsMenu implements Screen{
 		//Create a Slider to choose the game difficulty
 		this.difficultyLabel = new Label("DIFFICULTY:", MyGdxGame.MENUSKIN);
 		final Slider difficulty = new Slider(0, 3, 1, false, MyGdxGame.MENUSKIN);
-		
-		final Label selectedDifficulty = new Label("Easy", MyGdxGame.MENUSKIN);
+		difficulty.setValue(MyGdxGame.DIFFICULTY);
+		String savedDifficulty = String.valueOf(MyGdxGame.DIFFICULTY);
+		final Label selectedDifficulty = new Label(savedDifficulty, MyGdxGame.MENUSKIN);
 		
 		//Create a Slider to choose the resolution settings
 		this.resolutionLabel = new Label("GRAPHICS:", MyGdxGame.MENUSKIN);
 		final Slider resolution = new Slider(0, 2, 1, false, MyGdxGame.MENUSKIN);
 		resolution.setValue(MyGdxGame.RESOLUTION);
-		final Label selectedResolution = new Label("0", MyGdxGame.MENUSKIN);
+		String savedResolution = String.valueOf(MyGdxGame.RESOLUTION);
+		final Label selectedResolution = new Label(savedResolution, MyGdxGame.MENUSKIN);
 		
 		
 		//Create a Bar that changes the music volume
 		this.volumeLabel = new Label("VOLUME:", MyGdxGame.MENUSKIN);
 		final Slider volume = new Slider(0, 100, 10, false, MyGdxGame.MENUSKIN);
+		volume.setValue(MyGdxGame.VOLUME);
+		String savedVolume = String.valueOf((int)MyGdxGame.VOLUME);
+		final Label selectedVolume = new Label(savedVolume, MyGdxGame.MENUSKIN);
 		
 		//Checkbox to turn lighting on/off
 		this.lightLabel = new Label("LIGHT:", MyGdxGame.MENUSKIN);
 		final CheckBox light = new CheckBox(null, MyGdxGame.MENUSKIN);
+		light.setChecked(MyGdxGame.LIGHTING);
 		
 		//Checkbox for animation
 		this.animationLabel = new Label("ANIMATION:", MyGdxGame.MENUSKIN);
 		final CheckBox animation = new CheckBox(null, MyGdxGame.MENUSKIN);
-		
+		animation.setChecked(MyGdxGame.ANIMATION);
 		
 		/**
 		 * Creates tables for the widgets.
 		 */
-		Table mainTable = new Table(MyGdxGame.MENUSKIN);
+		/*Table mainTable = new Table(MyGdxGame.MENUSKIN);
 		mainTable.setBounds(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 		mainTable.setFillParent(true);
 		mainTable.top();
 		menu.setPosition(200, 200);
 		mainTable.add(menu);
-		mainTable.row();
+		mainTable.row();*/
 		Table centerTable = new Table(MyGdxGame.MENUSKIN);
 		centerTable.setBounds(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 		centerTable.setFillParent(true);
@@ -91,22 +95,26 @@ public class OptionsMenu implements Screen{
 		/**
 		 * Adds the widgets to the tables.
 		 */
+		centerTable.row();
+		centerTable.add(menu).right();
+		
 		//difficulty
 		centerTable.row();
 		centerTable.add(this.difficultyLabel);
-		centerTable.add(difficulty);
-		centerTable.add(selectedDifficulty);
+		centerTable.add(difficulty).width(200).padBottom(10);
+		centerTable.add(selectedDifficulty).width(100).padBottom(10);
 		
 		//resolution
 		centerTable.row();
 		centerTable.add(this.resolutionLabel);
-		centerTable.add(resolution);
-		centerTable.add(selectedResolution);
+		centerTable.add(resolution).width(200).padBottom(10);
+		centerTable.add(selectedResolution).width(100).padBottom(10);
 		
 		//volume
 		centerTable.row();
 		centerTable.add(this.volumeLabel);
-		centerTable.add(volume);
+		centerTable.add(volume).width(200).padBottom(10);
+		centerTable.add(selectedVolume).width(100).padBottom(10);
 		
 		//light
 		centerTable.row();
@@ -118,7 +126,7 @@ public class OptionsMenu implements Screen{
 		centerTable.add(this.animationLabel);
 		centerTable.add(animation);
 		
-		stage.addActor(mainTable);
+		//stage.addActor(mainTable);
 		stage.addActor(centerTable);
 		
 		/**
@@ -133,7 +141,8 @@ public class OptionsMenu implements Screen{
 
 		difficulty.addListener(new ChangeListener(){
 			public void changed(ChangeEvent event, Actor actor) {
-				//System.out.println(difficulty.getSelected());
+				selectedDifficulty.setText(String.valueOf(difficulty.getValue()));
+				MyGdxGame.DIFFICULTY = difficulty.getValue();
 			}	
 		});
 		
@@ -158,26 +167,20 @@ public class OptionsMenu implements Screen{
 		
 		volume.addListener(new ChangeListener(){
 			public void changed(ChangeEvent event, Actor actor) {
-				// TODO change the volumes
+				selectedVolume.setText(String.valueOf((int)volume.getValue()));
+				MyGdxGame.VOLUME = volume.getValue();
 			}
 		});
 		
 		light.addListener(new ChangeListener(){
 			public void changed(ChangeEvent event, Actor actor) {
-				if(lightClicked == false) {
-					lightClicked = true;
-					System.out.println("Lights ON");
-				} else {
-					lightClicked = false;
-					System.out.println("Lights OFF");
-				}
-				
+				MyGdxGame.LIGHTING = light.isChecked();
 			}
 		});
 		
-		animation.addListener(new InputListener(){
-			public void clicked(InputEvent event, float x, float y, int pointer, int button) {
-				System.out.println("Clicked");
+		animation.addListener(new ChangeListener(){
+			public void changed(ChangeEvent event, Actor actor) {
+				MyGdxGame.ANIMATION = animation.isChecked();
 			}
 		});
 	}
