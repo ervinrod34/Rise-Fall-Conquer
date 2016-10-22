@@ -62,7 +62,7 @@ public class GameScreen implements Screen{
 		scoreBoard.printScoreBoard();
 		
 		//initialize minimap, passing the map
-		miniMap = new MiniMap(mBoard);
+		miniMap = new MiniMap(mBoard, factions);
 	
 		//set up input processors, arrow keys, mouse click
 		nav = new Navigator(oGameCam, batch, stage, mBoard, (PlayerFaction) factions.get(0));

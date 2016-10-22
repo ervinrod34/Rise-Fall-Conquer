@@ -1,10 +1,13 @@
 package map;
 
+import java.util.ArrayList;
+
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
+import factions.Faction;
 
 public class MiniMap{
 	public static final int WIDTH = 1280;
@@ -17,8 +20,10 @@ public class MiniMap{
 	private OrthographicCamera miniCam;
 	private Map mBoard;
 	private Color playerColor;
+	private ArrayList<Faction> factions;
 	
-		public MiniMap(Map mBoard) {
+		public MiniMap(Map mBoard, ArrayList<Faction> list) {
+		this.factions = list;
 		this.mBoard = mBoard;
 		batchMiniMap = new SpriteBatch();
 		shr = new ShapeRenderer();
@@ -40,7 +45,7 @@ public class MiniMap{
 		shr.setColor(Color.RED);
 		shr.begin(ShapeType.Filled);
 		//shr.setColor(Color.RED);
-		mBoard.drawMarkers(shr);
+		mBoard.drawMarkers(shr, factions);
 		shr.end();
 	}
 	

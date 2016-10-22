@@ -21,6 +21,7 @@ import com.badlogic.gdx.utils.JsonWriter.OutputType;
 import com.mygdx.game.MyGdxGame;
 
 import box2dLight.RayHandler;
+import factions.Faction;
 import tools.BasicAnimation;
 import tools.BasicAnimationID;
 
@@ -203,7 +204,7 @@ public class Map {
 	 * Draws makers, mostly for visibility on minimap
 	 * @param batch
 	 */
-	public void drawMarkers(ShapeRenderer sh) {
+	public void drawMarkers(ShapeRenderer sh, ArrayList<Faction> list) {
 		for (int x = 0; x < XSIZE; x++) {
 			for (int y = 0; y < YSIZE; y++) {
 				if(grid[x][y].getResource() != null){
