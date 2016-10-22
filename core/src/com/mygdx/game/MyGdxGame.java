@@ -17,6 +17,13 @@ public class MyGdxGame extends Game {
 	public static Skin MENUSKINHUD;
 	public static final String ASSET_PATH = "asset" + File.separator;
 	
+	//used in the OptionsMenu
+	public static float DIFFICULTY;
+	public static float RESOLUTION;
+	public static float VOLUME;
+	public static boolean LIGHTING;
+	public static boolean ANIMATION;
+	
 	@Override
 	public void create () {
 		TestSuiteRunner.runTests();

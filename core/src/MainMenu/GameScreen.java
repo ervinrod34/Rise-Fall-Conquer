@@ -53,7 +53,7 @@ public class GameScreen implements Screen{
 		stage = new Stage(new ScreenViewport());
 		batch = new SpriteBatch();
 		//set camera position
-		oGameCam = new OrthographicCamera(1280, 720);
+		oGameCam = new OrthographicCamera(1280, 720); //game resolution
 		mBoard = new map.Map(oGameCam, "Map_2.json");
 		this.generateFactions();
 		oGameCam.position.set(factions.get(0).getHomeTile().getLocation().x,factions.get(0).getHomeTile().getLocation().y,0);
@@ -62,7 +62,7 @@ public class GameScreen implements Screen{
 		scoreBoard.printScoreBoard();
 		
 		//initialize minimap, passing the map
-		miniMap = new MiniMap(mBoard);
+		miniMap = new MiniMap(mBoard, factions);
 	
 		//set up input processors, arrow keys, mouse click
 		nav = new Navigator(oGameCam, batch, stage, mBoard, (PlayerFaction) factions.get(0));
@@ -91,7 +91,7 @@ public class GameScreen implements Screen{
 		bar.setEndTurnClickListener(new ClickListener(){
 			public void clicked(InputEvent event, float x, float y) {
 				for(Faction f : factions){
-					f.updateResources();
+					f.updateTotalResources();
 				}
 				final Timer time = new Timer();
 				time.scheduleTask(new Task(){

@@ -9,6 +9,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
@@ -20,6 +21,7 @@ import com.badlogic.gdx.utils.JsonWriter.OutputType;
 import com.mygdx.game.MyGdxGame;
 
 import box2dLight.RayHandler;
+import factions.Faction;
 import tools.BasicAnimation;
 import tools.BasicAnimationID;
 
@@ -174,29 +176,46 @@ public class Map {
 		rayHandler.setCombinedMatrix(oGameCam);
 		rayHandler.updateAndRender();
 	}
+	
 	/**
-	 * Draws the whole map
+	 * Draws the MiniMap without Markers
 	 * 
 	 * @param batch
 	 */
-	public void drawMap(SpriteBatch batch) {
+	public void drawMiniMap(SpriteBatch batch) {
+		//loop through the whole grid
 		for (int x = 0; x < XSIZE; x++) {
 			for (int y = 0; y < YSIZE; y++) {
+				//draw the tiles
 				batch.draw(grid[x][y].getTileImg()
 						, (grid[x][y].getLocation().x)- X_OFFSET
 						, (grid[x][y].getLocation().y)- Y_OFFSET );
-				if(grid[x][y].getResource() != null){
-					batch.draw(grid[x][y].getResourceImg()
-							, grid[x][y].getLocation().x - X_OFFSET
-							, grid[x][y].getLocation().y - Y_OFFSET);
-				}
-				// Font.draw(batch, (int)grid[x][y].getGridLocation().x + "," +
-				// (int)grid[x][y].getGridLocation().y,
-				// grid[x][y].getLocation().x + 10, grid[x][y].getLocation().y +
-				// TILEHEIGHT/2 + 5);
+				
+//				if(grid[x][y].getResource() != null){
+//						batch.draw(grid[x][y].getResourceImg()
+//								, grid[x][y].getLocation().x - X_OFFSET
+//								, grid[x][y].getLocation().y - Y_OFFSET);
+//				}
 			}
 		}
 	}
+	
+	/**
+	 * Draws markers on the MiniMap (more visible)
+	 * @param batch
+	 */
+	public void drawMarkers(ShapeRenderer sh, ArrayList<Faction> list) {	
+		//loop through the factions
+		for(Faction f : list) {
+			//get the color of that faction's territory
+			sh.setColor(f.getcTerritory());
+			//draw the marker
+			sh.rect(f.getHomeTile().getLocation().x - X_OFFSET
+					, f.getHomeTile().getLocation().y - Y_OFFSET
+					,100,100);
+		}
+	}
+	
 	/**
 	 * This only draws tiles within the viewport
 	 * @param batch

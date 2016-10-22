@@ -18,6 +18,7 @@ public class Faction {
 
 	// Unique Id for the faction
 	private int Id;
+
 	// Home city for the faction
 	private Tile HomeTile;
 	// List of claimed tiles by the faction
@@ -27,6 +28,10 @@ public class Faction {
 
 	private Color cTerritory;
 	
+	public Color getcTerritory() {
+		return cTerritory;
+	}
+
 	private Map mBoard;
 	
 	/**
@@ -82,6 +87,7 @@ public class Faction {
 	public void claimTile(Tile tile){
 		tile.setClaim(Id);
 		ClaimedTiles.add(tile);
+		this.updateResourcesPerTurn();
 	}
 	/**
 	 * Unclaims the specified tile for the faction
@@ -115,10 +121,18 @@ public class Faction {
 	}
 	
 	/**
-	 * Updates the values of the player's resources.
-	 * Called by: GameScreen.java, after a turn cycle.
+	 * get the factions Id (1 is the player)
+	 * @return
 	 */
-	public void updateResources() {
+	public int getId() {
+		return Id;
+	}
+	
+	/**
+	 * Updates the values of the player's resources per turn.
+	 * Called by:
+	 */
+	public void updateResourcesPerTurn() {
 		//resets the value of the resources per turn to 0 whenever this method is called
 		this.foodPerTurn = 0;
 		this.woodPerTurn = 0;
@@ -128,7 +142,7 @@ public class Faction {
 		for(int i = 0; i < this.ClaimedTiles.size(); i++) {
 			Tile currentTile = this.ClaimedTiles.get(i);
 			if(currentTile.getResource() != null) {
-				switch(currentTile.getResourceID()) {
+			switch(currentTile.getResourceID()) {
 				case FISH:
 					this.foodPerTurn += currentTile.getResource().getBonus();
 					break;
@@ -156,6 +170,13 @@ public class Faction {
 			}
 			
 		}
+	}
+	
+	/**
+	 * Updates the values of the player's total resources.
+	 * Called by: GameScreen.java, after a turn cycle.
+	 */
+	public void updateTotalResources() {
 		//adds the resources per turn to the total
 		this.totalFood += this.foodPerTurn;
 		this.totalWood += this.woodPerTurn;
@@ -191,7 +212,7 @@ public class Faction {
 	 * @return An int value
 	 */
 	public int getWoodPerTurn() {
-		return this.totalWood;
+		return this.woodPerTurn;
 	}
 	
 	/**
@@ -199,7 +220,7 @@ public class Faction {
 	 * @return An int value
 	 */
 	public int getFoodPerTurn() {
-		return this.totalFood;
+		return this.foodPerTurn;
 	}
 	
 	/**
@@ -207,7 +228,7 @@ public class Faction {
 	 * @return An int value
 	 */
 	public int getGoldPerTurn() {
-		return this.totalGold;
+		return this.goldPerTurn;
 	}
 
 }
