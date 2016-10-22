@@ -19,6 +19,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 
+import CustomWidgets.HomeTileOption;
 import CustomWidgets.TileOptions;
 import MainMenu.MainMenu;
 import factions.PlayerFaction;
@@ -30,6 +31,8 @@ public class Navigator implements InputProcessor {
 	private static double MAX_ZOOM = 0.20;
 	private static double MAX_ZOOM_OUT = 1;
 
+	private boolean failed = false;
+	
 	private double zoomValue;	//how much or how quickly to zoom
 	private Vector3 lastTouch;	//holds pos. of last button press
 
@@ -42,6 +45,7 @@ public class Navigator implements InputProcessor {
 	private Map m;
 	
 	private TileOptions op;
+	private HomeTileOption hp;
 	
 	private boolean isOpen;
 	private PlayerFaction pf;
@@ -182,10 +186,24 @@ public class Navigator implements InputProcessor {
 			}
 			if(isOpen == false){
 				Tile t = m.getClickedTile2(mPos);
-				op = new TileOptions(t, this.pf);
-				stage.addActor(op.gettOptions());
-				op.setIsOpen(true);
-				isOpen=true;
+				try{
+					if(t.getResourceID().name().equals("HOME")){
+						hp = new HomeTileOption(t,this.pf);
+						stage.addActor(hp.gettOptions());
+						hp.setIsOpen(true);
+						isOpen=true;
+					}else{
+						op = new TileOptions(t, this.pf);
+						stage.addActor(op.gettOptions());
+						op.setIsOpen(true);
+						isOpen=true;
+					}
+				} catch(NullPointerException e){
+					op = new TileOptions(t, this.pf);
+					stage.addActor(op.gettOptions());
+					op.setIsOpen(true);
+					isOpen=true;
+				}
 			}
 		}
 		//Testing path movement
