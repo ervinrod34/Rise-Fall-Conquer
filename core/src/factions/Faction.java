@@ -18,6 +18,7 @@ public class Faction {
 
 	// Unique Id for the faction
 	private int Id;
+
 	// Home city for the faction
 	private Tile HomeTile;
 	// List of claimed tiles by the faction
@@ -27,6 +28,10 @@ public class Faction {
 
 	private Color cTerritory;
 	
+	public Color getcTerritory() {
+		return cTerritory;
+	}
+
 	private Map mBoard;
 	
 	/**
@@ -113,6 +118,14 @@ public class Faction {
 	 */
 	public Tile getHomeTile() {
 		return HomeTile;
+	}
+	
+	/**
+	 * get the factions Id (1 is the player)
+	 * @return
+	 */
+	public int getId() {
+		return Id;
 	}
 	
 	/**
