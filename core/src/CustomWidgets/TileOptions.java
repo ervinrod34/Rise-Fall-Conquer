@@ -43,7 +43,11 @@ public class TileOptions {
 			resName = new Label(tile.getResourceID().name() + " ",MyGdxGame.MENUSKIN);
 			getContainer().add(resName);
 			getContainer().row();
-		} catch(NullPointerException e){}
+		} catch(NullPointerException e){
+			resName = new Label(" ",MyGdxGame.MENUSKIN);
+			getContainer().add(resName);
+			getContainer().row();
+		}
 		
 		try{
 			tileName = new Label(tile.getTileId().name() + " ",MyGdxGame.MENUSKIN);
@@ -136,6 +140,7 @@ public class TileOptions {
 					for(ResourceID r : ResourceID.values()){
 						if(b.getName().equals(r.name()) && tile.getClaim() == 0){
 							tile.setResourceID(r);
+							resName.setText(tile.getResourceID().name());
 							pf.claimTile(tile);
 						}
 					}

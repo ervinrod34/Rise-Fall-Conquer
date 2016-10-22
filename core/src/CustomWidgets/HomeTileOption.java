@@ -47,13 +47,13 @@ public class HomeTileOption {
 		
 		//Setting resource name and tile name, adding both to table
 		try{
-			resName = new Label(tile.getResourceID().name() + " ",MyGdxGame.MENUSKIN);
+			resName = new Label("Resource: " + tile.getResourceID().name() + " ",MyGdxGame.MENUSKIN);
 			getContainer().add(resName);
 			getContainer().row();
 		} catch(NullPointerException e){}
 		
 		try{
-			tileName = new Label(tile.getTileId().name() + " ",MyGdxGame.MENUSKIN);
+			tileName = new Label("Tile: " + tile.getTileId().name() + " ",MyGdxGame.MENUSKIN);
 		} catch(NullPointerException e) {}
 		
 		//create text buttons
