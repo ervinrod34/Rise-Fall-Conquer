@@ -157,4 +157,9 @@ public class HomeTileOption {
 		
 	}
 
+	public boolean getIsOpen() {
+		// TODO Auto-generated method stub
+		return isOpen;
+	}
+
 }

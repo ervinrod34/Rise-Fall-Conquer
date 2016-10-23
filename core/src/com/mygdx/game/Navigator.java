@@ -184,6 +184,10 @@ public class Navigator implements InputProcessor {
 			if(op!=null && op.getIsOpen()==false){
 				isOpen = false;
 			}
+			
+			if(hp!=null && hp.getIsOpen()==false){
+				isOpen = false;
+			}
 			if(isOpen == false){
 				Tile t = m.getClickedTile2(mPos);
 				try{
