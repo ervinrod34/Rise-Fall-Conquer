@@ -176,46 +176,43 @@ public class Map {
 		rayHandler.setCombinedMatrix(oGameCam);
 		rayHandler.updateAndRender();
 	}
+	
 	/**
-	 * Draws the whole map
+	 * Draws the MiniMap without Markers
 	 * 
 	 * @param batch
 	 */
-	public void drawMap(SpriteBatch batch) {
+	public void drawMiniMap(SpriteBatch batch) {
+		//loop through the whole grid
 		for (int x = 0; x < XSIZE; x++) {
 			for (int y = 0; y < YSIZE; y++) {
+				//draw the tiles
 				batch.draw(grid[x][y].getTileImg()
 						, (grid[x][y].getLocation().x)- X_OFFSET
 						, (grid[x][y].getLocation().y)- Y_OFFSET );
-				if(grid[x][y].getResource() != null){
-						batch.draw(grid[x][y].getResourceImg()
-								, grid[x][y].getLocation().x - X_OFFSET
-								, grid[x][y].getLocation().y - Y_OFFSET);
-				}
-				// Font.draw(batch, (int)grid[x][y].getGridLocation().x + "," +
-				// (int)grid[x][y].getGridLocation().y,
-				// grid[x][y].getLocation().x + 10, grid[x][y].getLocation().y +
-				// TILEHEIGHT/2 + 5);
+				
+//				if(grid[x][y].getResource() != null){
+//						batch.draw(grid[x][y].getResourceImg()
+//								, grid[x][y].getLocation().x - X_OFFSET
+//								, grid[x][y].getLocation().y - Y_OFFSET);
+//				}
 			}
 		}
 	}
 	
 	/**
-	 * Draws makers, mostly for visibility on minimap
+	 * Draws markers on the MiniMap (more visible)
 	 * @param batch
 	 */
-	public void drawMarkers(ShapeRenderer sh, ArrayList<Faction> list) {
-		for (int x = 0; x < XSIZE; x++) {
-			for (int y = 0; y < YSIZE; y++) {
-				if(grid[x][y].getResource() != null){
-					if(grid[x][y].getResource().getID().getId()==65)
-						sh.setColor(Color.BLUE);
-					else
-						sh.setColor(Color.RED);
-			        sh.rect( grid[x][y].getLocation().x - X_OFFSET
-			        		, grid[x][y].getLocation().y - Y_OFFSET, 100, 100);
-				}
-			}
+	public void drawMarkers(ShapeRenderer sh, ArrayList<Faction> list) {	
+		//loop through the factions
+		for(Faction f : list) {
+			//get the color of that faction's territory
+			sh.setColor(f.getcTerritory());
+			//draw the marker
+			sh.rect(f.getHomeTile().getLocation().x - X_OFFSET
+					, f.getHomeTile().getLocation().y - Y_OFFSET
+					,100,100);
 		}
 	}
 	

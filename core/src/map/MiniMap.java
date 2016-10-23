@@ -37,7 +37,7 @@ public class MiniMap{
 		//Draw the Mini Map
 		batchMiniMap.setProjectionMatrix(miniCam.combined);
 		batchMiniMap.begin();
-		mBoard.drawMap(batchMiniMap);
+		mBoard.drawMiniMap(batchMiniMap);
 		batchMiniMap.end();
 		
 		//Draw the Markers
