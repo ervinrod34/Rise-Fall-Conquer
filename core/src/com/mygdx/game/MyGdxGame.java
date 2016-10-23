@@ -20,9 +20,9 @@ public class MyGdxGame extends Game {
 	//used in the OptionsMenu
 	public static float DIFFICULTY;
 	public static float RESOLUTION;
-	public static float VOLUME;
-	public static boolean LIGHTING;
-	public static boolean ANIMATION;
+	public static float VOLUME = 50;
+	public static boolean LIGHTING = true;
+	public static boolean ANIMATION = true;
 	
 	@Override
 	public void create () {
