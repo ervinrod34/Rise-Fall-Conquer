@@ -52,8 +52,16 @@ public class GameScreen implements Screen{
 		//set up stage and table
 		stage = new Stage(new ScreenViewport());
 		batch = new SpriteBatch();
-		//set camera position
-		oGameCam = new OrthographicCamera(1280, 720); //game resolution
+		
+		//set camera position, resolution
+		if(MyGdxGame.RESOLUTION == 0.0) {
+			oGameCam = new OrthographicCamera(1024, 576); //low
+		} else if(MyGdxGame.RESOLUTION == 1.0) {
+			oGameCam = new OrthographicCamera(1280, 720); //normal
+		} else {
+			oGameCam = new OrthographicCamera(1600, 900); //high
+		}
+		
 		mBoard = new map.Map(oGameCam, "Map_2.json");
 		this.generateFactions();
 		oGameCam.position.set(factions.get(0).getHomeTile().getLocation().x,factions.get(0).getHomeTile().getLocation().y,0);
