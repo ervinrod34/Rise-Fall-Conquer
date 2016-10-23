@@ -27,14 +27,11 @@ public class OptionsMenu implements Screen{
 	//private TextureAtlas atlas;
 	//private Table mainTable;
 	
+	//Label objects for the different options
 	private Label difficultyLabel;
-	
 	private Label resolutionLabel;
-	
 	private Label volumeLabel; 
-	
 	private Label lightLabel;
-	
 	private Label animationLabel;
 	
 	
@@ -49,15 +46,34 @@ public class OptionsMenu implements Screen{
 		this.difficultyLabel = new Label("DIFFICULTY:", MyGdxGame.MENUSKIN);
 		final Slider difficulty = new Slider(0, 3, 1, false, MyGdxGame.MENUSKIN);
 		difficulty.setValue(MyGdxGame.DIFFICULTY);
-		String savedDifficulty = String.valueOf(MyGdxGame.DIFFICULTY);
-		final Label selectedDifficulty = new Label(savedDifficulty, MyGdxGame.MENUSKIN);
+		int savedDifficulty = Math.round(MyGdxGame.DIFFICULTY);
+		String displayDif = "";
+		if(savedDifficulty == 0) {
+			displayDif = "Very Easy";
+		} else if (savedDifficulty == 1) {
+			displayDif = "Easy";
+		} else if (savedDifficulty == 2){
+			displayDif = "Normal";
+		} else {
+			displayDif = "Hard";
+		}
+		final Label selectedDifficulty = new Label(displayDif, MyGdxGame.MENUSKIN);
 		
 		//Create a Slider to choose the resolution settings
 		this.resolutionLabel = new Label("GRAPHICS:", MyGdxGame.MENUSKIN);
 		final Slider resolution = new Slider(0, 2, 1, false, MyGdxGame.MENUSKIN);
 		resolution.setValue(MyGdxGame.RESOLUTION);
-		String savedResolution = String.valueOf(MyGdxGame.RESOLUTION);
-		final Label selectedResolution = new Label(savedResolution, MyGdxGame.MENUSKIN);
+		int savedResolution = Math.round(MyGdxGame.RESOLUTION);
+		String displayRes = "";
+		
+		if(savedResolution == 0) {
+			displayRes = "Low";
+		} else if (savedResolution == 1) {
+			displayRes = "Med";
+		} else {
+			displayRes = "High";
+		}
+		final Label selectedResolution = new Label(displayRes, MyGdxGame.MENUSKIN);
 		
 		
 		//Create a Bar that changes the music volume
@@ -96,7 +112,8 @@ public class OptionsMenu implements Screen{
 		 * Adds the widgets to the tables.
 		 */
 		centerTable.row();
-		centerTable.add(menu).right();
+		centerTable.add(new Label("", MyGdxGame.MENUSKIN));
+		centerTable.add(menu).center();
 		
 		//difficulty
 		centerTable.row();
@@ -138,33 +155,57 @@ public class OptionsMenu implements Screen{
 			}
 		});
 		
-
+		/**
+		 * Creates an action listener for the difficulty Slider.
+		 * Updates the display for current value of Slider. Saves the
+		 * value to the MyGdxGame.DIFFICULTY.
+		 */
 		difficulty.addListener(new ChangeListener(){
 			public void changed(ChangeEvent event, Actor actor) {
-				selectedDifficulty.setText(String.valueOf(difficulty.getValue()));
+				int intVal = Math.round(difficulty.getValue());
+				String displayValue = "";
+				
+				if(intVal == 0) {
+					displayValue = "Very Easy";
+				} else if (intVal == 1) {
+					displayValue = "Easy";
+				} else if (intVal == 2){
+					displayValue = "Normal";
+				} else {
+					displayValue = "Hard";
+				}
+				selectedDifficulty.setText(displayValue);
 				MyGdxGame.DIFFICULTY = difficulty.getValue();
 			}	
 		});
 		
+		/**
+		 * Creates an action listener for the resolution Slider.
+		 * Updates the display for current value of Slider. Saves the
+		 * value to the MyGdxGame.RESOLUTION.
+		 */
 		resolution.addListener(new ChangeListener(){
 			public void changed(ChangeEvent event, Actor actor) {
 					int intVal = Math.round(resolution.getValue());
-					CharSequence temp = null;
-					//selectedResolution.setText(temp);
-					//System.out.println("Slider value: " + intVal);
+					String displayValue = "";
 					
 					if(intVal == 0) {
-						temp = "Low ";
+						displayValue = "Low";
 					} else if (intVal == 1) {
-						temp = "Med ";
+						displayValue = "Med";
 					} else {
-						temp = "High";
+						displayValue = "High";
 					}
-					selectedResolution.setText(temp);
+					selectedResolution.setText(displayValue);
 					MyGdxGame.RESOLUTION = resolution.getValue();
 			}
 		});
 		
+		/**
+		 * Creates an action listener for the volume Slider.
+		 * Updates the display for current value of Slider. Saves the
+		 * value to the MyGdxGame.VOLUME.
+		 */
 		volume.addListener(new ChangeListener(){
 			public void changed(ChangeEvent event, Actor actor) {
 				selectedVolume.setText(String.valueOf((int)volume.getValue()));
@@ -172,12 +213,20 @@ public class OptionsMenu implements Screen{
 			}
 		});
 		
+		/**
+		 * Creates an action listener for the lighting CheckBox.
+		 * Saves the value to the MyGdxGame.LIGHTING.
+		 */
 		light.addListener(new ChangeListener(){
 			public void changed(ChangeEvent event, Actor actor) {
 				MyGdxGame.LIGHTING = light.isChecked();
 			}
 		});
 		
+		/**
+		 * Creates an action listener for the animation CheckBox.
+		 * Saves the value to the MyGdxGame.ANIMATION.
+		 */
 		animation.addListener(new ChangeListener(){
 			public void changed(ChangeEvent event, Actor actor) {
 				MyGdxGame.ANIMATION = animation.isChecked();
