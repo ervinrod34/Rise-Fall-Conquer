@@ -8,13 +8,11 @@ import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.MathUtils;
-import com.badlogic.gdx.math.Vector;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
@@ -30,8 +28,6 @@ public class Navigator implements InputProcessor {
 	//set the maximum zoom in and out value here
 	private static double MAX_ZOOM = 0.20;
 	private static double MAX_ZOOM_OUT = 1;
-
-	private boolean failed = false;
 	
 	private double zoomValue;	//how much or how quickly to zoom
 	private Vector3 lastTouch;	//holds pos. of last button press

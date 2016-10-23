@@ -1,5 +1,6 @@
 package map;
 
+@SuppressWarnings("unused")
 public class Tiled_Layer {
 	private int[] data;
 	private int height;

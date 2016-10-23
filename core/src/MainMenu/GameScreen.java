@@ -1,6 +1,7 @@
 package MainMenu;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
@@ -9,7 +10,6 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
@@ -54,7 +54,12 @@ public class GameScreen implements Screen{
 		batch = new SpriteBatch();
 		//set camera position
 		oGameCam = new OrthographicCamera(1280, 720); //game resolution
-		mBoard = new map.Map(oGameCam, "Map_2.json");
+		Random rmap = new Random();
+		if(rmap.nextBoolean() == true){
+			mBoard = new map.Map(oGameCam, "Map_1.json");
+		}else{
+			mBoard = new map.Map(oGameCam, "Map_2.json");
+		}
 		this.generateFactions();
 		oGameCam.position.set(factions.get(0).getHomeTile().getLocation().x,factions.get(0).getHomeTile().getLocation().y,0);
 		oGameCam.update();
@@ -154,7 +159,9 @@ public class GameScreen implements Screen{
 		}
 		batch.end();
 		
-		mBoard.drawMapLighting(oGameCam);
+		if(MyGdxGame.LIGHTING == true){
+			mBoard.drawMapLighting(oGameCam);
+		}
 		
 		//draw minimap on top of map
 		miniMap.MiniMapRender();
