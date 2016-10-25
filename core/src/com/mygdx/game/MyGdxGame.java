@@ -52,8 +52,4 @@ public class MyGdxGame extends Game {
 	public void dispose () {
 	}
 	
-	/**
-	 * Handles player input
-	 */
-	
 }
