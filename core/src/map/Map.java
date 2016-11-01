@@ -348,44 +348,140 @@ public class Map {
 				if(grid[x][y] == t){
 					if(y % 2 == 0){
 						// Even row
-						try {
+//						try {
 							switch (d) {
 							case LEFT:
+								boolean inBounds = (x-1 >= 0) && (x-1 < grid.length);
+								if(inBounds == false){
+									return null;
+								}
+								inBounds = (y >= 0) && (y < grid.length);
+								if(inBounds == false){
+									return null;
+								}
 								return grid[x-1][y];
 							case RIGHT:
+								inBounds = (x+1 >= 0) && (x+1 < grid.length);
+								if(inBounds == false){
+									return null;
+								}
+								inBounds = (y >= 0) && (y < grid.length);
+								if(inBounds == false){
+									return null;
+								}
 								return grid[x+1][y];
 							case UPLEFT:
+								inBounds = (x-1 >= 0) && (x-1 < grid.length);
+								if(inBounds == false){
+									return null;
+								}
+								inBounds = (y-1 >= 0) && (y-1 < grid.length);
+								if(inBounds == false){
+									return null;
+								}
 								return grid[x-1][y-1];
 							case UPRIGHT:
+								inBounds = (x >= 0) && (x < grid.length);
+								if(inBounds == false){
+									return null;
+								}
+								inBounds = (y-1 >= 0) && (y-1 < grid.length);
+								if(inBounds == false){
+									return null;
+								}
 								return grid[x][y-1];
 							case DOWNLEFT:
+								inBounds = (x-1 >= 0) && (x-1 < grid.length);
+								if(inBounds == false){
+									return null;
+								}
+								inBounds = (y+1 >= 0) && (y+1 < grid.length);
+								if(inBounds == false){
+									return null;
+								}
 								return grid[x-1][y+1];
 							case DOWNRIGHT:
+								inBounds = (x >= 0) && (x < grid.length);
+								if(inBounds == false){
+									return null;
+								}
+								inBounds = (y+1 >= 0) && (y+1 < grid.length);
+								if(inBounds == false){
+									return null;
+								}
 								return grid[x][y+1];
 							}
-						} catch (ArrayIndexOutOfBoundsException e) {
-							return null;
-						}
+//						} catch (ArrayIndexOutOfBoundsException e) {
+//							return null;
+//						}
 					}else{
 						// Odd row
-						try {
+//						try {
 							switch (d) {
 							case LEFT:
+								boolean inBounds = (x-1 >= 0) && (x-1 < grid.length);
+								if(inBounds == false){
+									return null;
+								}
+								inBounds = (y >= 0) && (y < grid.length);
+								if(inBounds == false){
+									return null;
+								}
 								return grid[x-1][y];
 							case RIGHT:
+								inBounds = (x+1 >= 0) && (x+1 < grid.length);
+								if(inBounds == false){
+									return null;
+								}
+								inBounds = (y >= 0) && (y < grid.length);
+								if(inBounds == false){
+									return null;
+								}
 								return grid[x+1][y];
 							case UPLEFT:
+								inBounds = (x >= 0) && (x < grid.length);
+								if(inBounds == false){
+									return null;
+								}
+								inBounds = (y-1 >= 0) && (y-1 < grid.length);
+								if(inBounds == false){
+									return null;
+								}
 								return grid[x][y-1];
 							case UPRIGHT:
+								inBounds = (x+1 >= 0) && (x+1 < grid.length);
+								if(inBounds == false){
+									return null;
+								}
+								inBounds = (y-1 >= 0) && (y-1 < grid.length);
+								if(inBounds == false){
+									return null;
+								}
 								return grid[x+1][y-1];
 							case DOWNLEFT:
+								inBounds = (x >= 0) && (x < grid.length);
+								if(inBounds == false){
+									return null;
+								}
+								inBounds = (y+1 >= 0) && (y+1 < grid.length);
+								if(inBounds == false){
+									return null;
+								}
 								return grid[x][y+1];
 							case DOWNRIGHT:
+								inBounds = (x+1 >= 0) && (x+1 < grid.length);
+								if(inBounds == false){
+									return null;
+								}
+								inBounds = (y+1 >= 0) && (y+1 < grid.length);
+								if(inBounds == false){
+									return null;
+								}
 								return grid[x+1][y+1];
 							}
-						} catch (ArrayIndexOutOfBoundsException e) {
-							return null;
-						}
+//						} catch (ArrayIndexOutOfBoundsException e) {
+//							return null;
+//						}
 					}
 				}
 			}
@@ -416,5 +512,15 @@ public class Map {
 			}
 		}
 		return rangeList;
+	}
+	
+	public int getTileDistance(Tile t, Tile d, int maxRange){
+		for(int i = 1; i <= maxRange; i++){
+			ArrayList <Tile> list = getTilesInRange(t, i, null);
+			if(list != null && list.contains(d) == true){
+				return i;
+			}
+		}
+		return -1;
 	}
 }

@@ -13,7 +13,10 @@ import com.badlogic.gdx.scenes.scene2d.ui.Widget;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.mygdx.game.MyGdxGame;
 
+import factions.Faction;
 import factions.PlayerFaction;
+import factions.Unit;
+import factions.UnitID;
 import map.Tile;
 
 public class HomeTileOption {
@@ -24,12 +27,12 @@ public class HomeTileOption {
 	private Table tOptions, holder, container, buttonsTable;
 	private Tile tile;
 	private boolean isOpen;
-	private PlayerFaction pf;
+	private ArrayList<Faction> factions;
 
-	public HomeTileOption(Tile t, PlayerFaction pf) {
+	public HomeTileOption(Tile t, ArrayList<Faction> factionList) {
 		//initialize tile, player faction, whether or not menu is open
 		tile = t;
-		this.pf = pf;
+		this.factions = factionList;
 		isOpen = false;
 		
 		ArrayList<Cell> cells = new ArrayList<Cell>();
@@ -109,7 +112,17 @@ public class HomeTileOption {
 	private void setBuildListeners() {
 		buildWorker.addListener(new ClickListener() {
 			public void clicked(InputEvent e,float x,float y){
+				//Makes sure there are no units on the tile before creating units
+				for(Faction f : factions){
+					for(Unit u : f.getUnits()){
+						if(u.getLocation() == tile){
+							return;
+						}
+					}
+				}
+				// Create a new unit
 				Gdx.app.log(this.getClass().getName(),"IM SO HAPPY RIGHT NOW, I BUILT A WORKER");
+				factions.get(0).addUnit(UnitID.Basic, tile);
 			}
 		});
 	}

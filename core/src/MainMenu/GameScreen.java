@@ -20,6 +20,7 @@ import com.mygdx.game.MyGdxGame;
 import com.mygdx.game.Navigator;
 
 import CustomWidgets.GameBar;
+import box2dLight.RayHandler;
 import factions.Faction;
 import factions.PlayerFaction;
 import factions.ScoreBoard;
@@ -39,7 +40,6 @@ public class GameScreen implements Screen{
 	private ArrayList<Faction> factions;
     private int totalTurns;
     private ScoreBoard scoreBoard;
-    
     
 	private GameBar bar;
 	private DayNightCycle dnCycle;
@@ -81,7 +81,7 @@ public class GameScreen implements Screen{
 		miniMap = new MiniMap(mBoard, factions);
 	
 		//set up input processors, arrow keys, mouse click
-		nav = new Navigator(oGameCam, batch, stage, mBoard, (PlayerFaction) factions.get(0));
+		nav = new Navigator(oGameCam, batch, stage, mBoard, factions);
 		InputMultiplexer ipm = new InputMultiplexer();
 		ipm.addProcessor(nav);
 		ipm.addProcessor(stage);
@@ -167,6 +167,7 @@ public class GameScreen implements Screen{
 		mBoard.drawView(batch, oGameCam);
 		for(Faction fac : factions){
 			fac.drawTerritory(batch);
+			fac.drawUnits(batch);
 		}
 		batch.end();
 		
@@ -223,12 +224,12 @@ public class GameScreen implements Screen{
 			Faction faction = null;
 			if(FactId == 1){
 				//Set the first faction to a player owned one
-				faction = new PlayerFaction(FactId, home, mBoard, Color.BLUE);
+				faction = new PlayerFaction(FactId, home, mBoard, Color.BLUE, mBoard.getrayHandler());
 				//add a score entry for the player faction
 				scoreBoard.addScore(faction.getScore());
 			}else{
 				//Set the other factions to normal
-				faction = new PlayerFaction(FactId, home, mBoard, Color.RED);
+				faction = new PlayerFaction(FactId, home, mBoard, Color.RED, mBoard.getrayHandler());
 				//add a score entry for a nonplayer faction
 				scoreBoard.addScore(faction.getScore());
 			}

@@ -16,11 +16,11 @@ import com.badlogic.gdx.math.Vector2;
  */
 public class BasicAnimation{
 	
-    Animation animation;
-    ParticleEffect pEffect;
-    TextureRegion currentFrame;
-    float stateTime; 
-    Vector2 Location;
+    private Animation animation;
+    private ParticleEffect pEffect;
+    private TextureRegion currentFrame;
+    private float stateTime; 
+    private Vector2 Location;
     
 	public BasicAnimation(BasicAnimationID id, float x, float y){
 		if(id.getAnimatedSheet() != null){

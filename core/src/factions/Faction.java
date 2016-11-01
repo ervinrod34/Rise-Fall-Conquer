@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
+import box2dLight.RayHandler;
 import map.Map;
 import map.Tile;
 import map.TileID;
@@ -23,9 +24,12 @@ public class Faction {
 	private Tile HomeTile;
 	// List of claimed tiles by the faction
 	private ArrayList<Tile> ClaimedTiles;
+	// List of units by the faction
+	private ArrayList<Unit> Units;
 	// this faction's score
 	Score score;
-
+	RayHandler rayHandler;
+	
 	private Color cTerritory;
 	
 	public Color getcTerritory() {
@@ -54,11 +58,13 @@ public class Faction {
 	 * @param homeTile The faction's home tile
 	 * @param m The map where the faction is
 	 */
-	public Faction(int id, Tile homeTile, Map m, Color c) {
+	public Faction(int id, Tile homeTile, Map m, Color c, RayHandler rayHandler) {
 		this.Id = id;
 		this.mBoard = m;
+		this.rayHandler = rayHandler;
 		score = new Score(id);
 		ClaimedTiles = new ArrayList<Tile>();
+		Units = new ArrayList<Unit>();
 		this.HomeTile = homeTile;
 		this.claimTile(HomeTile);
 		
@@ -97,7 +103,12 @@ public class Faction {
 		tile.setClaim(0);
 		ClaimedTiles.remove(tile);
 	}
-	
+	public void addUnit(UnitID type, Tile location){
+		this.Units.add(new Unit(type, location, mBoard, rayHandler));
+	}
+	public void removeUnit(Unit unit){
+		this.Units.remove(unit);
+	}
 	/**
 	 * Draws the territory own by this faction
 	 * 
@@ -111,7 +122,15 @@ public class Faction {
 			batch.setColor(c);
 		}
 	}
-	
+	/**
+	 * Draws units owned by faction
+	 * @param batch
+	 */
+	public void drawUnits(SpriteBatch batch){
+		for(Unit u : Units){
+			u.draw(batch);
+		}
+	}
 	/**
 	 * Returns the faction's home tile.
 	 * @return A Tile object
@@ -119,7 +138,13 @@ public class Faction {
 	public Tile getHomeTile() {
 		return HomeTile;
 	}
-	
+	/**
+	 * Gives the units the faction owns
+	 * @return
+	 */
+	public ArrayList<Unit> getUnits(){
+		return Units;
+	}
 	/**
 	 * get the factions Id (1 is the player)
 	 * @return
