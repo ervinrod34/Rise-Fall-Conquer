@@ -125,6 +125,13 @@ public class Unit {
 		MovementRangeTiles = m.getTilesInRange(location, this.MovementRange, null);
 	}
 	/**
+	 * Updates the unit's fields, call at end of turn
+	 */
+	public void update(Map m){
+		this.MovementRange = this.MaxMovementRange;
+		MovementRangeTiles = m.getTilesInRange(location, this.MovementRange, null);
+	}
+	/**
 	 * Get the units location
 	 * @return
 	 */

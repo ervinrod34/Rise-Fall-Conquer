@@ -229,23 +229,25 @@ public class Navigator implements InputProcessor {
 			}
 			if(isOpen == false){
 				Tile t = m.getClickedTile2(mPos);
-				try{
-					if(t.getResourceID().name().equals("HOME")){
-						hp = new HomeTileOption(t,this.factions);
-						stage.addActor(hp.gettOptions());
-						hp.setIsOpen(true);
-						isOpen=true;
-					}else{
+				if (factions.get(0).getBuildRange().contains(t) == true) {
+					try {
+						if (t.getResourceID().name().equals("HOME")) {
+							hp = new HomeTileOption(t, this.factions);
+							stage.addActor(hp.gettOptions());
+							hp.setIsOpen(true);
+							isOpen = true;
+						} else {
+							op = new TileOptions(t, (PlayerFaction) this.factions.get(0));
+							stage.addActor(op.gettOptions());
+							op.setIsOpen(true);
+							isOpen = true;
+						}
+					} catch (NullPointerException e) {
 						op = new TileOptions(t, (PlayerFaction) this.factions.get(0));
 						stage.addActor(op.gettOptions());
 						op.setIsOpen(true);
-						isOpen=true;
+						isOpen = true;
 					}
-				} catch(NullPointerException e){
-					op = new TileOptions(t, (PlayerFaction) this.factions.get(0));
-					stage.addActor(op.gettOptions());
-					op.setIsOpen(true);
-					isOpen=true;
 				}
 			}
 		}
@@ -289,6 +291,7 @@ public class Navigator implements InputProcessor {
 					//Set location if no collision with other units
 					if(collision == false){
 						unitOptions.getUnit().setLocation(tile, m);
+						factions.get(0).calculateBuildRange();
 					}
 					unitOptions.getUnit().displayMovementRange();
 					unitOptions.setIsMoving(false);

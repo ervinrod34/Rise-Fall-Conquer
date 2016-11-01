@@ -24,6 +24,8 @@ public class Faction {
 	private Tile HomeTile;
 	// List of claimed tiles by the faction
 	private ArrayList<Tile> ClaimedTiles;
+	// List of tiles the player can build on
+	private ArrayList<Tile> BuildRange;
 	// List of units by the faction
 	private ArrayList<Unit> Units;
 	// this faction's score
@@ -64,6 +66,7 @@ public class Faction {
 		this.rayHandler = rayHandler;
 		score = new Score(id);
 		ClaimedTiles = new ArrayList<Tile>();
+		BuildRange = new ArrayList<Tile>();
 		Units = new ArrayList<Unit>();
 		this.HomeTile = homeTile;
 		this.claimTile(HomeTile);
@@ -87,12 +90,45 @@ public class Faction {
 		return score;
 	}
 	/**
+	 * Calculates the range in which factions can build
+	 */
+	public void calculateBuildRange(){
+		BuildRange.clear();
+		for(Tile t : ClaimedTiles){
+			// Must have a resource to increase build range
+			if(t.getResource() == null){
+				continue;
+			}
+			// Add the tile itself
+			BuildRange.add(t);
+			// Add all its neighbors
+			for(Tile neighbor : mBoard.getNeighborTiles(t)){
+				if(BuildRange.contains(neighbor) == false){
+					BuildRange.add(neighbor);
+				}
+			}
+		}
+		// Add units into build range
+		for(Unit u : this.getUnits()){
+			if(BuildRange.contains(u.getLocation()) == false){
+				BuildRange.add(u.getLocation());
+				// Add all its neighbors
+				for(Tile neighbor : mBoard.getNeighborTiles(u.getLocation())){
+					if(BuildRange.contains(neighbor) == false){
+						BuildRange.add(neighbor);
+					}
+				}
+			}
+		}
+	}
+	/**
 	 * Claims the specified tile for the faction
 	 * @param tile
 	 */
 	public void claimTile(Tile tile){
 		tile.setClaim(Id);
 		ClaimedTiles.add(tile);
+		this.calculateBuildRange();
 		this.updateResourcesPerTurn();
 	}
 	/**
@@ -102,10 +138,20 @@ public class Faction {
 	public void unclaimTile(Tile tile){
 		tile.setClaim(0);
 		ClaimedTiles.remove(tile);
+		this.calculateBuildRange();
 	}
+	/**
+	 * Adds the unit to the faction
+	 * @param type
+	 * @param location
+	 */
 	public void addUnit(UnitID type, Tile location){
 		this.Units.add(new Unit(type, location, mBoard, rayHandler));
 	}
+	/**
+	 * Removes the unit from the faction
+	 * @param unit
+	 */
 	public void removeUnit(Unit unit){
 		this.Units.remove(unit);
 	}
@@ -144,6 +190,13 @@ public class Faction {
 	 */
 	public ArrayList<Unit> getUnits(){
 		return Units;
+	}
+	/**
+	 * Get the range in which the player can build
+	 * @return
+	 */
+	public ArrayList<Tile> getBuildRange(){
+		return BuildRange;
 	}
 	/**
 	 * get the factions Id (1 is the player)

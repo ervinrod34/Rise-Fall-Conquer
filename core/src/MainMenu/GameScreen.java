@@ -24,6 +24,7 @@ import box2dLight.RayHandler;
 import factions.Faction;
 import factions.PlayerFaction;
 import factions.ScoreBoard;
+import factions.Unit;
 import map.DayNightCycle;
 import map.MiniMap;
 import map.Tile;
@@ -108,6 +109,9 @@ public class GameScreen implements Screen{
 			public void clicked(InputEvent event, float x, float y) {
 				for(Faction f : factions){
 					f.updateTotalResources();
+					for(Unit u : f.getUnits()){
+						u.update(mBoard);
+					}
 				}
 				final Timer time = new Timer();
 				time.scheduleTask(new Task(){
