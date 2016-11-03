@@ -211,6 +211,11 @@ public class Navigator implements InputProcessor {
 						unitOptions.getUnit().displayMovementRange();
 						unitOptions.setIsMoving(false);
 					}
+					// Reset the last unit movement
+					if(unitOptions != null && unitOptions.isAttacking() == true){
+						unitOptions.getUnit().displayAttackRange();
+						unitOptions.setAttacking(false);
+					}
 					unitOptions = new UnitOption(u);
 					stage.addActor(unitOptions.gettOptions());
 					unitOptions.setIsOpen(true);
@@ -282,10 +287,12 @@ public class Navigator implements InputProcessor {
 				if(unitOptions.getUnit().getMovementRange() != null && unitOptions.getUnit().getMovementRange().contains(tile) == true){
 					//Check for collision with player units
 					boolean collision = false;
-					for (Unit u : factions.get(0).getUnits()) {
-						if(u.getLocation().equals(tile) == true){
-							collision = true;
-							break;
+					for (Faction f : factions) {
+						for (Unit u : f.getUnits()) {
+							if (u.getLocation().equals(tile) == true) {
+								collision = true;
+								break;
+							}
 						}
 					}
 					//Set location if no collision with other units
@@ -299,6 +306,28 @@ public class Navigator implements InputProcessor {
 					unitOptions.getUnit().displayMovementRange();
 					unitOptions.setIsMoving(false);
 				}
+			}
+			// If the unit is attacking
+			if (unitOptions != null && unitOptions.isAttacking() == true) {
+				Tile tile = m.getClickedTile2(mPos);
+				if (unitOptions.getUnit().getAttackRange() != null
+						&& unitOptions.getUnit().getAttackRange().contains(tile) == true) {
+					for (Faction f : factions) {
+						// Only attack non-player units
+						if(f.equals(factions.get(0))){
+							continue;
+						}
+						// Check for collision with faction units
+						for (Unit u : f.getUnits()) {
+							if (u.getLocation().equals(tile) == true) {
+								unitOptions.getUnit().attack(u);
+								break;
+							}
+						}
+					}
+				}
+					unitOptions.getUnit().displayAttackRange();
+					unitOptions.setAttacking(false);
 			}
 			lastTouch.set(screenX, screenY,0);
 			//return true;

@@ -12,14 +12,13 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.mygdx.game.MyGdxGame;
 
 import factions.Unit;
-import map.Map;
 
 public class UnitOption {
 	
-	private Label menuTitle;
-	private TextButton exitButton, upgradeButton, moveButton;
-	private Table tOptions, holder, container, buttonsTable;
-	private boolean isOpen, isMoving;
+	private Label menuTitle, infoHealth, infoDefense, infoAttack;
+	private TextButton exitButton, upgradeButton, moveButton, attackButton;
+	private Table tOptions, container, infoTable, unitButtonTable;
+	private boolean isOpen, isMoving, isAttacking;
 	private Unit uUnit;
 	
 	public UnitOption(Unit u) {
@@ -32,41 +31,53 @@ public class UnitOption {
 		
 		// Create all tables to be used
 		setContainer(new Table(MyGdxGame.MENUSKIN));
+		container.setFillParent(true);
 		tOptions = new Table(MyGdxGame.MENUSKIN);
 		tOptions.setFillParent(true);
-		holder = new Table(MyGdxGame.MENUSKIN);
-		holder.setFillParent(true);
-		buttonsTable = new Table(MyGdxGame.MENUSKIN);
+		infoTable = new Table(MyGdxGame.MENUSKIN);
+		unitButtonTable = new Table(MyGdxGame.MENUSKIN);
+		//infoTable.setFillParent(true);
 		
 		// Create basic menu labels
 		menuTitle = new Label(uUnit.getType().name(), MyGdxGame.MENUSKIN);
 		
+		// Create unit info
+		infoHealth = new Label("Health: " + Integer.toString((int)uUnit.getHealth()), MyGdxGame.MENUSKINHUD, "info");
+		infoAttack = new Label("Attack: " + Integer.toString((int)uUnit.getAttack()), MyGdxGame.MENUSKINHUD, "info");
+		infoDefense = new Label("Defense: " + Integer.toString((int)uUnit.getDefense()), MyGdxGame.MENUSKINHUD, "info");
+		infoTable.add(infoHealth).pad(3);
+		infoTable.add(infoAttack).pad(3);
+		infoTable.add(infoDefense).pad(3);
+		
 		// Create generic background for tables
 		Label background = new Label("", MyGdxGame.MENUSKINHUD);
 		
-		// create text buttons
+		// Create text buttons
 		exitButton = new TextButton("Exit",MyGdxGame.MENUSKIN);
 		upgradeButton = new TextButton("Upgrade",MyGdxGame.MENUSKIN);
 		moveButton = new TextButton("Move",MyGdxGame.MENUSKIN);
+		attackButton = new TextButton("Attack",MyGdxGame.MENUSKIN);
 		textButtons.add(exitButton);
 		textButtons.add(upgradeButton);
 		textButtons.add(moveButton);
+		textButtons.add(attackButton);
+		cells.add(unitButtonTable.add(upgradeButton));
+		cells.add(unitButtonTable.add(moveButton));
+		cells.add(unitButtonTable.add(attackButton));
 		
-		//add items to table
+		// Add items to table
 		getContainer().add(menuTitle);
 		getContainer().row();
-		cells.add(getContainer().add(upgradeButton));
+		getContainer().add(infoTable);
 		getContainer().row();
-		cells.add(getContainer().add(moveButton));
+		getContainer().add(unitButtonTable);
 		getContainer().row();
 		cells.add(getContainer().add(exitButton));
 		getContainer().row();
-		holder.add(getContainer());
-		holder.add(buttonsTable);
 		
 		settOptions(new Table(MyGdxGame.MENUSKIN));
 		tOptions.setFillParent(true);
-		tOptions.stack(background, holder);
+		tOptions.stack(background, getContainer());
 		
 		//Make all text buttons the same size
 		this.resizeTextButtons(textButtons, cells);
@@ -93,6 +104,19 @@ public class UnitOption {
 				getContainer().invalidateHierarchy();
 				setIsOpen(false);
 				isMoving = true;
+			}
+		});
+		attackButton.addListener(new ClickListener(){
+			public void clicked(InputEvent e,float x,float y){
+				tOptions.remove();
+				getContainer().remove();
+				getContainer().invalidateHierarchy();
+				if(uUnit.hasAttacked() == true){
+					return;
+				}
+				setIsOpen(false);
+				uUnit.displayAttackRange();
+				isAttacking = true;
 			}
 		});
 		
@@ -152,6 +176,21 @@ public class UnitOption {
 	public void setIsMoving(boolean moving){
 		this.isMoving = moving;
 	}
+	
+	/**
+	 * @return the isAttacking
+	 */
+	public boolean isAttacking() {
+		return isAttacking;
+	}
+
+	/**
+	 * @param isAttacking the isAttacking to set
+	 */
+	public void setAttacking(boolean isAttacking) {
+		this.isAttacking = isAttacking;
+	}
+
 	public Unit getUnit(){
 		return uUnit;
 	}

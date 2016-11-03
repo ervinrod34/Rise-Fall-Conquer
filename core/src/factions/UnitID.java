@@ -17,7 +17,9 @@ import map.TileID;
  *
  */
 public enum UnitID {
-	Basic(65, "BasicUnit0.png", "BasicUnit1.png", "BasicUnit2.png");
+	Basic(65, "BasicUnit0.png", "BasicUnit1.png", "BasicUnit2.png"),
+	UNIT_1(66, "Unit0.png", "Unit1.png", "Unit2.png", "Unit3.png", "Unit4.png"),
+	UNDEAD_1(66, "UndeadUnit1.png", "UndeadUnit2.png", "UndeadUnit3.png");
 
 	private int Id;
 	//private Texture[] textures;

@@ -25,6 +25,7 @@ import factions.Faction;
 import factions.PlayerFaction;
 import factions.ScoreBoard;
 import factions.Unit;
+import factions.UnitID;
 import map.DayNightCycle;
 import map.MiniMap;
 import map.Tile;
@@ -233,8 +234,10 @@ public class GameScreen implements Screen{
 				scoreBoard.addScore(faction.getScore());
 			}else{
 				//Set the other factions to normal
-				faction = new PlayerFaction(FactId, home, mBoard, Color.RED, mBoard.getrayHandler());
-				//add a score entry for a nonplayer faction
+				faction = new Faction(FactId, home, mBoard, Color.RED, mBoard.getrayHandler());
+				// Add an enemy at there home tiles
+				faction.addUnit(UnitID.Basic, faction.getHomeTile());
+				//add a score entry for a non-player faction
 				scoreBoard.addScore(faction.getScore());
 			}
 			//Add a animation to the home tile

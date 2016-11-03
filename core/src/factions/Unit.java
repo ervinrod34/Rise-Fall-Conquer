@@ -26,12 +26,24 @@ public class Unit {
 	
 	private PointLight pLight;
 	
-	// Testing path movement
+	// Movement
 	private boolean displayMovementRange;
 	private ArrayList<Tile> MovementRangeTiles;
 	private int MaxMovementRange = 5;
 	private int MovementRange = MaxMovementRange;
-		
+	
+	// Attack
+	private boolean displayAttackRange;
+	private boolean attacked;
+	private ArrayList<Tile> AttackRangeTiles;
+	private int MaxAttackRange = 5;
+	private int AttackRange = MaxMovementRange;
+	
+	// Units stats
+	private double health;
+	private double attack;
+	private double defense;
+	
 	public Unit(UnitID type, Tile location, Map m, RayHandler rayHandler){
 		this.setupPointLight(rayHandler);
 		this.setLocation(location, m);
@@ -43,6 +55,12 @@ public class Unit {
 		this.upgrade();
 		
 		this.displayMovementRange = false;
+		this.displayAttackRange = false;
+		this.attacked = false;
+		
+		this.health = 100;
+		this.attack = 25;
+		this.defense = 10;
 	}
 	
 	/**
@@ -50,13 +68,21 @@ public class Unit {
 	 * @param batch
 	 */
 	public void draw(SpriteBatch batch){
-		if(displayMovementRange == true && MovementRangeTiles != null){
-		for(Tile tile : MovementRangeTiles){
-			Color c = batch.getColor();
-			batch.setColor(Color.CYAN);
-			batch.draw(TileID.TERRITORY.getImg(), tile.getLocation().x, tile.getLocation().y);
-			batch.setColor(c);
+		if (displayMovementRange == true && MovementRangeTiles != null) {
+			for (Tile tile : MovementRangeTiles) {
+				Color c = batch.getColor();
+				batch.setColor(Color.CYAN);
+				batch.draw(TileID.TERRITORY.getImg(), tile.getLocation().x, tile.getLocation().y);
+				batch.setColor(c);
+			}
 		}
+		if (displayAttackRange == true && AttackRangeTiles != null) {
+			for (Tile tile : AttackRangeTiles) {
+				Color c = batch.getColor();
+				batch.setColor(Color.RED);
+				batch.draw(TileID.TERRITORY.getImg(), tile.getLocation().x, tile.getLocation().y);
+				batch.setColor(c);
+			}
 		}
 		stateTime += Gdx.graphics.getDeltaTime();
 		batch.draw(animation.getKeyFrame(stateTime, true), location.getLocation().x, location.getLocation().y);
@@ -66,12 +92,24 @@ public class Unit {
 	 * Upgrades the unit
 	 */
 	public void upgrade(){
-		if(this.upgrade < type.getTextures()[0].length){
+		if(this.upgrade < type.getTextures().length - 1){
 			this.upgrade++;
 			animation = new Animation(0.5f, type.getTextures()[this.upgrade]);
 		}else{
 			upgradable = false;
 		}
+	}
+	/**
+	 * Attacks the given unit
+	 * @param u
+	 */
+	public void attack(Unit u){
+		this.attacked = true;
+		System.out.println("Attacked: " + u.getType().name());
+		if(this.attack > u.defense){
+			u.damage(this.attack - u.defense);
+		}
+		System.out.println("Health: " + u.getHealth());
 	}
 	/**
 	 * Display the movement range for the given tile on the map
@@ -83,6 +121,18 @@ public class Unit {
 			this.displayMovementRange = true;
 		}else{
 			this.displayMovementRange = false;
+		}
+	}
+	/**
+	 * Display the attack range for the given tile on the map
+	 * 
+	 * @param m
+	 */
+	public void displayAttackRange(){
+		if(this.displayAttackRange == false){
+			this.displayAttackRange = true;
+		}else{
+			this.displayAttackRange = false;
 		}
 	}
 	/**
@@ -123,13 +173,20 @@ public class Unit {
 		this.location = location;
 		this.setLightLocation();
 		MovementRangeTiles = m.getTilesInRange(location, this.MovementRange, null);
+		AttackRangeTiles = m.getTilesInRange(location, this.AttackRange, null);
 	}
 	/**
 	 * Updates the unit's fields, call at end of turn
 	 */
 	public void update(Map m){
+		// Update movement range
 		this.MovementRange = this.MaxMovementRange;
 		MovementRangeTiles = m.getTilesInRange(location, this.MovementRange, null);
+		// Update attack range
+		this.AttackRange = this.MaxAttackRange;
+		AttackRangeTiles = m.getTilesInRange(location, this.AttackRange, null);
+		// Set has attacked to false
+		this.attacked = false;
 	}
 	/**
 	 * Get the units location
@@ -158,5 +215,44 @@ public class Unit {
 	 */
 	public ArrayList<Tile> getMovementRange(){
 		return MovementRangeTiles;
+	}
+
+	/**
+	 * @return the attackRangeTiles
+	 */
+	public ArrayList<Tile> getAttackRange() {
+		return AttackRangeTiles;
+	}
+
+	/**
+	 * @return the health
+	 */
+	public double getHealth() {
+		return health;
+	}
+
+	/**
+	 * @return the attack
+	 */
+	public double getAttack() {
+		return attack;
+	}
+
+	/**
+	 * @return the defense
+	 */
+	public double getDefense() {
+		return defense;
+	}
+	/**
+	 * Damages the unit by the amount given
+	 * @param amount
+	 */
+	public void damage(double amount){
+		this.health -= amount;
+	}
+
+	public boolean hasAttacked() {
+		return attacked;
 	}
 }

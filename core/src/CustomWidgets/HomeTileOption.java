@@ -121,8 +121,7 @@ public class HomeTileOption {
 					}
 				}
 				// Create a new unit
-				Gdx.app.log(this.getClass().getName(),"IM SO HAPPY RIGHT NOW, I BUILT A WORKER");
-				factions.get(0).addUnit(UnitID.Basic, tile);
+				factions.get(0).addUnit(UnitID.UNIT_1, tile);
 			}
 		});
 	}
