@@ -7,6 +7,7 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.mygdx.game.MyGdxGame;
+import factions.ScoreBoard;
 
 public class LeaderScreen implements Screen {
 
@@ -20,6 +21,11 @@ public class LeaderScreen implements Screen {
 		mainTable = new Table(MyGdxGame.MENUSKIN);
 		mainTable.setBounds(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 		mainTable.setFillParent(true);
+		
+		ScoreBoard s = new ScoreBoard();
+		s.fillFromDatabase();
+		
+		
 	}
 
 	@Override

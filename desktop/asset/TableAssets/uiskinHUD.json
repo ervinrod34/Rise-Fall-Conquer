@@ -11,6 +11,7 @@ com.badlogic.gdx.scenes.scene2d.ui.Skin$TintedDrawable: {
 },
 com.badlogic.gdx.scenes.scene2d.ui.Label$LabelStyle: {
 	default: { font: default-font, fontColor: white, background: default-rect },
+	info: { font: default-font, fontColor: white, background: grey},
 	hmm: { font: default-font, fontColor: green, background: default-window}
 },
 com.badlogic.gdx.scenes.scene2d.ui.ImageButton$ImageButtonStyle: {

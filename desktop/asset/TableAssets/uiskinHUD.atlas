@@ -268,3 +268,10 @@ white
   orig: 3, 3
   offset: 0, 0
   index: -1
+grey
+  rotate: false
+  xy: 132, 31
+  size: 3, 3
+  orig: 3, 3
+  offset: 0, 0
+  index: -1

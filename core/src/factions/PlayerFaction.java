@@ -2,6 +2,7 @@ package factions;
 
 import com.badlogic.gdx.graphics.Color;
 
+import box2dLight.RayHandler;
 import map.Map;
 import map.Tile;
 /**
@@ -12,8 +13,8 @@ import map.Tile;
  */
 public class PlayerFaction extends Faction{
 
-	public PlayerFaction(int id, Tile homeTile, Map m, Color c) {
-		super(id, homeTile, m, c);
+	public PlayerFaction(int id, Tile homeTile, Map m, Color c, RayHandler rayHandler) {
+		super(id, homeTile, m, c, rayHandler);
 	}
 
 	/**

@@ -1,8 +1,13 @@
 package MainMenu;
 
+import java.util.Random;
+
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
@@ -12,11 +17,18 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.mygdx.game.MyGdxGame;
 
+import map.Map;
+import map.ResourceID;
+import map.Tile;
+
 public class MainMenu implements Screen{
 
 	private Stage stage;
 	private Table mainTable;
-
+	private SpriteBatch batch;
+	private OrthographicCamera cam;
+	private Map map;
+	
 	public MainMenu()
 	{
 		stage = new Stage(new ScreenViewport());
@@ -52,6 +64,10 @@ public class MainMenu implements Screen{
 		//add table to stage
 		stage.addActor(mainTable);
 
+		batch = new SpriteBatch();
+		cam = new OrthographicCamera(1280, 720);
+		map = new Map(cam);
+		
 		//create action listeners for menu buttons
 		play.addListener(new ClickListener(){
 			public void clicked(InputEvent event, float x, float y) {
@@ -84,7 +100,16 @@ public class MainMenu implements Screen{
 	public void render(float delta) {
 		Gdx.gl.glClearColor(50/255f, 50/255f, 50/255f, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+		batch.begin();
+		map.drawAnimated(batch);
+		batch.end();
 		stage.draw();
+		if(Gdx.input.isKeyPressed(Input.Keys.P)){
+			Tile t = map.getRandomTile();
+			t.setResourceID(ResourceID.TEMP);
+			t.getResource().upgradeTile();
+			t.getResource().upgradeTile();
+		}
 	}
 
 	@Override

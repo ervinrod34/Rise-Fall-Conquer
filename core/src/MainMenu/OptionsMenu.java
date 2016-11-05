@@ -1,5 +1,11 @@
 package MainMenu;
 
+/**
+ * 
+ * @author Seth
+ * @co-author Ervin
+ */
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;

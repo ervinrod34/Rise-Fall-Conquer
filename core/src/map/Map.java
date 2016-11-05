@@ -57,6 +57,11 @@ public class Map {
 	// Light manager 
 	private RayHandler rayHandler;
 	
+	// Animated Map values
+	private float amountShown;
+	private float stateTime;
+	private boolean animationFull;
+	private float animationType;
 	/**
 	 * Creates the map where the game will take place
 	 */
@@ -66,6 +71,15 @@ public class Map {
 		Font = new BitmapFont();
 		Font.getData().setScale(0.5f, 0.5f);
 		Font.setColor(Color.BLACK);
+	}
+	
+	/**
+	 * Creates the map for title screen
+	 */
+	public Map(OrthographicCamera oGameCam) {
+		this.createLighting(oGameCam);
+		this.createMenuGrid();
+		this.amountShown = -10;
 	}
 	
 	/**
@@ -117,6 +131,14 @@ public class Map {
 		return null;
 	}
 	/**
+	 * Gives a random tile in the map
+	 * @return
+	 */
+	public Tile getRandomTile(){
+		Random rand = new Random();
+		return grid[rand.nextInt(grid.length)][rand.nextInt(grid[0].length)];
+	}
+	/**
 	 * Reads in the map.json file
 	 * 
 	 * @param filepath
@@ -148,11 +170,22 @@ public class Map {
 	 * Creates the grid
 	 */
 	private void createGrid(String filename) {
-		ArrayList<Tiled_Layer> tLayers = readTiledJson(filename);
-		int[][] data = tLayers.get(0).getmapData();
-		int[][] rdata = tLayers.get(1).getmapData();
-		int xSize = data[0].length;
-		int ySize = data.length;
+		int xSize = XSIZE;
+		int ySize = YSIZE;
+		int[][] data = new int [XSIZE][YSIZE];
+		for (int x = 0; x < xSize; x++) {
+			for (int y = 0; y < ySize; y++) {
+				data[x][y] = TileID.GRASS.getId();
+			}
+		}
+		int[][] rdata = new int [XSIZE][YSIZE];
+		if (filename != null) {
+			ArrayList<Tiled_Layer> tLayers = readTiledJson(filename);
+			data = tLayers.get(0).getmapData();
+			rdata = tLayers.get(1).getmapData();
+			xSize = data[0].length;
+			ySize = data.length;
+		}
 		grid = new Tile[xSize][ySize];
 		for (int x = 0; x < xSize; x++) {
 			for (int y = 0; y < ySize; y++) {
@@ -161,6 +194,32 @@ public class Map {
 					grid[x][y] = new Tile(data[x][y], rdata[x][y], x * TILEWIDTH + TILEWIDTH / 2, y * (TILEHEIGHT * 3 / 4), rayHandler);
 				} else {
 					grid[x][y] = new Tile(data[x][y], rdata[x][y], x * TILEWIDTH, y * (TILEHEIGHT * 3 / 4), rayHandler);
+				}
+				grid[x][y].setGridLocation(x, y);
+			}
+		}
+	}
+	/**
+	 * Creates the menu grid
+	 */
+	private void createMenuGrid() {
+		int xSize = 13;
+		int ySize = 12;
+		int[][] data = new int [xSize][ySize];
+		for (int x = 0; x < xSize; x++) {
+			for (int y = 0; y < ySize; y++) {
+				data[x][y] = TileID.GRASS.getId();
+			}
+		}
+		int[][] rdata = new int [xSize][ySize];
+		grid = new Tile[xSize][ySize];
+		for (int x = 0; x < xSize; x++) {
+			for (int y = 0; y < ySize; y++) {
+				// Shift odd rows of hexagon's to the right
+				if (y % 2 == 1) {
+					grid[x][y] = new Tile(data[x][y], rdata[x][y], x * TILEWIDTH + TILEWIDTH / 2 - TILEWIDTH / 2, y * (TILEHEIGHT * 3 / 4) - (TILEHEIGHT * 3 / 4), rayHandler);
+				} else {
+					grid[x][y] = new Tile(data[x][y], rdata[x][y], x * TILEWIDTH - TILEWIDTH / 2, y * (TILEHEIGHT * 3 / 4) - (TILEHEIGHT * 3 / 4), rayHandler);
 				}
 				grid[x][y].setGridLocation(x, y);
 			}
@@ -217,6 +276,85 @@ public class Map {
 	}
 	
 	/**
+	 * This draws the map
+	 * @param batch
+	 * @param oGameCam
+	 */
+	public void drawAnimated(SpriteBatch batch) {
+		stateTime += Gdx.graphics.getDeltaTime();
+		// Every 15 miliseconds
+		if(stateTime >= .15f){
+			stateTime = 0;
+			// Start animation from cleared state
+			if(amountShown == -10){
+				Random rand = new Random();
+				animationType = rand.nextInt(3);
+				animationFull = false;
+			}
+			//Start animation from full state
+			if(grid.length + grid[0].length == amountShown){
+				Random rand = new Random();
+				animationType = rand.nextInt(3) + 100;
+				animationFull = true;
+			}
+			// Flip the animation to close
+			if(animationFull == false){
+				amountShown += 1;
+			}else{
+				amountShown -= 1;
+			}
+		}
+		ArrayList<BasicAnimation> animations = new ArrayList<BasicAnimation>();
+		if (animationType < 100) {
+			// Loop through the tile grid
+			for (int x = 0; x < grid.length; x++) {
+				for (int y = 0; y < grid[0].length; y++) {
+					if (amountShown >= x + y && animationType == 0) {
+						this.drawTile(batch, grid[x][y], animations);
+					}
+					if (amountShown > x && animationType == 1) {
+						this.drawTile(batch, grid[x][y], animations);
+					}
+					if (amountShown > y && animationType == 2) {
+						this.drawTile(batch, grid[x][y], animations);
+					}
+				}
+			}
+		} else {
+			// Loop through the tile grid
+			for (int x = grid.length - 1; x >= 0; x--) {
+				for (int y = grid[0].length - 1; y >= 0; y--) {
+					if (amountShown >= x + y && animationType == 100) {
+						this.drawTile(batch, grid[x][y], animations);
+					}
+					if (amountShown > x && animationType == 101) {
+						this.drawTile(batch, grid[x][y], animations);
+					}
+					if (amountShown > y && animationType == 102) {
+						this.drawTile(batch, grid[x][y], animations);
+					}
+				}
+			}
+		}
+		for(BasicAnimation a : animations){
+			a.draw(batch);
+		}
+	}
+	
+	private void drawTile(SpriteBatch batch,Tile t,ArrayList<BasicAnimation> animations){
+		batch.draw(t.getTileImg(), t.getLocation().x, t.getLocation().y);
+
+		// if there's a resource, draw it
+		if (t.getResource() != null) {
+			batch.draw(t.getResourceImg(), t.getLocation().x, t.getLocation().y);
+		}
+		
+		// if there's a animation, draw it
+		if (t.getbAnimation() != null) {
+			animations.add(t.getbAnimation());
+		}
+	}
+	/**
 	 * This only draws tiles within the viewport
 	 * @param batch
 	 * @param oGameCam
@@ -240,8 +378,8 @@ public class Map {
 
 		ArrayList<BasicAnimation> animations = new ArrayList<BasicAnimation>();
 		// loop through the tile grid
-		for (int x = 0; x < XSIZE; x++) {
-			for (int y = 0; y < YSIZE; y++) {
+		for (int x = 0; x < grid.length; x++) {
+			for (int y = 0; y < grid[0].length; y++) {
 
 				// make a rectangle based on a given tile from the grid
 				Rectangle tileRect = new Rectangle(grid[x][y].getLocation().x, grid[x][y].getLocation().y,
@@ -348,44 +486,140 @@ public class Map {
 				if(grid[x][y] == t){
 					if(y % 2 == 0){
 						// Even row
-						try {
+//						try {
 							switch (d) {
 							case LEFT:
+								boolean inBounds = (x-1 >= 0) && (x-1 < grid.length);
+								if(inBounds == false){
+									return null;
+								}
+								inBounds = (y >= 0) && (y < grid.length);
+								if(inBounds == false){
+									return null;
+								}
 								return grid[x-1][y];
 							case RIGHT:
+								inBounds = (x+1 >= 0) && (x+1 < grid.length);
+								if(inBounds == false){
+									return null;
+								}
+								inBounds = (y >= 0) && (y < grid.length);
+								if(inBounds == false){
+									return null;
+								}
 								return grid[x+1][y];
 							case UPLEFT:
+								inBounds = (x-1 >= 0) && (x-1 < grid.length);
+								if(inBounds == false){
+									return null;
+								}
+								inBounds = (y-1 >= 0) && (y-1 < grid.length);
+								if(inBounds == false){
+									return null;
+								}
 								return grid[x-1][y-1];
 							case UPRIGHT:
+								inBounds = (x >= 0) && (x < grid.length);
+								if(inBounds == false){
+									return null;
+								}
+								inBounds = (y-1 >= 0) && (y-1 < grid.length);
+								if(inBounds == false){
+									return null;
+								}
 								return grid[x][y-1];
 							case DOWNLEFT:
+								inBounds = (x-1 >= 0) && (x-1 < grid.length);
+								if(inBounds == false){
+									return null;
+								}
+								inBounds = (y+1 >= 0) && (y+1 < grid.length);
+								if(inBounds == false){
+									return null;
+								}
 								return grid[x-1][y+1];
 							case DOWNRIGHT:
+								inBounds = (x >= 0) && (x < grid.length);
+								if(inBounds == false){
+									return null;
+								}
+								inBounds = (y+1 >= 0) && (y+1 < grid.length);
+								if(inBounds == false){
+									return null;
+								}
 								return grid[x][y+1];
 							}
-						} catch (ArrayIndexOutOfBoundsException e) {
-							return null;
-						}
+//						} catch (ArrayIndexOutOfBoundsException e) {
+//							return null;
+//						}
 					}else{
 						// Odd row
-						try {
+//						try {
 							switch (d) {
 							case LEFT:
+								boolean inBounds = (x-1 >= 0) && (x-1 < grid.length);
+								if(inBounds == false){
+									return null;
+								}
+								inBounds = (y >= 0) && (y < grid.length);
+								if(inBounds == false){
+									return null;
+								}
 								return grid[x-1][y];
 							case RIGHT:
+								inBounds = (x+1 >= 0) && (x+1 < grid.length);
+								if(inBounds == false){
+									return null;
+								}
+								inBounds = (y >= 0) && (y < grid.length);
+								if(inBounds == false){
+									return null;
+								}
 								return grid[x+1][y];
 							case UPLEFT:
+								inBounds = (x >= 0) && (x < grid.length);
+								if(inBounds == false){
+									return null;
+								}
+								inBounds = (y-1 >= 0) && (y-1 < grid.length);
+								if(inBounds == false){
+									return null;
+								}
 								return grid[x][y-1];
 							case UPRIGHT:
+								inBounds = (x+1 >= 0) && (x+1 < grid.length);
+								if(inBounds == false){
+									return null;
+								}
+								inBounds = (y-1 >= 0) && (y-1 < grid.length);
+								if(inBounds == false){
+									return null;
+								}
 								return grid[x+1][y-1];
 							case DOWNLEFT:
+								inBounds = (x >= 0) && (x < grid.length);
+								if(inBounds == false){
+									return null;
+								}
+								inBounds = (y+1 >= 0) && (y+1 < grid.length);
+								if(inBounds == false){
+									return null;
+								}
 								return grid[x][y+1];
 							case DOWNRIGHT:
+								inBounds = (x+1 >= 0) && (x+1 < grid.length);
+								if(inBounds == false){
+									return null;
+								}
+								inBounds = (y+1 >= 0) && (y+1 < grid.length);
+								if(inBounds == false){
+									return null;
+								}
 								return grid[x+1][y+1];
 							}
-						} catch (ArrayIndexOutOfBoundsException e) {
-							return null;
-						}
+//						} catch (ArrayIndexOutOfBoundsException e) {
+//							return null;
+//						}
 					}
 				}
 			}
@@ -416,5 +650,15 @@ public class Map {
 			}
 		}
 		return rangeList;
+	}
+	
+	public int getTileDistance(Tile t, Tile d, int maxRange){
+		for(int i = 1; i <= maxRange; i++){
+			ArrayList <Tile> list = getTilesInRange(t, i, null);
+			if(list != null && list.contains(d) == true){
+				return i;
+			}
+		}
+		return -1;
 	}
 }
