@@ -19,4 +19,5 @@ public class ScoreBoard {
 			System.out.println(score.toString());
 		}
 	}
+	
 }
