@@ -38,6 +38,7 @@ public class MainMenu implements Screen{
 		TextButton play = new TextButton("PLAY",MyGdxGame.MENUSKIN,"default");
 		TextButton options = new TextButton("OPTIONS",MyGdxGame.MENUSKIN,"default");
 		TextButton exit = new TextButton ("EXIT",MyGdxGame.MENUSKIN,"default");
+		TextButton leaderboard = new TextButton ("LEADERBOARD",MyGdxGame.MENUSKIN,"default");
 		
 		//title textfield
 		Label title = new Label("Rise, Fall, Conquer", MyGdxGame.MENUSKIN);
@@ -54,6 +55,8 @@ public class MainMenu implements Screen{
 		mainTable.add(play);
 		mainTable.row();
 		mainTable.add(options);
+		mainTable.row();
+		mainTable.add(leaderboard);
 		mainTable.row();
 		mainTable.add(exit);
 		mainTable.center();
@@ -74,6 +77,11 @@ public class MainMenu implements Screen{
 		options.addListener(new ClickListener(){
 			public void clicked(InputEvent event, float x, float y) {
 				MyGdxGame.GAME.setScreen(new OptionsMenu());
+			}
+		});
+		leaderboard.addListener(new ClickListener(){
+			public void clicked(InputEvent event, float x, float y) {
+				MyGdxGame.GAME.setScreen(new LeaderScreen());
 			}
 		});
 		exit.addListener(new ClickListener(){
