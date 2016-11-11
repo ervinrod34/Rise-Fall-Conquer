@@ -2,8 +2,12 @@ package CustomWidgets;
 
 import java.util.ArrayList;
 
+import javax.annotation.Resources;
+
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.Cell;
+import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
@@ -125,9 +129,17 @@ public class TileOptions {
 	public void setUpgradeListener(){
 		upgrade.addListener(new ClickListener() {
 			public void clicked(InputEvent e,float x,float y){
-				if(tile.getResource() != null){
-					tile.getResource().upgradeTile();
-					pf.updateResourcesPerTurn();
+				try {
+					if(tile.getResource() != null){
+						if(pf.checkCanUpgrade(tile.getResourceID()) == true) {
+							tile.getResource().upgradeTile(); //this is where tile is getting upgraded, use pf to access res
+							pf.updateResourcesPerTurn();
+							pf.applyUpgradeCost();
+						}
+					}
+				} catch (NullPointerException ne) {
+					//upgrade.setVisible(false);
+					Gdx.app.error(null, "Upgrade error.");
 				}
 				//Gdx.app.log(this.getClass().getName(),"IM SO HAPPY RIGHT NOW, I'M BEING UPGRADED");
 			}
@@ -138,14 +150,27 @@ public class TileOptions {
 		for(final TextButton b : buttons){
 			b.addListener(new ClickListener(){
 				public void clicked(InputEvent e, float x, float y){
-					for(ResourceID r : ResourceID.values()){
-						if(b.getName().equals(r.name()) && tile.getClaim() == 0){
-							tile.setResourceID(r);
-							resName.setText(tile.getResourceID().name());
-							pf.claimTile(tile);
+					try {
+						for(ResourceID r : ResourceID.values()){
+							if(b.getName().equals(r.name()) && tile.getClaim() == 0){
+								//Tile tempTile = tile;
+								//tempTile.setResourceID(r);
+								
+								
+								if(pf.checkCanUpgrade(r) == true) {
+									tile.setResourceID(r);
+								    resName.setText(tile.getResourceID().name());
+								
+									pf.claimTile(tile); //already calls updateResourcesPerTurn
+									pf.applyUpgradeCost();
+								} else {
+									System.out.println("Not enough Resources.");
+								}
+							}
 						}
+					} catch (NullPointerException ne) {
+						Gdx.app.error(null, "Upgrade error.");
 					}
-					
 				}
 			});
 		}

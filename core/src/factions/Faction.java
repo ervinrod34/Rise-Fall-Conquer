@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 import box2dLight.RayHandler;
 import map.Map;
+import map.ResourceID;
 import map.Tile;
 import map.TileID;
 /**
@@ -55,6 +56,13 @@ public class Faction {
 	private int goldPerTurn;
 	
 	/**
+	 * The cost to upgrade a resource
+	 */
+	private int foodCost;
+	private int woodCost;
+	private int goldCost;
+	
+	/**
 	 * Construct a new Faction
 	 * @param id The faction's id
 	 * @param homeTile The faction's home tile
@@ -78,6 +86,9 @@ public class Faction {
 		this.foodPerTurn= 0;
 		this.woodPerTurn = 0;
 		this.goldPerTurn = 0;
+		this.foodCost = 0;
+		this.woodCost = 0;
+		this.goldCost = 0;
 		cTerritory = c;
 
 	}
@@ -121,6 +132,7 @@ public class Faction {
 			}
 		}
 	}
+	
 	/**
 	 * Claims the specified tile for the faction
 	 * @param tile
@@ -131,6 +143,7 @@ public class Faction {
 		this.calculateBuildRange();
 		this.updateResourcesPerTurn();
 	}
+	
 	/**
 	 * Unclaims the specified tile for the faction
 	 * @param tile
@@ -140,6 +153,7 @@ public class Faction {
 		ClaimedTiles.remove(tile);
 		this.calculateBuildRange();
 	}
+	
 	/**
 	 * Adds the unit to the faction
 	 * @param type
@@ -148,6 +162,7 @@ public class Faction {
 	public void addUnit(UnitID type, Tile location){
 		this.Units.add(new Unit(type, location, mBoard, rayHandler));
 	}
+	
 	/**
 	 * Removes the unit from the faction
 	 * @param unit
@@ -155,6 +170,7 @@ public class Faction {
 	public void removeUnit(Unit unit){
 		this.Units.remove(unit);
 	}
+	
 	/**
 	 * Draws the territory own by this faction
 	 * 
@@ -168,6 +184,7 @@ public class Faction {
 			batch.setColor(c);
 		}
 	}
+	
 	/**
 	 * Draws units owned by faction
 	 * @param batch
@@ -177,6 +194,7 @@ public class Faction {
 			u.draw(batch);
 		}
 	}
+	
 	/**
 	 * Returns the faction's home tile.
 	 * @return A Tile object
@@ -184,6 +202,7 @@ public class Faction {
 	public Tile getHomeTile() {
 		return HomeTile;
 	}
+	
 	/**
 	 * Gives the units the faction owns
 	 * @return
@@ -191,6 +210,7 @@ public class Faction {
 	public ArrayList<Unit> getUnits(){
 		return Units;
 	}
+	
 	/**
 	 * Get the range in which the player can build
 	 * @return
@@ -198,12 +218,76 @@ public class Faction {
 	public ArrayList<Tile> getBuildRange(){
 		return BuildRange;
 	}
+	
 	/**
 	 * get the factions Id (1 is the player)
 	 * @return
 	 */
 	public int getId() {
 		return Id;
+	}
+	
+	/**
+	 * Checks if the faction may upgrade or not. If faction has 
+	 * enough resources to upgrade, returns true. Otherwise, returns
+	 * false.
+	 * @param tile The tile to be upgraded
+	 * @return boolean A boolean whether it is possible to upgrade or not
+	 */
+	public boolean checkCanUpgrade(ResourceID id) {
+		this.foodCost = 0;
+		this.woodCost = 0;
+		this.goldCost = 0;
+		
+		boolean canUpgrade = false;
+
+		switch(id) {
+		case FISH:
+			this.goldCost = 50;
+			break;
+		case MEAT:
+			this.goldCost = 50;
+			break;
+		case TEMP:
+			this.goldCost = 50;
+			break;
+		case WHEAT:
+			this.goldCost = 50;
+			break;
+		case COAL:
+			this.goldCost = 50;
+			break;
+		case WOOD:
+			this.goldCost = 50;
+			break;
+		case GOLD:
+			this.goldCost = 100;
+			break;
+		//case HOME:
+			//break;
+		case TOWN:
+			this.goldCost = 100;
+			break;
+		default:
+			break;
+		}
+		
+		if((this.goldCost <= this.totalGold) && 
+		   (this.woodCost <= this.totalWood) &&
+		   (this.foodCost <= this.totalFood)) {
+			canUpgrade = true;
+		}
+		
+		return canUpgrade;
+	}
+	
+	/**
+	 * 
+	 */
+	public void applyUpgradeCost() {
+		this.totalFood -= this.foodCost;
+		this.totalWood -= this.woodCost;
+		this.totalGold -= this.goldCost;
 	}
 	
 	/**
@@ -241,6 +325,16 @@ public class Faction {
 					break;
 				case GOLD:
 					this.goldPerTurn += currentTile.getResource().getBonus();
+					break;
+				case HOME:
+					this.foodPerTurn += 10;
+					this.woodPerTurn += 10;
+					this.goldPerTurn += 10;
+					break;
+				case TOWN:
+					this.foodPerTurn += 10;
+					this.woodPerTurn += 10;
+					this.goldPerTurn += 10;
 					break;
 				default:
 					break;

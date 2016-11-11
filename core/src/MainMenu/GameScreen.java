@@ -76,6 +76,7 @@ public class GameScreen implements Screen{
 		this.generateFactions();
 		oGameCam.position.set(factions.get(0).getHomeTile().getLocation().x,factions.get(0).getHomeTile().getLocation().y,0);
 		oGameCam.update();
+		factions.get(0).updateResourcesPerTurn();
 		
 		scoreBoard.printScoreBoard();
 		

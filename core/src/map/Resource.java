@@ -109,6 +109,6 @@ public class Resource {
 		this.upgradeCount = 0;
 		this.Img = id.getUpgrades()[upgradeCount];
 		Random rand = new Random();
-		this.bonus = 5 * (rand.nextInt(5) + 1);
+		this.bonus = rand.nextInt(30) + 1;
 	}
 }
