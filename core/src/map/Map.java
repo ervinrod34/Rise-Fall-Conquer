@@ -399,6 +399,8 @@ public class Map {
 						animations.add(grid[x][y].getbAnimation());
 						//grid[x][y].getbAnimation().draw(batch);
 					}
+					// Draw outline of tiles
+					batch.draw(TileID.OUTLINE.getImg(), grid[x][y].getLocation().x, grid[x][y].getLocation().y);
 				}
 			}
 		}

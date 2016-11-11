@@ -21,7 +21,8 @@ public enum TileID {
 	ICE (4, "Tile_Ice.png"),
 	MOUNTAIN (5, "Tile_Mountain.png"),
 	MOUNTAIN_ICE (6, "Tile_Mountain_Ice.png"),
-	TERRITORY (1000, "Tile_Territory.png");
+	TERRITORY (1000, "Tile_Territory.png"),
+	OUTLINE (1001, "Tile_Outline.png");
 	
 	private Texture Img;
 	private int Id;
