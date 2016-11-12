@@ -6,6 +6,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
 
 import box2dLight.PointLight;
@@ -40,11 +41,15 @@ public class Unit {
 	private int AttackRange = MaxMovementRange;
 	
 	// Units stats
-	private double health;
-	private double attack;
-	private double defense;
+	private Bar barHealth;
+	private float attack;
+	private float defense;
 	
 	public Unit(UnitID type, Tile location, Map m, RayHandler rayHandler){
+		
+		// Set health bar
+		this.barHealth = new Bar(100, 100);
+		
 		this.setupPointLight(rayHandler);
 		this.setLocation(location, m);
 		this.type = type;
@@ -58,9 +63,9 @@ public class Unit {
 		this.displayAttackRange = false;
 		this.attacked = false;
 		
-		this.health = 100;
 		this.attack = 25;
 		this.defense = 10;
+		
 	}
 	
 	/**
@@ -89,6 +94,13 @@ public class Unit {
 	}
 	
 	/**
+	 * Draws units shape (health-bar)
+	 * @param rend
+	 */
+	public void draw(ShapeRenderer rend){
+		barHealth.draw(rend);
+	}
+	/**
 	 * Upgrades the unit
 	 */
 	public void upgrade(){
@@ -105,11 +117,9 @@ public class Unit {
 	 */
 	public void attack(Unit u){
 		this.attacked = true;
-		System.out.println("Attacked: " + u.getType().name());
 		if(this.attack > u.defense){
 			u.damage(this.attack - u.defense);
 		}
-		System.out.println("Health: " + u.getHealth());
 	}
 	/**
 	 * Display the movement range for the given tile on the map
@@ -172,6 +182,8 @@ public class Unit {
 		}
 		this.location = location;
 		this.setLightLocation();
+		this.barHealth.setLocation(this.location.getLocation().x + this.location.getTileImg().getWidth()/2, this.location.getLocation().y 
+				+ this.location.getTileImg().getHeight()/2 + 22);
 		MovementRangeTiles = m.getTilesInRange(location, this.MovementRange, null);
 		AttackRangeTiles = m.getTilesInRange(location, this.AttackRange, null);
 	}
@@ -228,7 +240,7 @@ public class Unit {
 	 * @return the health
 	 */
 	public double getHealth() {
-		return health;
+		return barHealth.getValue();
 	}
 
 	/**
@@ -248,8 +260,12 @@ public class Unit {
 	 * Damages the unit by the amount given
 	 * @param amount
 	 */
-	public void damage(double amount){
-		this.health -= amount;
+	public void damage(float amount){
+		if(barHealth.getValue() - amount < 0){
+			barHealth.setValue(0);
+			return;
+		}
+		barHealth.setValue(barHealth.getValue() - amount);
 	}
 
 	public boolean hasAttacked() {

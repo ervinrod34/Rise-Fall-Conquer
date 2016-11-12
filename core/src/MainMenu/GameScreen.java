@@ -10,6 +10,8 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
@@ -20,7 +22,7 @@ import com.mygdx.game.MyGdxGame;
 import com.mygdx.game.Navigator;
 
 import CustomWidgets.GameBar;
-import box2dLight.RayHandler;
+import factions.Bar;
 import factions.Faction;
 import factions.PlayerFaction;
 import factions.ScoreBoard;
@@ -50,10 +52,14 @@ public class GameScreen implements Screen{
 	public static final int HEIGHT = 720;
 	public static final int SCALE = 12;
 	
+	private ShapeRenderer rend;
+	
 	public GameScreen(){
+		
 		//set up stage and table
 		stage = new Stage(new ScreenViewport());
 		batch = new SpriteBatch();
+		rend = new ShapeRenderer();
 		
 		//set camera position, resolution
 		if(MyGdxGame.RESOLUTION == 0.0) {
@@ -163,7 +169,27 @@ public class GameScreen implements Screen{
 			bar.setWood(player.getTotalWood(), player.getWoodPerTurn());
 			bar.setGold(player.getTotalGold(), player.getGoldPerTurn());
 		}
+		
 		nav.inputHandle(delta);
+		
+		//Check for unit deaths
+		ArrayList<Unit> dead = new ArrayList<Unit>();
+		for(Faction fac : factions){
+			for(Unit u : fac.getUnits()){
+				if(u.getHealth() == 0){
+					dead.add(u);
+				}
+			}
+		}
+		// Remove dead units
+		for(Unit u : dead){
+			for(Faction fac : factions){
+				if(fac.getUnits().contains(u) == true){
+					fac.getUnits().remove(u);
+				}
+			}
+		}
+		
 		//draw map on GameScreen
 		Gdx.gl.glClearColor(36/255f, 97/255f, 123/255f, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
@@ -177,6 +203,16 @@ public class GameScreen implements Screen{
 		}
 		batch.end();
 		
+		rend.setProjectionMatrix(oGameCam.combined);
+		// Draws all non textures
+		rend.setAutoShapeType(true);
+		rend.begin(ShapeType.Filled);
+		// Draw unit shapes
+		for (Faction fac : factions) {
+			fac.drawUnits(rend);
+		}
+		rend.end();
+				
 		if(MyGdxGame.LIGHTING == true){
 			mBoard.drawMapLighting(oGameCam);
 		}

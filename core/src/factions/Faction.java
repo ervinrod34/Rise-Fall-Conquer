@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 
 import box2dLight.RayHandler;
 import map.Map;
@@ -192,6 +193,16 @@ public class Faction {
 	public void drawUnits(SpriteBatch batch){
 		for(Unit u : Units){
 			u.draw(batch);
+		}
+	}
+	
+	/**
+	 * Draws units shapes
+	 * @param batch
+	 */
+	public void drawUnits(ShapeRenderer rend){
+		for(Unit u : Units){
+			u.draw(rend);
 		}
 	}
 	
