@@ -1,11 +1,8 @@
 package factions;
 import java.util.ArrayList;
-
-import com.google.gson.JsonArray;
-import com.google.gson.JsonParser;
-
-import web.Login;
-import web.Query;
+import org.json.JSONArray;
+import web.LoginApache;
+import web.QueryApache;
 
 public class ScoreBoard {
 	
@@ -44,19 +41,18 @@ public class ScoreBoard {
 	 */
 	public void fillFromDatabase() {
 		String query = "SELECT * FROM `leaderboard` WHERE 1";
-		JsonArray jsonLeaderBoard = new JsonArray();
-		JsonParser parser = new JsonParser();
+		JSONArray jsonLeaderBoard = new JSONArray();
 		
 		//login and get session id to webservice
-		Login login = new Login();
+		LoginApache login = new LoginApache();
 		session = login.loginToWebservice();
 		
 		//execute the query on webserivce
 		//executed query returns JsonArray
 		if(session != null) {
-			Query q = new Query(session, query);
+			QueryApache q = new QueryApache(session, query);
 			jsonLeaderBoard = q.execute();
-			//System.out.println(jsonLeaderBoard.toString());
+			System.out.println(jsonLeaderBoard.toString());
 		}
 	}
 	
