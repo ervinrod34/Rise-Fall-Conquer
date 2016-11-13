@@ -43,11 +43,18 @@ public class LoginApache {
 	    arr.put(obj);
 	}
 	
+	/**
+	 * Login to the webservice and create a session
+	 * @return	session		the session key for the created session 
+	 */
 	public String loginToWebservice() {
 		
 		String loginString = arr.toString();
 		JSONArray responseJSON = null;
-		System.out.println("From Login: " + loginString);
+		
+		//uncomment for debugging
+		//System.out.println("From Login: " + loginString);
+		
 		try {
 			//make the connection
 			CloseableHttpClient httpclient = HttpClients.createDefault();
@@ -55,18 +62,21 @@ public class LoginApache {
 			CloseableHttpResponse response = null;
 			httpGet = new HttpGet("https://easel1.fulgentcorp.com/bifrost/ws.php?json=" 
 					+  URLEncoder.encode(arr.toString(), java.nio.charset.StandardCharsets.UTF_8.toString()));
+			
+			//get the response json
 			response = httpclient.execute(httpGet);
 			HttpEntity entity = response.getEntity();
 		    responseJSON = new JSONArray(EntityUtils.toString(entity));
 		    session = responseJSON.getJSONObject(3).getString("session_key");
-		    System.out.println(responseJSON.toString());
-			
-
+		    
+		    //uncomment for debugging
+		    //System.out.println(responseJSON.toString());
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} 
 		
+		//returns the session key
 		return session;
 	}
 }

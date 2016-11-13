@@ -37,11 +37,19 @@ public class QueryApache {
 	    arr.put(obj);
 	}
 	
+	/**
+	 * Sends a SQL query to the web service and returns
+	 * the results
+	 * @return	responseJSON	The resulting data from sql query
+	 */
 	public JSONArray execute() {
 		
 		String query = arr.toString();	
 		JSONArray responseJSON = null;
-		System.out.println("From Query: " + query);
+		
+		//uncomment print for debugging
+		//System.out.println("From Query: " + query);
+		
 		try {
 			//make the connection
 			CloseableHttpClient httpclient = HttpClients.createDefault();
@@ -49,6 +57,8 @@ public class QueryApache {
 			CloseableHttpResponse response = null;
 			httpGet = new HttpGet("https://easel1.fulgentcorp.com/bifrost/ws.php?json=" 
 					+  URLEncoder.encode(arr.toString(), java.nio.charset.StandardCharsets.UTF_8.toString()));
+			
+			//get the response JSON
 			response = httpclient.execute(httpGet);
 			HttpEntity entity = response.getEntity();
 		    responseJSON = new JSONArray(EntityUtils.toString(entity));
