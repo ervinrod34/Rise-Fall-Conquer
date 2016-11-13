@@ -1,10 +1,14 @@
 package factions;
 
+import org.json.JSONArray;
+
+import web.LoginApache;
+import web.QueryApache;
+
 public class Score {
 	
 	private int scoreVal;
 	private int	factionId;
-	private int ldrBoardPos;
 	private String name;
 		
 	public Score() {
@@ -14,6 +18,11 @@ public class Score {
 	public Score(int id) {
 		name = "";
 		this.factionId = id;
+	}
+	
+	public Score(String name, int scoreVal) {
+		this.name = name;
+		this.scoreVal = scoreVal;
 	}
 	
 	/**
@@ -59,18 +68,26 @@ public class Score {
 	public String getName() {
 		return name;
 	}
-	public int getLdrBoardPos() {
-		return ldrBoardPos;
-	}
-
-	public void setLdrBoardPos(int ldrBoardPos) {
-		this.ldrBoardPos = ldrBoardPos;
-	}
 	
 	public String toString() {
 		String s;
-		s = String.format("%-5d%-15s%-10d", ldrBoardPos, name, scoreVal);
+		s = String.format("%-15s %10d", name, scoreVal);
 		return s;
 	}
+	
+	public void pushToLeaderBoard() {
+		JSONArray response = new JSONArray();
+		String strQuery = "INSERT INTO `bifrost_4x`.`leaderboard` "
+				+ "(`id`, `name`, `score`) VALUES (NULL, '" 
+				+ this.name + "', '" 
+				+ this.scoreVal + "');";
+		LoginApache login = new LoginApache();
+		String session = login.loginToWebservice();
+		QueryApache query = new QueryApache(session, strQuery);
+		response = query.execute();
+		System.out.println(response.toString());
+	}
+
+
 
 }

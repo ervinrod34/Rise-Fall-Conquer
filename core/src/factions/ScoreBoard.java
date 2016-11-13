@@ -47,9 +47,8 @@ public class ScoreBoard {
 	 */
 	public void fillFromDatabase() {
 		
-		//SQL command to pull all entries in database
-		String query = "SELECT * FROM `leaderboard` WHERE 1";
-		
+		//SQL command to pull top 10 scores in database
+		String query = "SELECT * FROM leaderboard ORDER by score DESC LIMIT 10";
 		JSONArray response = new JSONArray();
 		JSONArray ldrArr = new JSONArray();
 		
@@ -71,7 +70,6 @@ public class ScoreBoard {
 			JSONArray arr = ldrArr.getJSONArray(i);
 			JSONObject obj;
 			Score score = new Score();
-			score.setLdrBoardPos(arr.getJSONObject(0).getInt("id"));
 			score.setName(arr.getJSONObject(1).getString("name"));
 			score.setScoreVal(arr.getJSONObject(2).getInt("score"));
 			scoreList.add(score);
