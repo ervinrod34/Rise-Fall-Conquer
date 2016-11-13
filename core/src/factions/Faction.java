@@ -356,6 +356,27 @@ public class Faction {
 	}
 	
 	/**
+	 * updates the factions score based on
+	 * resources, size of territory, and num of units
+	 */
+	public void updateTotalScore() {
+		int points;
+		//points for resources
+		points = this.totalFood * 5;
+		points += this.totalWood * 5;
+		points += this.totalGold * 10;
+		
+		//territory bonus
+		points += (ClaimedTiles.size());
+		
+		//unit bonus
+		points += (Units.size());
+		
+		//set the score value
+		this.score.setScoreVal(points);	
+	}
+	
+	/**
 	 * Updates the values of the player's total resources.
 	 * Called by: GameScreen.java, after a turn cycle.
 	 */

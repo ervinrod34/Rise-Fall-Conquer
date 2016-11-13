@@ -84,7 +84,7 @@ public class GameScreen implements Screen{
 		oGameCam.update();
 		factions.get(0).updateResourcesPerTurn();
 		
-		scoreBoard.printScoreBoard();
+		//scoreBoard.printScoreBoard();
 		
 		//initialize minimap, passing the map
 		miniMap = new MiniMap(mBoard, factions);
@@ -120,6 +120,8 @@ public class GameScreen implements Screen{
 					for(Unit u : f.getUnits()){
 						u.update(mBoard);
 					}
+					f.updateTotalScore();
+					System.out.println(f.getScore().toString());
 				}
 				final Timer time = new Timer();
 				time.scheduleTask(new Task(){

@@ -38,7 +38,7 @@ public class Score {
 	 * @param scoreVal
 	 */
 	public void setScoreVal(int scoreVal) {
-		this.scoreVal += scoreVal;
+		this.scoreVal = scoreVal;
 	}
 
 	/**
@@ -75,6 +75,9 @@ public class Score {
 		return s;
 	}
 	
+	/**
+	 * pushes this score to the database
+	 */
 	public void pushToLeaderBoard() {
 		JSONArray response = new JSONArray();
 		String strQuery = "INSERT INTO `bifrost_4x`.`leaderboard` "
