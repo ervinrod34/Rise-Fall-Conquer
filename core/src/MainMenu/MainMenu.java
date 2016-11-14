@@ -70,7 +70,7 @@ public class MainMenu implements Screen{
 		//create action listeners for menu buttons
 		play.addListener(new ClickListener(){
 			public void clicked(InputEvent event, float x, float y) {
-				MyGdxGame.GAME.setScreen(new GameScreen());
+				MyGdxGame.GAME.setScreen(new MapSelectScreen());
 			}
 		});
 		options.addListener(new ClickListener(){

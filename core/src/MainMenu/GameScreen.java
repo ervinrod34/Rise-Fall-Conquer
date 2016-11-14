@@ -51,11 +51,10 @@ public class GameScreen implements Screen{
 	public static final int WIDTH = 1280;
 	public static final int HEIGHT = 720;
 	public static final int SCALE = 12;
-	
 	private ShapeRenderer rend;
+	public GameScreen(String mapName){
 	
-	public GameScreen(){
-		
+
 		//set up stage and table
 		stage = new Stage(new ScreenViewport());
 		batch = new SpriteBatch();
@@ -70,14 +69,14 @@ public class GameScreen implements Screen{
 			oGameCam = new OrthographicCamera(1600, 900); //high
 		}
 		
-		mBoard = new map.Map(oGameCam, "Map_2.json");
+		mBoard = new map.Map(oGameCam, mapName);
 
-		Random rmap = new Random();
-		if(rmap.nextBoolean() == true){
-			mBoard = new map.Map(oGameCam, "Map_1.json");
-		}else{
-			mBoard = new map.Map(oGameCam, "Map_2.json");
-		}
+//		Random rmap = new Random();
+//		if(rmap.nextBoolean() == true){
+//			mBoard = new map.Map(oGameCam, "Map_1.json");
+//		}else{
+//			mBoard = new map.Map(oGameCam, "Map_2.json");
+//		}
 
 		this.generateFactions();
 		oGameCam.position.set(factions.get(0).getHomeTile().getLocation().x,factions.get(0).getHomeTile().getLocation().y,0);

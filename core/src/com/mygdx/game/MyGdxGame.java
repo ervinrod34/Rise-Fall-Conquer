@@ -8,6 +8,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.GdxRuntimeException;
 
 import MainMenu.MainMenu;
+import MainMenu.MapSelectScreen;
 import test.suite.TestSuiteRunner;
 
 public class MyGdxGame extends Game {
