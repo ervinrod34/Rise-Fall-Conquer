@@ -33,7 +33,7 @@ public class OptionsMenu implements Screen{
 	private Label resolutionLabel;
 	private Label volumeLabel; 
 	private Label lightLabel;
-	private Label animationLabel;
+	//private Label animationLabel;
 	
 	
 	public OptionsMenu(){
@@ -90,20 +90,13 @@ public class OptionsMenu implements Screen{
 		light.setChecked(MyGdxGame.LIGHTING);
 		
 		//Checkbox for animation
-		this.animationLabel = new Label("ANIMATION:", MyGdxGame.MENUSKIN);
-		final CheckBox animation = new CheckBox(null, MyGdxGame.MENUSKIN);
-		animation.setChecked(MyGdxGame.ANIMATION);
+		//this.animationLabel = new Label("ANIMATION:", MyGdxGame.MENUSKIN);
+		//final CheckBox animation = new CheckBox(null, MyGdxGame.MENUSKIN);
+		//animation.setChecked(MyGdxGame.ANIMATION);
 		
 		/**
 		 * Creates tables for the widgets.
 		 */
-		/*Table mainTable = new Table(MyGdxGame.MENUSKIN);
-		mainTable.setBounds(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-		mainTable.setFillParent(true);
-		mainTable.top();
-		menu.setPosition(200, 200);
-		mainTable.add(menu);
-		mainTable.row();*/
 		Table centerTable = new Table(MyGdxGame.MENUSKIN);
 		centerTable.setBounds(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 		centerTable.setFillParent(true);
@@ -140,9 +133,9 @@ public class OptionsMenu implements Screen{
 		centerTable.add(light);
 		
 		//animation
-		centerTable.row();
-		centerTable.add(this.animationLabel);
-		centerTable.add(animation);
+		//centerTable.row();
+		//centerTable.add(this.animationLabel);
+		//centerTable.add(animation);
 		
 		//stage.addActor(mainTable);
 		stage.addActor(centerTable);
@@ -228,11 +221,11 @@ public class OptionsMenu implements Screen{
 		 * Creates an action listener for the animation CheckBox.
 		 * Saves the value to the MyGdxGame.ANIMATION.
 		 */
-		animation.addListener(new ChangeListener(){
+		/*animation.addListener(new ChangeListener(){
 			public void changed(ChangeEvent event, Actor actor) {
 				MyGdxGame.ANIMATION = animation.isChecked();
 			}
-		});
+		});*/
 	}
 	@Override
 	public void show() {

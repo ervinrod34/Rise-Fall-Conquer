@@ -2,6 +2,7 @@ package CustomWidgets;
 
 import java.util.ArrayList;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.Cell;
@@ -93,7 +94,14 @@ public class UnitOption {
 		});
 		upgradeButton.addListener(new ClickListener(){
 			public void clicked(InputEvent e,float x,float y){
-				uUnit.upgrade();
+				try {
+					if(uUnit.getUnitsFaction().checkUnitCost(uUnit.getType()) == true) {
+						uUnit.upgrade();
+						uUnit.getUnitsFaction().applyPromoteCost();
+					}
+				} catch (NullPointerException ne) {
+					Gdx.app.error(null, "Unit Upgrade error.");
+				}
 			}
 		});
 		moveButton.addListener(new ClickListener(){

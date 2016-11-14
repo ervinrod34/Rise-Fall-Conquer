@@ -21,6 +21,7 @@ public class Unit {
 	private float stateTime;
 	private UnitID type;
 	private Tile location;
+	private Faction unitFaction;
 	
 	private int upgrade;
 	private boolean upgradable;
@@ -100,6 +101,7 @@ public class Unit {
 	public void draw(ShapeRenderer rend){
 		barHealth.draw(rend);
 	}
+	
 	/**
 	 * Upgrades the unit
 	 */
@@ -111,6 +113,23 @@ public class Unit {
 			upgradable = false;
 		}
 	}
+	
+	/**
+	 * Change the faction whom this unit belongs to.
+	 * @param faction The units to be faction
+	 */
+	public void setUnitFaction(Faction faction) {
+		this.unitFaction = faction;
+	}
+	
+	/**
+	 * Returns this units faction.
+	 * @return The faction of this unit
+	 */
+	public Faction getUnitsFaction() {
+		return this.unitFaction;
+	}
+	
 	/**
 	 * Attacks the given unit
 	 * @param u
@@ -222,6 +241,13 @@ public class Unit {
 		return upgradable;
 	}
 	/**
+	 * Returns the upgrade level of this unit.
+	 * @return int The units upgrade level
+	 */
+	public int getUpgradeLevel() {
+		return this.upgrade;
+	}
+	/**
 	 * Get the tiles within range
 	 * @return
 	 */
@@ -271,4 +297,5 @@ public class Unit {
 	public boolean hasAttacked() {
 		return attacked;
 	}
+	
 }

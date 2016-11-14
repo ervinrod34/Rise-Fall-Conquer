@@ -152,11 +152,7 @@ public class TileOptions {
 				public void clicked(InputEvent e, float x, float y){
 					try {
 						for(ResourceID r : ResourceID.values()){
-							if(b.getName().equals(r.name()) && tile.getClaim() == 0){
-								//Tile tempTile = tile;
-								//tempTile.setResourceID(r);
-								
-								
+							if(b.getName().equals(r.name()) && tile.getClaim() == 0){								
 								if(pf.checkCanUpgrade(r) == true) {
 									tile.setResourceID(r);
 								    resName.setText(tile.getResourceID().name());

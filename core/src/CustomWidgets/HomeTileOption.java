@@ -112,16 +112,27 @@ public class HomeTileOption {
 	private void setBuildListeners() {
 		buildWorker.addListener(new ClickListener() {
 			public void clicked(InputEvent e,float x,float y){
-				//Makes sure there are no units on the tile before creating units
-				for(Faction f : factions){
-					for(Unit u : f.getUnits()){
-						if(u.getLocation() == tile){
-							return;
+				try {
+					//Makes sure there are no units on the tile before creating units
+					for(Faction f : factions){
+						for(Unit u : f.getUnits()){
+							if(u.getLocation() == tile){
+								return;
+							}
 						}
 					}
+					// Create a new unit
+					if(factions.get(0).checkUnitCost(UnitID.UNIT_1) == true) {
+						factions.get(0).applyPromoteCost();
+						factions.get(0).addUnit(UnitID.UNIT_1, tile, factions.get(0));
+					}
+					else {
+						Gdx.app.error(null, "Unit Promote error.");
+					}
+				} catch (NullPointerException ne) {
+					Gdx.app.error(null, "Unit Promoye error.");
 				}
-				// Create a new unit
-				factions.get(0).addUnit(UnitID.UNIT_1, tile);
+				
 			}
 		});
 	}

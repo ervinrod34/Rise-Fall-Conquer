@@ -64,6 +64,11 @@ public class Faction {
 	private int goldCost;
 	
 	/**
+	 * The cost to promote a unit
+	 */
+	private int unitCost;
+	
+	/**
 	 * Construct a new Faction
 	 * @param id The faction's id
 	 * @param homeTile The faction's home tile
@@ -90,6 +95,8 @@ public class Faction {
 		this.foodCost = 0;
 		this.woodCost = 0;
 		this.goldCost = 0;
+		this.unitCost = 0;
+		
 		cTerritory = c;
 
 	}
@@ -162,6 +169,19 @@ public class Faction {
 	 */
 	public void addUnit(UnitID type, Tile location){
 		this.Units.add(new Unit(type, location, mBoard, rayHandler));
+	}
+	
+	/**
+	 * Adds the unit to the faction. This version assigns the 
+	 * faction to the unit.
+	 * @param type The units ID
+	 * @param location The location of the unit
+	 * @param faction The faction who created this unit
+	 */
+	public void addUnit(UnitID type, Tile location, Faction faction) {
+		Unit unit = new Unit(type, location, mBoard, rayHandler);
+		unit.setUnitFaction(faction);
+		this.Units.add(unit);
 	}
 	
 	/**
@@ -239,16 +259,16 @@ public class Faction {
 	}
 	
 	/**
-	 * Checks if the faction may upgrade or not. If faction has 
-	 * enough resources to upgrade, returns true. Otherwise, returns
-	 * false.
-	 * @param tile The tile to be upgraded
+	 * Passes in the resources that is to be made or upgraded
+	 * and calculate the cost. Then, returns true if player has enough
+	 * resources, false if not.
+	 * @param id The resource to be upgraded
 	 * @return boolean A boolean whether it is possible to upgrade or not
 	 */
 	public boolean checkCanUpgrade(ResourceID id) {
-		this.foodCost = 0;
-		this.woodCost = 0;
-		this.goldCost = 0;
+		//this.foodCost = 0;
+		//this.woodCost = 0;
+		//this.goldCost = 0;
 		
 		boolean canUpgrade = false;
 
@@ -293,7 +313,8 @@ public class Faction {
 	}
 	
 	/**
-	 * 
+	 * Apply the current cost of the resources that is created
+	 * or upgraded.
 	 */
 	public void applyUpgradeCost() {
 		this.totalFood -= this.foodCost;
@@ -435,4 +456,41 @@ public class Faction {
 		return this.goldPerTurn;
 	}
 
+	
+	/**
+	 * Calculates the cost to create or promote a unit. 
+	 * Returns true if the unit is promotable, and false otherwise.
+	 * @return boolean A boolean whether unit is promotable
+	 */
+	public boolean checkUnitCost(UnitID unitID) {
+		boolean checkResult = false;
+		
+		switch(unitID) {
+		case Basic:
+			this.unitCost = 50;
+			//this.unitCost += unit.getUpgradeLevel() * 50;
+		case UNIT_1:
+			this.unitCost = 50;
+			//this.unitCost += unit.getUpgradeLevel() * 50;
+		case UNDEAD_1:
+			this.unitCost = 50;
+			//this.unitCost += unit.getUpgradeLevel() * 50;
+		default:
+			break;
+		}
+		
+		
+		if(this.unitCost <= this.totalGold) {
+			checkResult = true;
+		}
+		
+		return checkResult;
+	}
+	
+	/**
+	 * Applies the cost to promote the unit.
+	 */
+	public void applyPromoteCost() {
+		this.totalGold -= this.unitCost;
+	}
 }
