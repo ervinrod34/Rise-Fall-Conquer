@@ -46,10 +46,11 @@ public class MapSelectScreen implements Screen{
 		
 		mainTable.add(title);
 		mainTable.row();
-
+		mainTable.add(new Label(" ", MyGdxGame.MENUSKIN,"default"));
+		mainTable.row();
 		String mapName = "";
 		final ArrayList<TextButton> buttons = new ArrayList<TextButton>();
-		for(int i = 1; i< 11; i++){
+		for(int i = 1; i< 6; i++){
 			final int q = i;
 			mapName = "Map_"+i+".json";
 			buttons.add(new TextButton(mapName,MyGdxGame.MENUSKIN,"default"));
@@ -61,6 +62,8 @@ public class MapSelectScreen implements Screen{
 			buttons.get(i-1).setName(mapName);
 			mainTable.add(buttons.get(i-1));
 			mainTable.row();
+			mainTable.add(new Label(" ", MyGdxGame.MENUSKIN,"default"));
+			mainTable.row();
 			if(i <= 2){
 				buttons.get(i-1).addListener(new ClickListener(){
 					public void clicked(InputEvent event, float x, float y) {
@@ -70,13 +73,8 @@ public class MapSelectScreen implements Screen{
 				});
 			}
 		}
-		
-		//mainTable.add(Map1);
-
-		
 		batch = new SpriteBatch();
 		cam = new OrthographicCamera(1280, 720);
-		map = new Map(cam);
 	}
 
 	@Override
@@ -91,7 +89,6 @@ public class MapSelectScreen implements Screen{
 		Gdx.gl.glClearColor(50/255f, 50/255f, 50/255f, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		batch.begin();
-		map.drawAnimated(batch);
 		batch.end();
 		stage.draw();
 	}
