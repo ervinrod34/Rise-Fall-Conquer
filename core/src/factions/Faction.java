@@ -102,6 +102,14 @@ public class Faction {
 	}
 
 	/**
+	 * returns the list of claimed tiles
+	 * @return
+	 */
+	public ArrayList<Tile> getClaimedTiles() {
+		return ClaimedTiles;
+	}
+
+	/**
 	 * Gets the faction's score
 	 * @return
 	 */

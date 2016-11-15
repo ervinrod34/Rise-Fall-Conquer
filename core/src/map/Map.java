@@ -266,12 +266,14 @@ public class Map {
 	public void drawMarkers(ShapeRenderer sh, ArrayList<Faction> list) {	
 		//loop through the factions
 		for(Faction f : list) {
+			for(Tile t : f.getClaimedTiles()) {	
 			//get the color of that faction's territory
-			sh.setColor(f.getcTerritory());
-			//draw the marker
-			sh.rect(f.getHomeTile().getLocation().x - X_OFFSET
-					, f.getHomeTile().getLocation().y - Y_OFFSET
-					,100,100);
+				sh.setColor(f.getcTerritory());
+				//draw the marker
+				sh.rect(t.getLocation().x - X_OFFSET
+						, t.getLocation().y - Y_OFFSET
+						,100,100);
+			}
 		}
 	}
 	

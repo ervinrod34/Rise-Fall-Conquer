@@ -122,6 +122,7 @@ public class GameScreen implements Screen{
 					f.updateTotalScore();
 					System.out.println(f.getScore().toString());
 				}
+				bar.setScore(factions.get(0).getScore().getScoreVal());
 				final Timer time = new Timer();
 				time.scheduleTask(new Task(){
 					@Override
