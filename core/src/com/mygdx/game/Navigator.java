@@ -96,6 +96,13 @@ public class Navigator implements InputProcessor {
 		int mouseX = Gdx.input.getX();
 		int mouseY = Gdx.input.getY();
 		Vector3 mousePos = new Vector3(mouseX, mouseY, 0);
+		/*** FOR DEMO PURPOSES *******/
+		if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) {
+			factions.get(0).getScore().setName("Demo");
+			factions.get(0).getScore().pushToLeaderBoard();
+		}
+		/****************/
+		
 		if (Gdx.input.isKeyPressed(Input.Keys.RIGHT) || (mousePos.x >= (Gdx.graphics.getWidth() - 15))) {
 			oGameCam.translate(iCamSpeed, 0);
 		}
