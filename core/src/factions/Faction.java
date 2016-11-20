@@ -441,6 +441,13 @@ public class Faction {
 	}
 	
 	/**
+	 * Returns the faction's total gold.
+	 * @return An int value
+	 */
+	public int setTotalGold(int value) {
+		return this.totalGold = value;
+	}
+	/**
 	 * Returns this faction's wood per turn.
 	 * @return An int value
 	 */

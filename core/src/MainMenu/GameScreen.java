@@ -271,6 +271,8 @@ public class GameScreen implements Screen{
 				faction = new PlayerFaction(FactId, home, mBoard, Color.BLUE, mBoard.getrayHandler());
 				//add a score entry for the player faction
 				scoreBoard.addScore(faction.getScore());
+				// Give player starting resources
+				faction.setTotalGold(100);
 			}else{
 				//Set the other factions to normal
 				faction = new Faction(FactId, home, mBoard, Color.RED, mBoard.getrayHandler());
