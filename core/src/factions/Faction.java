@@ -21,7 +21,6 @@ public class Faction {
 
 	// Unique Id for the faction
 	private int Id;
-
 	// Home city for the faction
 	private Tile HomeTile;
 	// List of claimed tiles by the faction
