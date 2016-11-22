@@ -84,14 +84,14 @@ public class Tile {
 				break;
 			}
 		}
+		this.Location = new Vector2(x,y);
+		this.GridLocation = new Vector2(0,0);
 		for(ResourceID rId : ResourceID.values()){
 			if(resId == rId.getId()){
 				this.setResourceID(rId);
 				break;
 			}
 		}
-		this.Location = new Vector2(x,y);
-		this.GridLocation = new Vector2(0,0);
 		setupPointLight(rayHandler);
 		//rect = new Rectangle(x,y,54,63);
 		rect = new Polygon(new float[]{
@@ -196,8 +196,10 @@ public class Tile {
 	public void setResourceID(ResourceID r){
 		if(this.rId == null){
 			this.rId = new Resource(r);
+			this.rId.updateLocation(this.Location);
 		}else{
 			rId.setID(r);
+			this.rId.updateLocation(this.Location);
 		}
 	}
 	/**
@@ -206,6 +208,9 @@ public class Tile {
 	 */
 	public Resource getResource() {
 		return rId;
+	}
+	public void setResource(Resource r) {
+		this.rId = r;
 	}
 	public TileID getTileId() {
 		return this.Id;
@@ -220,6 +225,10 @@ public class Tile {
 		return bAnimation;
 	}
 	public void setbAnimation(BasicAnimationID id) {
+		if(id == null){
+			this.bAnimation = null;
+			return;
+		}
 		float x = Location.x + this.getTileImg().getWidth()/2;
 		float y = Location.y + this.getTileImg().getHeight()/2;
 		if(id.getAnimatedSheet() != null){

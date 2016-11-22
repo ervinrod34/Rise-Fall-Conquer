@@ -319,6 +319,7 @@ public class Navigator implements InputProcessor {
 				Tile tile = m.getClickedTile2(mPos);
 				if (unitOptions.getUnit().getAttackRange() != null
 						&& unitOptions.getUnit().getAttackRange().contains(tile) == true) {
+					boolean attackedUnit = false;
 					for (Faction f : factions) {
 						// Only attack non-player units
 						if(f.equals(factions.get(0))){
@@ -328,8 +329,17 @@ public class Navigator implements InputProcessor {
 						for (Unit u : f.getUnits()) {
 							if (u.getLocation().equals(tile) == true) {
 								unitOptions.getUnit().attack(u);
+								attackedUnit = true;
 								break;
 							}
+						}
+					}
+					// Check if tile contains a resource and no unit
+					if(attackedUnit == false && tile.getResource() != null){
+						// Check that resource is not owned by player
+						if(tile.getClaim() != 1){
+							System.out.println("Attacked Resource");
+							unitOptions.getUnit().attack(tile.getResource());
 						}
 					}
 				}

@@ -12,6 +12,7 @@ import com.badlogic.gdx.math.Vector2;
 import box2dLight.PointLight;
 import box2dLight.RayHandler;
 import map.Map;
+import map.Resource;
 import map.Tile;
 import map.TileID;
 
@@ -139,6 +140,14 @@ public class Unit {
 		if(this.attack > u.defense){
 			u.damage(this.attack - u.defense);
 		}
+	}
+	/**
+	 * Attacks the given resource
+	 * @param r
+	 */
+	public void attack(Resource r){
+		this.attacked = true;
+		r.damage(this.attack);
 	}
 	/**
 	 * Display the movement range for the given tile on the map

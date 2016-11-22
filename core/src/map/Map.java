@@ -42,8 +42,8 @@ public class Map {
 	private static final int YSIZE = 50;
 
 	// Values for the tile sizes
-	private static final int TILEWIDTH = 54;
-	private static final int TILEHEIGHT = 63;
+	public static final int TILEWIDTH = 54;
+	public static final int TILEHEIGHT = 63;
 	private static final int X_OFFSET = (1280/2)*12;
 	private static final int Y_OFFSET = (720/2)*12;
 	
@@ -411,7 +411,17 @@ public class Map {
 			a.draw(batch);
 		}
 	}
-
+	public void drawHealthbars(ShapeRenderer rend){
+		// loop through the tile grid
+		for (int x = 0; x < grid.length; x++) {
+			for (int y = 0; y < grid[0].length; y++) {
+				// if there's a resource, draw it
+				if (grid[x][y].getResource() != null) {
+					grid[x][y].getResource().draw(rend);
+				}
+			}
+		}
+	}
 	/**
 	 * Disposes of all textures in map
 	 */
