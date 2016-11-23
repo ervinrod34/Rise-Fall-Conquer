@@ -44,6 +44,7 @@ public class GameScreen implements Screen{
 	private ArrayList<Faction> factions;
     private int totalTurns;
     private ScoreBoard scoreBoard;
+    //private String winDisplay;
     
 	private GameBar bar;
 	private DayNightCycle dnCycle;
@@ -82,6 +83,7 @@ public class GameScreen implements Screen{
 		oGameCam.position.set(factions.get(0).getHomeTile().getLocation().x,factions.get(0).getHomeTile().getLocation().y,0);
 		oGameCam.update();
 		factions.get(0).updateResourcesPerTurn();
+		//winDisplay = this.calculateWin();
 		
 		//scoreBoard.printScoreBoard();
 		
@@ -112,6 +114,8 @@ public class GameScreen implements Screen{
 				MyGdxGame.GAME.setScreen(new MainMenu());
 			}
 		});
+		
+		final GameScreen tempScreen = this;
 		bar.setEndTurnClickListener(new ClickListener(){
 			public void clicked(InputEvent event, float x, float y) {
 				for(Faction f : factions){
@@ -123,6 +127,8 @@ public class GameScreen implements Screen{
 					System.out.println(f.getScore().toString());
 				}
 				bar.setScore(factions.get(0).getScore().getScoreVal());
+				bar.setWin(tempScreen.calculateWin()); //Display the current city counts, will be changed to win%
+				
 				final Timer time = new Timer();
 				time.scheduleTask(new Task(){
 					@Override
@@ -295,5 +301,24 @@ public class GameScreen implements Screen{
 				e.printStackTrace();
 			}
 		}
+	}
+	
+	/**
+	 * TO DO
+	 */
+	public String calculateWin() {
+		int playerCityCount = 0;
+		int otherCityCount = 0;
+		String strCityCounts = "";
+		
+		playerCityCount = factions.get(0).getCityCount();
+		for(int i = 1; i < factions.size(); i++) {
+			otherCityCount += factions.get(i).getCityCount();
+		}
+		
+		//System.out.println("Player City Count: " + playerCityCount + "\nOther: " + otherCityCount);
+		strCityCounts = "Player: " + playerCityCount + "  Other: " + otherCityCount;
+		
+		return strCityCounts.toString();
 	}
 }

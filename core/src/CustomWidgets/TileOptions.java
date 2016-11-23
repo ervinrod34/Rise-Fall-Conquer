@@ -159,6 +159,7 @@ public class TileOptions {
 								
 									pf.claimTile(tile); //already calls updateResourcesPerTurn
 									pf.applyUpgradeCost();
+									
 								} else {
 									System.out.println("Not enough Resources.");
 								}

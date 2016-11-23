@@ -30,6 +30,12 @@ public class Faction {
 	// List of units by the faction
 	private ArrayList<Unit> Units;
 	// this faction's score
+	
+	/**
+	 * The number of city
+	 */
+	private int cityCount;
+	
 	Score score;
 	RayHandler rayHandler;
 	
@@ -58,14 +64,16 @@ public class Faction {
 	/**
 	 * The cost to upgrade a resource
 	 */
-	private int foodCost;
-	private int woodCost;
-	private int goldCost;
+	private int resFoodCost;
+	private int resWoodCost;
+	private int resGoldCost;
 	
 	/**
 	 * The cost to promote a unit
 	 */
-	private int unitCost;
+	private int unitFoodCost;
+	private int unitWoodCost;
+	private int unitGoldCost;
 	
 	/**
 	 * Construct a new Faction
@@ -84,6 +92,8 @@ public class Faction {
 		this.HomeTile = homeTile;
 		this.claimTile(HomeTile);
 		
+		this.cityCount = this.getCityCount();
+		
 		//initialize resources variables
 		this.totalFood = 0;
 		this.totalWood = 0;
@@ -91,10 +101,12 @@ public class Faction {
 		this.foodPerTurn= 0;
 		this.woodPerTurn = 0;
 		this.goldPerTurn = 0;
-		this.foodCost = 0;
-		this.woodCost = 0;
-		this.goldCost = 0;
-		this.unitCost = 0;
+		this.resFoodCost = 0;
+		this.resWoodCost = 0;
+		this.resGoldCost = 0;
+		this.unitFoodCost = 0;
+		this.unitWoodCost = 0;
+		this.unitGoldCost = 0;
 		
 		cTerritory = c;
 
@@ -167,6 +179,23 @@ public class Faction {
 		tile.setClaim(0);
 		ClaimedTiles.remove(tile);
 		this.calculateBuildRange();
+	}
+	
+	/**
+	 * Counts the number of city tiles this faction has.
+	 * Then, return the city count.
+	 * @return An int specifying the city count
+	 */
+	public int getCityCount() {
+		int tempCityCount = 0;
+		for(int i = 0; i < this.ClaimedTiles.size(); i++) {
+			if(this.ClaimedTiles.get(i).getResourceID() == ResourceID.HOME) {
+				tempCityCount++;
+			}
+		}
+		this.cityCount = tempCityCount;
+		
+		return this.cityCount;
 	}
 	
 	/**
@@ -281,38 +310,38 @@ public class Faction {
 
 		switch(id) {
 		case FISH:
-			this.goldCost = 50;
+			this.resGoldCost = 50;
 			break;
 		case MEAT:
-			this.goldCost = 50;
+			this.resGoldCost = 50;
 			break;
 		case TEMP:
-			this.goldCost = 50;
+			this.resGoldCost = 50;
 			break;
 		case WHEAT:
-			this.goldCost = 50;
+			this.resGoldCost = 50;
 			break;
 		case COAL:
-			this.goldCost = 50;
+			this.resGoldCost = 50;
 			break;
 		case WOOD:
-			this.goldCost = 50;
+			this.resGoldCost = 50;
 			break;
 		case GOLD:
-			this.goldCost = 100;
+			this.resGoldCost = 100;
 			break;
 		//case HOME:
 			//break;
 		case TOWN:
-			this.goldCost = 100;
+			this.resGoldCost = 100;
 			break;
 		default:
 			break;
 		}
 		
-		if((this.goldCost <= this.totalGold) && 
-		   (this.woodCost <= this.totalWood) &&
-		   (this.foodCost <= this.totalFood)) {
+		if((this.resGoldCost <= this.totalGold) && 
+		   (this.resWoodCost <= this.totalWood) &&
+		   (this.resFoodCost <= this.totalFood)) {
 			canUpgrade = true;
 		}
 		
@@ -324,9 +353,9 @@ public class Faction {
 	 * or upgraded.
 	 */
 	public void applyUpgradeCost() {
-		this.totalFood -= this.foodCost;
-		this.totalWood -= this.woodCost;
-		this.totalGold -= this.goldCost;
+		this.totalFood -= this.resFoodCost;
+		this.totalWood -= this.resWoodCost;
+		this.totalGold -= this.resGoldCost;
 	}
 	
 	/**
@@ -381,27 +410,6 @@ public class Faction {
 			}
 			
 		}
-	}
-	
-	/**
-	 * updates the factions score based on
-	 * resources, size of territory, and num of units
-	 */
-	public void updateTotalScore() {
-		int points;
-		//points for resources
-		points = this.totalFood * 5;
-		points += this.totalWood * 5;
-		points += this.totalGold * 10;
-		
-		//territory bonus
-		points += (ClaimedTiles.size());
-		
-		//unit bonus
-		points += (Units.size());
-		
-		//set the score value
-		this.score.setScoreVal(points);	
 	}
 	
 	/**
@@ -469,8 +477,55 @@ public class Faction {
 	public int getGoldPerTurn() {
 		return this.goldPerTurn;
 	}
-
 	
+	/**
+	 * Return the food cost to upgrade resource.
+	 * @return An int value
+	 */
+	public int getResFoodCost() {
+		return this.resFoodCost;
+	}
+	
+	/**
+	 * Return the wood cost to upgrade resource.
+	 * @return An int value
+	 */
+	public int getResWoodCost() {
+		return this.resWoodCost;
+	}
+	
+	/**
+	 * Return the gold cost to upgrade resource.
+	 * @return An int value
+	 */
+	public int getResGoldCost() {
+		return this.resGoldCost;
+	}
+	
+	/**
+	 * Return the food cost to upgrade unit.
+	 * @return An int value
+	 */
+	public int getUnitFoodCost() {
+		return this.unitFoodCost;
+	}
+	
+	/**
+	 * Return the wood cost to upgrade unit.
+	 * @return An int value
+	 */
+	public int getUnitWoodCost() {
+		return this.unitWoodCost;
+	}
+
+	/**
+	 * Return the gold cost to upgrade unit.
+	 * @return An int value
+	 */
+	public int getUnitGoldCost() {
+		return this.unitGoldCost;
+	}
+
 	/**
 	 * Calculates the cost to create or promote a unit. 
 	 * Returns true if the unit is promotable, and false otherwise.
@@ -481,20 +536,20 @@ public class Faction {
 		
 		switch(unitID) {
 		case Basic:
-			this.unitCost = 50;
+			this.unitGoldCost = 50;
 			//this.unitCost += unit.getUpgradeLevel() * 50;
 		case UNIT_1:
-			this.unitCost = 50;
+			this.unitGoldCost = 50;
 			//this.unitCost += unit.getUpgradeLevel() * 50;
 		case UNDEAD_1:
-			this.unitCost = 50;
+			this.unitGoldCost = 50;
 			//this.unitCost += unit.getUpgradeLevel() * 50;
 		default:
 			break;
 		}
 		
 		
-		if(this.unitCost <= this.totalGold) {
+		if(this.unitGoldCost <= this.totalGold) {
 			checkResult = true;
 		}
 		
@@ -505,6 +560,27 @@ public class Faction {
 	 * Applies the cost to promote the unit.
 	 */
 	public void applyPromoteCost() {
-		this.totalGold -= this.unitCost;
+		this.totalGold -= this.unitGoldCost;
+	}
+	
+	/**
+	 * updates the factions score based on
+	 * resources, size of territory, and num of units
+	 */
+	public void updateTotalScore() {
+		int points;
+		//points for resources
+		points = this.totalFood * 5;
+		points += this.totalWood * 5;
+		points += this.totalGold * 10;
+		
+		//territory bonus
+		points += (ClaimedTiles.size());
+		
+		//unit bonus
+		points += (Units.size());
+		
+		//set the score value
+		this.score.setScoreVal(points);	
 	}
 }

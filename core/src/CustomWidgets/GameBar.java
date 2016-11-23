@@ -12,7 +12,7 @@ public class GameBar {
 
 	private Table topBar;
 	private WidgetResource itFood, itWood, itGold;
-	private Label Turns, Time, Score;
+	private Label Turns, Time, Score, Win;
 	private TextButton options,endTurn;
 	private float padding;
 	@SuppressWarnings("rawtypes")
@@ -27,6 +27,7 @@ public class GameBar {
 		// Create all widgets
 		Label Background = new Label("", MyGdxGame.MENUSKINHUD);
 		Turns = new Label("Turn: " + "0", MyGdxGame.MENUSKIN);
+		Win = new Label("Win: " + "0", MyGdxGame.MENUSKIN);
 		Score = new Label("Score: " + "0", MyGdxGame.MENUSKIN);
 		Time = new Label("12:00", MyGdxGame.MENUSKIN);
 		options = new TextButton("?",MyGdxGame.MENUSKIN);
@@ -45,6 +46,8 @@ public class GameBar {
 		cCell = gameHUD.add().height(HUDheight);
 		gameHUD.add(endTurn);
 		cCell2 = gameHUD.add();
+		gameHUD.add().width(10);
+		gameHUD.add(Win).height(HUDheight);
 		gameHUD.add().width(padding);
 		gameHUD.add(Score).height(HUDheight);
 		gameHUD.add().width(padding);
@@ -73,7 +76,7 @@ public class GameBar {
 		// Calculate the size of the empty cells
 		float filler = Gdx.graphics.getWidth() - itFood.getCellSize() 
 				- itWood.getCellSize() - itGold.getCellSize() - Turns.getWidth() - Time.getWidth() 
-				- options.getWidth() - endTurn.getWidth() - Score.getWidth() - 5*padding;
+				- options.getWidth() - endTurn.getWidth() - Score.getWidth() - Win.getWidth() - 5*padding;
 		cCell.width(filler/2);
 		cCell2.width(filler/2);
 		
@@ -100,6 +103,14 @@ public class GameBar {
 	
 	public void setScore(int value){
 		Score.setText("Score: " + String.valueOf(value));
+		this.update();
+	}
+	
+	/**
+	 * Display the winning percentage.
+	 */
+	public void setWin(String cityCount) {
+		Win.setText("Win: " + cityCount);
 		this.update();
 	}
 	
