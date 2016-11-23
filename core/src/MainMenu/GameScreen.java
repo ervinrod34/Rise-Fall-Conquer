@@ -197,6 +197,22 @@ public class GameScreen implements Screen{
 				}
 			}
 		}
+		// Remove dead resources
+		for(Faction fac : factions){
+			ArrayList<Tile> deadResources = new ArrayList<Tile>();
+			for(Tile t : fac.getClaimedTiles()){
+				if(t.getResource() != null){
+					if(t.getResource().getHealth() <= 0){
+						t.setResource(null);
+						t.setbAnimation(null);
+						deadResources.add(t);
+					}
+				}
+			}
+			for(Tile t : deadResources){
+				fac.unclaimTile(t);
+			}
+		}
 		
 		//draw map on GameScreen
 		Gdx.gl.glClearColor(36/255f, 97/255f, 123/255f, 1);
@@ -215,6 +231,8 @@ public class GameScreen implements Screen{
 		// Draws all non textures
 		rend.setAutoShapeType(true);
 		rend.begin(ShapeType.Filled);
+		// Draw tile health bars
+		this.mBoard.drawHealthbars(rend);
 		// Draw unit shapes
 		for (Faction fac : factions) {
 			fac.drawUnits(rend);
