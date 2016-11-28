@@ -1,6 +1,7 @@
 package CustomWidgets;
 
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.Stage;
 
 /**
  * Defines a class that displays the cost of 
@@ -22,43 +23,43 @@ import factions.PlayerFaction;
 
 public class CostOption {
 
-	private Label resourceName, tileName, description;
+	private Stage stage;
+	private Label resourceName, description;
 	private TextButton approve, cancel;
-	private Table displayTable, buttonTable, mainTable;
+	private Table container, holder;
 	private Tile tile;
 	private PlayerFaction pf;
 	private boolean isOpen;
 	
 	public CostOption(Tile tile, PlayerFaction pf) {
+		this.stage = null;
 		this.tile = tile;
 		this.pf = pf;
 		
 		this.isOpen = false;
 		
-		this.displayTable = new Table(MyGdxGame.MENUSKIN);
-		this.displayTable.setFillParent(true);
-		this.buttonTable = new Table(MyGdxGame.MENUSKIN);
-		this.buttonTable.setFillParent(true);
-		this.mainTable = new Table(MyGdxGame.MENUSKIN);
-		this.displayTable.setFillParent(true);
+		this.container = new Table(MyGdxGame.MENUSKIN);
+		//this.displayTable = new Table(MyGdxGame.MENUSKIN);
+		//this.displayTable.setFillParent(true);
+		//this.buttonTable = new Table(MyGdxGame.MENUSKIN);
+		//this.buttonTable.setFillParent(true);
+		this.holder = new Table(MyGdxGame.MENUSKIN);
+		this.holder.setFillParent(true);
 		
+		//Label backGround = new Label("", MyGdxGame.MENUSKIN);
 		
 		/**
 		 * Setup the table for the tile name display.
 		 */
 		try {
 			resourceName = new Label(tile.getResourceID().name() + " ", MyGdxGame.MENUSKIN);
-			this.displayTable.add(resourceName);
-			this.displayTable.row();
+			this.container.add(resourceName);
+			this.container.row();
 		} catch(NullPointerException e) {
 			resourceName = new Label(" ", MyGdxGame.MENUSKIN);
-			this.displayTable.add(resourceName);
-			this.displayTable.row();
+			this.container.add(resourceName);
+			this.container.row();
 		}
-		
-		try {
-			tileName = new Label(tile.getTileId().name() + " ", MyGdxGame.MENUSKIN);
-		} catch(NullPointerException e) {}
 		
 		/**
 		 * Setup the table for the cost display
@@ -72,8 +73,8 @@ public class CostOption {
 		/**
 		 * Place the displays into a table for displays
 		 */
-		this.displayTable.row();
-		this.displayTable.add(this.description);
+		//this.displayTable.row();
+		//this.displayTable.add(this.description);
 		
 		/**
 		 * Create TextButtons
@@ -84,33 +85,73 @@ public class CostOption {
 		/**
 		 * Place the APPROVE and CANCEL textbutton in a table
 		 */
-		this.buttonTable.add(this.approve);
-		this.buttonTable.row();
-		this.buttonTable.add(this.cancel);
-		this.buttonTable.row();
+		//this.buttonTable.add(this.approve);
+		//this.buttonTable.add(this.cancel);
+		//this.buttonTable.row();
 		
-		this.mainTable.add(this.displayTable);
-		this.mainTable.add(this.buttonTable);
+		/**
+		 * Adds the sub-tables into the table
+		 */
+		this.container.row();
+		this.container.add(this.description);
+		this.container.row();
+		this.container.add(this.description);
+		this.container.row();
+		this.container.add(this.approve);
+		this.container.add(this.cancel);
 		
+		this.holder.add(this.container);
 		
+		/**
+		 * Creates a listener for the APPROVE button.
+		 */
 		this.approve.addListener(new ClickListener() {
 			public void clicked(InputEvent ie, float x, float y) {
 				
 			}
 		});
 		
+		/**
+		 * Creates a listener for the CANCEL button.
+		 */
 		this.cancel.addListener(new ClickListener() {
 			public void clicked(InputEvent ie, float x, float y) {
+				getContainer().remove();
+				getContainer().invalidateHierarchy();
 				setIsOpen(false);
 			}
 		});
 	}
 
+	/**
+	 * Return the main table.
+	 * @return A Table object
+	 */
+	public Table getContainer() {
+		return this.container;
+	}
+	
+	/**
+	 * Sets the stage for this class.
+	 * @param stage A reference to a Stage object
+	 */
+	public void setStage(Stage stage) {
+		this.stage = stage;
+	}
+	
+	/**
+	 * Returns a boolean value whether this window is open.
+	 * @return A boolean value
+	 */
 	public boolean getIsOpen() {
 		return isOpen;
 	}
 
-	public void setIsOpen(boolean isOpen) {
-		this.isOpen = isOpen;
+	/**
+	 * Change the boolean 
+	 * @param change The new boolean value
+	 */
+	public void setIsOpen(boolean change) {
+		this.isOpen = change;
 	}
 }

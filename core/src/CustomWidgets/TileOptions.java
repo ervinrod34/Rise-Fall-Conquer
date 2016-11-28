@@ -6,6 +6,7 @@ import javax.annotation.Resources;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Cell;
 import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
@@ -21,6 +22,7 @@ import map.Tile;
 
 public class TileOptions {
 	
+	private Stage stage;
 	private Label resName, tileName, desc;
 	private TextButton exit, upgrade;
 	private ArrayList<TextButton> buttons;
@@ -28,8 +30,10 @@ public class TileOptions {
 	private Tile tile;
 	private boolean isOpen;
 	private PlayerFaction pf;
+	private CostOption costDisplay;
 	
 	public TileOptions(Tile t, PlayerFaction pf){
+		this.stage = null;
 		this.pf = pf;
 		isOpen = false;	
 		tile = t;
@@ -130,6 +134,12 @@ public class TileOptions {
 		upgrade.addListener(new ClickListener() {
 			public void clicked(InputEvent e,float x,float y){
 				try {
+					//costDisplay = new CostOption(tile, pf);
+					//Stage mainStage = getStage();
+					//mainStage.addActor(costDisplay.getContainer());
+					//costDisplay.setStage(mainStage);
+					//costDisplay.setIsOpen(true);
+					
 					if(tile.getResource() != null){
 						if(pf.checkCanUpgrade(tile.getResourceID()) == true) {
 							tile.getResource().upgradeTile(); //this is where tile is getting upgraded, use pf to access res
@@ -171,6 +181,14 @@ public class TileOptions {
 				}
 			});
 		}
+	}
+	
+	public Stage getStage() {
+		return this.stage;
+	}
+	
+	public void setStage(Stage stage) {
+		this.stage = stage;
 	}
 
 	public Table gettOptions() {

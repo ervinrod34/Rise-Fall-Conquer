@@ -251,6 +251,7 @@ public class Navigator implements InputProcessor {
 						} else {
 							op = new TileOptions(t, (PlayerFaction) this.factions.get(0));
 							stage.addActor(op.gettOptions());
+							op.setStage(stage);
 							op.setIsOpen(true);
 							isOpen = true;
 						}
