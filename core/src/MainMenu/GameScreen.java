@@ -53,6 +53,7 @@ public class GameScreen implements Screen{
 	public static final int HEIGHT = 720;
 	public static final int SCALE = 12;
 	private ShapeRenderer rend;
+	
 	public GameScreen(String mapName){
 	
 
@@ -72,17 +73,10 @@ public class GameScreen implements Screen{
 		
 		mBoard = new map.Map(oGameCam, mapName);
 
-//		Random rmap = new Random();
-//		if(rmap.nextBoolean() == true){
-//			mBoard = new map.Map(oGameCam, "Map_1.json");
-//		}else{
-//			mBoard = new map.Map(oGameCam, "Map_2.json");
-//		}
-
 		this.generateFactions();
 		oGameCam.position.set(factions.get(0).getHomeTile().getLocation().x,factions.get(0).getHomeTile().getLocation().y,0);
 		oGameCam.update();
-		factions.get(0).updateResourcesPerTurn();
+		
 		//winDisplay = this.calculateWin();
 		
 		//scoreBoard.printScoreBoard();
@@ -118,13 +112,23 @@ public class GameScreen implements Screen{
 		final GameScreen tempScreen = this;
 		bar.setEndTurnClickListener(new ClickListener(){
 			public void clicked(InputEvent event, float x, float y) {
+				// Check if player's turn is over before proceeding
+				if(factions.get(0).isTurnOver() == true){
+					return;
+				}
+				// Set player's turn to being over
+				factions.get(0).setTurnOver(true);
 				for(Faction f : factions){
+					// Move all AI
+					if(f != factions.get(0)){
+						f.AI(factions);
+					}
 					f.updateTotalResources();
 					for(Unit u : f.getUnits()){
 						u.update(mBoard);
 					}
 					f.updateTotalScore();
-					System.out.println(f.getScore().toString());
+					//System.out.println(f.getScore().toString());
 				}
 				bar.setScore(factions.get(0).getScore().getScoreVal());
 				bar.setWin(tempScreen.calculateWin()); //Display the current city counts, will be changed to win%
@@ -135,6 +139,8 @@ public class GameScreen implements Screen{
 					public void run(){
 						// Stop transition after 4 hours
 						if(dnCycle.getTime() % 40 == 0){
+							// Make it so player can end there turn again
+							factions.get(0).setTurnOver(false);
 							time.stop();
 						}
 						// Update time
@@ -305,6 +311,8 @@ public class GameScreen implements Screen{
 				//add a score entry for a non-player faction
 				scoreBoard.addScore(faction.getScore());
 			}
+			//Update all resources per turn
+			faction.updateResourcesPerTurn();
 			//Add a animation to the home tile
 			home.setbAnimation(BasicAnimationID.PARTICLE_SLEEP);
 			factions.add(faction);

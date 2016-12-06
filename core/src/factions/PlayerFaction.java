@@ -42,4 +42,16 @@ public class PlayerFaction extends Faction{
 //			t.setLight(false);
 //		}
 	}
+	
+	/**
+	 * Adds the unit to the faction
+	 * @param type
+	 * @param location
+	 */
+	@Override
+	public void addUnit(UnitID type, Tile location){
+		Unit u = new Unit(type, location, super.mBoard, rayHandler);
+		u.setUnitFaction(this);
+		super.getUnits().add(u);
+	}
 }

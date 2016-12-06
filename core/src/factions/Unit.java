@@ -70,6 +70,28 @@ public class Unit {
 		
 	}
 	
+	public Unit(UnitID type, Tile location, Map m){
+		
+		// Set health bar
+		this.barHealth = new Bar(100, 100);
+		
+		this.setLocation(location, m);
+		this.type = type;
+		this.upgradable = true;
+		
+		// Set unit to first animation
+		this.upgrade = -1;
+		this.upgrade();
+		
+		this.displayMovementRange = false;
+		this.displayAttackRange = false;
+		this.attacked = false;
+		
+		this.attack = 25;
+		this.defense = 10;
+		
+	}
+	
 	/**
 	 * Draw the unit
 	 * @param batch
@@ -189,6 +211,7 @@ public class Unit {
 	private void setLightLocation(){ 
 		Vector2 LocationCenter = new Vector2();
 		LocationCenter.set(location.getLocation().x + this.getLocation().getTileImg().getWidth()/2, location.getLocation().y + this.getLocation().getTileImg().getHeight()/2);
+		if(pLight != null)
 		pLight.setPosition(LocationCenter);
 	}
 	/**

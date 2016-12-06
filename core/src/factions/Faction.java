@@ -1,7 +1,9 @@
 package factions;
 
 import java.util.ArrayList;
+import java.util.Random;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
@@ -45,7 +47,7 @@ public class Faction {
 		return cTerritory;
 	}
 
-	private Map mBoard;
+	protected Map mBoard;
 	
 	/**
 	 * The total resources variables
@@ -71,9 +73,12 @@ public class Faction {
 	/**
 	 * The cost to promote a unit
 	 */
+	
+	private boolean turnOver;
 	private int unitFoodCost;
 	private int unitWoodCost;
 	private int unitGoldCost;
+
 	
 	/**
 	 * Construct a new Faction
@@ -109,6 +114,7 @@ public class Faction {
 		this.unitGoldCost = 0;
 		
 		cTerritory = c;
+		this.setTurnOver(false);
 
 	}
 
@@ -204,7 +210,7 @@ public class Faction {
 	 * @param location
 	 */
 	public void addUnit(UnitID type, Tile location){
-		this.Units.add(new Unit(type, location, mBoard, rayHandler));
+		this.Units.add(new Unit(type, location, mBoard));
 	}
 	
 	/**
@@ -215,7 +221,7 @@ public class Faction {
 	 * @param faction The faction who created this unit
 	 */
 	public void addUnit(UnitID type, Tile location, Faction faction) {
-		Unit unit = new Unit(type, location, mBoard, rayHandler);
+		Unit unit = new Unit(type, location, mBoard);
 		unit.setUnitFaction(faction);
 		this.Units.add(unit);
 	}
@@ -582,5 +588,168 @@ public class Faction {
 		
 		//set the score value
 		this.score.setScoreVal(points);	
+	}
+	
+	public boolean isTurnOver() {
+		return turnOver;
+	}
+
+	public void setTurnOver(boolean turnOver) {
+		this.turnOver = turnOver;
+	}
+	
+	public void AI(ArrayList<Faction> factions){
+		// Loop through this factions unit's looking for enemies
+		for(Unit u : Units){
+			// Get each units attack range and movement range
+			//ArrayList<Tile> uAttackRange = u.getAttackRange();
+			ArrayList<Tile> uMovementRange = u.getMovementRange();
+			// Variable for if unit has attacked or moved
+			boolean attacked = AIAttackLogic(u, factions);
+			// Move in a random direction if unit did not attack
+			if(attacked == false){
+				Random rand = new Random();
+				u.setLocation(uMovementRange.get(rand.nextInt(uMovementRange.size())), mBoard);
+			}
+		}
+		// Randomly build a unit or a new building
+		Random rand = new Random();
+		if (rand.nextBoolean() == true) {
+			AIBuildLogic();
+		} else {
+			AIBuildUnitLogic(factions);
+		}
+	}
+	/**
+	 * Logic for AI attacking
+	 * @param u
+	 * @param factions
+	 * @return
+	 */
+	private boolean AIAttackLogic(Unit u, ArrayList<Faction> factions){
+		// Get unit attack range and movement range
+		ArrayList<Tile> uAttackRange = u.getAttackRange();
+		boolean attacked = false;
+		// Loop through all other factions
+		for (Faction f : factions) {
+			// Make sure we are not checking our faction
+			if (f == this) {
+				continue;
+			}
+			// Check if any enemies are in range
+			ArrayList<Unit> attackableUnits = new ArrayList<Unit>();
+			for (Unit u1 : f.getUnits()) {
+				// Attack first enemy seen in range
+				if (uAttackRange.contains(u1.getLocation()) == true) {
+					// Add to attackable units
+					attackableUnits.add(u1);
+				}
+			}
+			// If no units are in range we do not attack
+			if(attackableUnits.size() != 0){
+				// Compare all unit's the AI can attack
+				Unit unitToAttack = attackableUnits.get(0);
+				for (Unit u1 : attackableUnits) {
+					for (Unit u2 : attackableUnits) {
+						if (u1 != u2) {
+							// Look for unit with lowest health in range
+							if(u1.getHealth() < u2.getHealth()){
+								unitToAttack = u1;
+							}
+						}
+					}
+				}
+				// Attack the given unit
+				 u.attack(unitToAttack);
+				 attacked = true;
+				 break;
+			}
+			// AI attacks buildings if they are in range
+			for(Tile tile : f.getClaimedTiles()){
+				// Check if tile contains a resource
+				if(uAttackRange.contains(tile) && tile.getResource() != null){
+					// Check that resource is not owned by current faction
+					if(tile.getClaim() != this.Id){
+						u.attack(tile.getResource());
+						attacked = true;
+						break;
+					}
+				}
+			}
+			// If we have attacked, no point in looking through other factions
+			if(attacked == true){
+				break;
+			}
+		}
+		// No one to attack :)
+		return attacked;
+	}
+	/**
+	 * Logic for AI building buildings
+	 * @return
+	 */
+	private boolean AIBuildLogic(){
+		// Update where the AI can build
+		this.calculateBuildRange();
+		// Variable for if we build
+		boolean Built = false;
+		// Currently only check if we can build wheat
+		if(this.checkCanUpgrade(ResourceID.WHEAT) == true){
+			// Get the actual build range of unclaimed tiles
+			ArrayList<Tile> actualBuildRange = new ArrayList<Tile>();
+			for(Tile tile : this.BuildRange){
+				if(tile.getClaim() == 0){
+					actualBuildRange.add(tile);
+				}
+			}
+			// Pick a random tile in build range to build wheat
+			Random rand = new Random();
+			Tile buildTile = actualBuildRange.get(rand.nextInt(actualBuildRange.size()));
+			buildTile.setResourceID(ResourceID.WHEAT);
+			this.claimTile(buildTile);
+			this.applyUpgradeCost();
+			Built = true;
+		}
+		return Built;
+	}
+	/**
+	 * Logic for AI creating units
+	 * @param factions
+	 * @return
+	 */
+	private boolean AIBuildUnitLogic(ArrayList<Faction> factions){
+		// Find all home tiles for faction
+		ArrayList<Tile> homeList = new ArrayList<Tile>();
+		for(Tile tile : this.getClaimedTiles()){
+			if(tile.getResourceID() != null && tile.getResourceID().equals(ResourceID.HOME)){
+				homeList.add(tile);
+			}
+		}
+		if(homeList.size() == 0){
+			return false;
+		}
+		// Pick a random home tile to build on
+		Random rand = new Random();
+		Tile tile = homeList.get(rand.nextInt(homeList.size()));
+		// attempt to create a unit
+		try {
+			//Makes sure there are no units on the tile before creating units
+			for(Faction f : factions){
+				for(Unit u : f.getUnits()){
+					if(u.getLocation() == tile){
+						return false;
+					}
+				}
+			}
+			// Create a new unit
+			if(this.checkUnitCost(UnitID.Basic) == true) {
+				this.applyPromoteCost();
+				this.addUnit(UnitID.Basic, tile, this);
+				return true;
+			}
+		} catch (NullPointerException ne) {
+			Gdx.app.error(null, "Unit Promoye error.");
+		}
+		return false;
 	}
 }
