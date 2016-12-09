@@ -87,7 +87,7 @@ public class ProgressOption {
 		getContainer().add(this.endGame).width(100).padBottom(10);
 		getContainer().add(this.close).width(100).padBottom(10);
 		
-		Label backGround = new Label("", MyGdxGame.MENUSKIN);		
+		Label backGround = new Label("", MyGdxGame.MENUSKINHUD);		
 		
 		setMainTable(new Table(MyGdxGame.MENUSKIN));
 		getMainTable().setFillParent(true);

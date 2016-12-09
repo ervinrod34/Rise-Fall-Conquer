@@ -77,7 +77,7 @@ public class GameBar {
 		// Calculate the size of the empty cells
 		float filler = Gdx.graphics.getWidth() - itFood.getCellSize() 
 				- itWood.getCellSize() - itGold.getCellSize() - Turns.getWidth() - Time.getWidth() 
-				- options.getWidth() - endTurn.getWidth() - Score.getWidth() - progress.getWidth() - 5*padding;
+				- options.getWidth() - endTurn.getWidth() - Score.getWidth() - progress.getWidth() - 6*padding;
 		cCell.width(filler/2);
 		cCell2.width(filler/2);
 		
