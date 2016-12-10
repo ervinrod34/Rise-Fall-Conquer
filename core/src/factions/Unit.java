@@ -34,7 +34,8 @@ public class Unit {
 	private ArrayList<Tile> MovementRangeTiles;
 	private int MaxMovementRange = 5;
 	private int MovementRange = MaxMovementRange;
-	
+	private Tile target;
+
 	// Attack
 	private boolean displayAttackRange;
 	private boolean attacked;
@@ -67,6 +68,8 @@ public class Unit {
 		
 		this.attack = 25;
 		this.defense = 10;
+		
+		target = null;
 		
 	}
 	
@@ -151,6 +154,33 @@ public class Unit {
 	 */
 	public Faction getUnitsFaction() {
 		return this.unitFaction;
+	}
+	
+	/**
+	 * sets a target tile for this unit
+	 * @param tile
+	 */
+	public void setTarget(Tile tile) {
+		this.target = tile;
+	}
+	
+	/**
+	 * gets the target for this unit
+	 * @return
+	 */
+	public Tile getTarget() {
+		return target;
+	}
+	
+	/**
+	 * checks if this unit has a target
+	 * @return
+	 */
+	public boolean hasTarget() {
+		if(target != null)
+			return true;
+		else
+			return false;
 	}
 	
 	/**

@@ -1,12 +1,14 @@
 package factions;
 
 import java.util.ArrayList;
+import java.util.EnumSet;
 import java.util.Random;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.math.Vector2;
 
 import box2dLight.RayHandler;
 import map.Map;
@@ -18,6 +20,7 @@ import map.TileID;
  * 
  * @author Porter
  * @co-author Ervin
+ * 
  */
 public class Faction {
 
@@ -601,6 +604,10 @@ public class Faction {
 	public void AI(ArrayList<Faction> factions){
 		// Loop through this factions unit's looking for enemies
 		for(Unit u : Units){
+
+//			//UNCOMMENT TO TEST TARGETING
+//			u.setTarget(factions.get(0).getHomeTile());
+						
 			// Get each units attack range and movement range
 			//ArrayList<Tile> uAttackRange = u.getAttackRange();
 			ArrayList<Tile> uMovementRange = u.getMovementRange();
@@ -608,8 +615,14 @@ public class Faction {
 			boolean attacked = AIAttackLogic(u, factions);
 			// Move in a random direction if unit did not attack
 			if(attacked == false){
-				Random rand = new Random();
-				u.setLocation(uMovementRange.get(rand.nextInt(uMovementRange.size())), mBoard);
+				if(u.hasTarget()) {
+					moveTowardTarget(u);
+				} else {
+					Random rand = new Random();
+					u.setLocation(uMovementRange.get(rand.nextInt(uMovementRange.size())), mBoard);
+				}
+//				Random rand = new Random();
+//				u.setLocation(uMovementRange.get(rand.nextInt(uMovementRange.size())), mBoard);
 			}
 		}
 		// Randomly build a unit or a new building
@@ -620,6 +633,41 @@ public class Faction {
 			AIBuildUnitLogic(factions);
 		}
 	}
+	
+	/**
+	 * This function moves a unit toward it's target
+	 * @param unit
+	 * @author Zach Floyd
+	 */
+	private void moveTowardTarget(Unit unit) {
+		// get the movement range of unit
+		ArrayList<Tile> uMovementRange = unit.getMovementRange();
+		// get coordinates of the target
+		Vector2 targetCoord = new Vector2(unit.getTarget().getLocation());
+		
+		float thisDist;
+		int ind = -1;
+		
+		//pick a first minimum distance
+		float minDist = uMovementRange.get(0).getLocation().dst(targetCoord);
+		for(Tile t : uMovementRange) {
+			//dist between this tile and target
+			thisDist = t.getLocation().dst(targetCoord);
+			//check if it's the new minimum
+			if(thisDist <= minDist) {
+				minDist = thisDist;
+				// get the index of this object
+				ind = uMovementRange.indexOf(t);
+			}
+		}
+		// don't do anything if we didn't find a min
+		if (ind == -1)
+			return;
+		else
+			// move the unit
+			unit.setLocation(uMovementRange.get(ind), mBoard);	
+	}
+	
 	/**
 	 * Logic for AI attacking
 	 * @param u
@@ -693,8 +741,18 @@ public class Faction {
 		this.calculateBuildRange();
 		// Variable for if we build
 		boolean Built = false;
+		Random rand = new Random();
+		ResourceID rsrcIDs[] = {
+				ResourceID.TOWN, ResourceID.COAL, ResourceID.FISH, ResourceID.GOLD
+				,ResourceID.MEAT, ResourceID.WHEAT, ResourceID.WOOD
+		};
+		
+		// get a random resource
+		int ind = rand.nextInt(rsrcIDs.length);
+		ResourceID randRsrc = rsrcIDs[ind];
+
 		// Currently only check if we can build wheat
-		if(this.checkCanUpgrade(ResourceID.WHEAT) == true){
+		if(this.checkCanUpgrade(randRsrc) == true){
 			// Get the actual build range of unclaimed tiles
 			ArrayList<Tile> actualBuildRange = new ArrayList<Tile>();
 			for(Tile tile : this.BuildRange){
@@ -703,9 +761,9 @@ public class Faction {
 				}
 			}
 			// Pick a random tile in build range to build wheat
-			Random rand = new Random();
+			
 			Tile buildTile = actualBuildRange.get(rand.nextInt(actualBuildRange.size()));
-			buildTile.setResourceID(ResourceID.WHEAT);
+			buildTile.setResourceID(randRsrc);
 			this.claimTile(buildTile);
 			this.applyUpgradeCost();
 			Built = true;
