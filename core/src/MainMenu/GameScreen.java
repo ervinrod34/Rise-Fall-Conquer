@@ -130,6 +130,7 @@ public class GameScreen implements Screen{
 					f.updateTotalScore();
 					//System.out.println(f.getScore().toString());
 				}
+				//sets the player's score in the hud
 				bar.setScore(factions.get(0).getScore().getScoreVal());
 				bar.setWin(tempScreen.calculateWin()); //Display the current city counts, will be changed to win%
 				
