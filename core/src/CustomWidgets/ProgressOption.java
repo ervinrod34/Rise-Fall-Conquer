@@ -21,6 +21,8 @@ import com.mygdx.game.MyGdxGame;
 
 import MainMenu.MainMenu;
 import factions.Faction;
+import factions.Score;
+import factions.ScoreBoard;
 
 public class ProgressOption {
 	
@@ -31,7 +33,7 @@ public class ProgressOption {
 	private TextButton close, endGame;
 	//mainTable is holder
 	private Table mainTable, container, holder;
-	
+	private boolean playerGotHighScore;
 	private boolean isOpen;
 	private ArrayList<Faction> factions;
 	
@@ -99,6 +101,18 @@ public class ProgressOption {
 		this.endGame.addListener(new ClickListener() {
 			public void clicked(InputEvent ie, float x, float y) {
 				MyGdxGame.GAME.setScreen(new MainMenu());
+				
+				//here we check, if the score is in the top 10
+				Score playerScore = factions.get(0).getScore();
+				ScoreBoard currLdrBoard = new ScoreBoard();
+				currLdrBoard.fillFromDatabase();
+				playerGotHighScore = currLdrBoard.isTopTen(playerScore);
+				
+//				//debugging
+//				if(playerGotHighScore)
+//					System.out.println("You got a high score");
+//				else
+//					System.out.println("You didn't get a high score");
 			}
 		});
 		

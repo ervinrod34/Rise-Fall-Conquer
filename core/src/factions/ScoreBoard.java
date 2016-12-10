@@ -76,4 +76,20 @@ public class ScoreBoard {
 		}
 	}
 	
+	/**
+	 * checks if the given playerScore is less then or equal to
+	 * any of the scores in this scoreBoard. If so, it's in the
+	 * top 10.
+	 * @param playerScore
+	 * @return
+	 */	
+	public boolean isTopTen(Score playerScore) {
+		for (int i=0; i < 10; i++ ) {
+			Score other = scoreList.get(i);
+			if(playerScore.getScoreVal() >= other.getScoreVal())
+				return true;
+		}
+		return false;
+	}
+	
 }
