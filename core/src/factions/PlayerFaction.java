@@ -49,7 +49,8 @@ public class PlayerFaction extends Faction{
 	 * @param location
 	 */
 	@Override
-	public void addUnit(UnitID type, Tile location){
+	public void addUnit(UnitID type, Tile location, Faction faction){
+		System.out.println("Called");
 		Unit u = new Unit(type, location, super.mBoard, rayHandler);
 		u.setUnitFaction(this);
 		super.getUnits().add(u);
