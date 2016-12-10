@@ -244,19 +244,19 @@ public class Navigator implements InputProcessor {
 				if (factions.get(0).getBuildRange().contains(t) == true) {
 					try {
 						if (t.getResourceID().name().equals("HOME")) {
-							hp = new HomeTileOption(t, this.factions);
+							hp = new HomeTileOption(t, this.factions,(PlayerFaction) this.factions.get(0),this.stage);
 							stage.addActor(hp.gettOptions());
 							hp.setIsOpen(true);
 							isOpen = true;
 						} else {
-							op = new TileOptions(t, (PlayerFaction) this.factions.get(0));
+							op = new TileOptions(t, (PlayerFaction) this.factions.get(0),this.stage);
 							stage.addActor(op.gettOptions());
 							op.setStage(stage);
 							op.setIsOpen(true);
 							isOpen = true;
 						}
 					} catch (NullPointerException e) {
-						op = new TileOptions(t, (PlayerFaction) this.factions.get(0));
+						op = new TileOptions(t, (PlayerFaction) this.factions.get(0),this.stage);
 						stage.addActor(op.gettOptions());
 						op.setIsOpen(true);
 						isOpen = true;

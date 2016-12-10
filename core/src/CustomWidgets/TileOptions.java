@@ -33,8 +33,8 @@ public class TileOptions {
 	private PlayerFaction pf;
 	private CostOption costDisplay;
 	
-	public TileOptions(Tile t, PlayerFaction pf){
-		this.stage = null;
+	public TileOptions(Tile t, PlayerFaction pf,Stage stage){
+		this.stage = stage;
 		this.pf = pf;
 		isOpen = false;	
 		tile = t;
@@ -137,26 +137,14 @@ public class TileOptions {
 				try {
 					if(tile.getResource() != null) {
 						boolean upgradable = pf.checkCanUpgrade(tile.getResourceID());
-						costDisplay = new CostOption(tile, pf, upgradable, "UPG");
-						costDisplay.getMainTable().setFillParent(true);
-						costDisplay.getMainTable().center();
-						//costDisplay.getMainTable().setColor(Color.BLACK);
-						getStage().addActor(costDisplay.getMainTable());
+						costDisplay = new CostOption(tile, pf, upgradable, "UPG",tile.getResourceID());
+						costDisplay.getCOption().setFillParent(true);
+						costDisplay.getCOption().center();
+						getStage().addActor(costDisplay.getCOption());
 						costDisplay.setStage(getStage());
 						costDisplay.setIsOpen(true);
-					
 					}
-					
-					/*
-					if(tile.getResource() != null){
-						if(pf.checkCanUpgrade(tile.getResourceID()) == true) {
-							tile.getResource().upgradeTile(); //this is where tile is getting upgraded, use pf to access res
-							pf.updateResourcesPerTurn();
-							pf.applyUpgradeCost();
-						}
-					}*/
 				} catch (NullPointerException ne) {
-					//upgrade.setVisible(false);
 					Gdx.app.error(null, "Upgrade error.");
 				}
 				//Gdx.app.log(this.getClass().getName(),"IM SO HAPPY RIGHT NOW, I'M BEING UPGRADED");
@@ -168,44 +156,31 @@ public class TileOptions {
 		for(final TextButton b : buttons){
 			b.addListener(new ClickListener(){
 				public void clicked(InputEvent e, float x, float y){
-					try {
+					//try {
 						for(ResourceID r : ResourceID.values()){
-							if(b.getName().equals(r.name()) && tile.getClaim() == 0){								
-								/*boolean upgradable = pf.checkCanUpgrade(r);
-								System.out.println("line 174 ok");
-								costDisplay = new CostOption(tile, pf, upgradable, "NEW");
-								System.out.println("line 176 ok");
-								costDisplay.setResID(r);
-								System.out.println("line 178 ok");
-								//resName.setText(tile.getResourceID().name());
-								//System.out.println("line 180 ok");
-								
-								costDisplay.getMainTable().setFillParent(true);
-								System.out.println("line 182 ok");
-								costDisplay.getMainTable().center();
-								System.out.println("line 184 ok");
-								getStage().addActor(costDisplay.getMainTable());
-								System.out.println("line 186 ok");
-								costDisplay.setStage(getStage());
-								System.out.println("line 188 ok");
-								costDisplay.setIsOpen(true);*/
-								
-								
+							if(b.getName().equals(r.name()) && tile.getClaim() == 0){	
 								if(pf.checkCanUpgrade(r) == true) {
+								costDisplay = new CostOption(tile, pf, false, "NEW",r);
+								costDisplay.getCOption().setFillParent(true);
+								costDisplay.getCOption().center();
+								getStage().addActor(costDisplay.getCOption());
+								costDisplay.setStage(getStage());
+								costDisplay.setIsOpen(true);		
+								}
+								/*if(pf.checkCanUpgrade(r) == true) {
 									tile.setResourceID(r);
 								    resName.setText(tile.getResourceID().name());
 								
 									pf.claimTile(tile); //already calls updateResourcesPerTurn
-									pf.applyUpgradeCost();
-									
+									pf.applyUpgradeCost();			
 								} else {
 									System.out.println("Not enough Resources.");
-								}
+								}*/
 							}
 						}
-					} catch (NullPointerException ne) {
+					/*} catch (NullPointerException ne) {
 						Gdx.app.error(null, "Upgrade error.");
-					}
+					}*/
 				}
 			});
 		}

@@ -20,38 +20,39 @@ import map.ResourceID;
 import map.Tile;
 import factions.PlayerFaction;
 
-
-public class CostOption {
-
-	private Stage stage;
+public class CostOption{
 	private Label resourceName, description;
 	private TextButton approve, cancel;
-	private Table mainTable, container;
-	
+	private Table cOption, container, holder;
+
+	private Stage s;
 	private Tile tile;
 	private PlayerFaction pf;
 	private String type;
 	private boolean upgradable;
 	private ResourceID tempResID;
-	
+
 	private boolean isOpen;
-	
-	public CostOption(Tile t, PlayerFaction pf, boolean upg, String type) {
-		this.stage = null;
+
+
+	public CostOption(Tile t, PlayerFaction pf, boolean upg, String type, ResourceID r) {
+		
+		s = null;
 		this.tile = t;
+		tempResID = r;
+		System.out.println(tempResID.getId());
 		this.pf = pf;
 		this.upgradable = upg;
 		this.type = type;
 		this.isOpen = false;
-		
 		setContainer(new Table(MyGdxGame.MENUSKIN));
-		getContainer().setFillParent(true);
+		cOption = new Table(MyGdxGame.MENUSKIN);
+		cOption.setFillParent(true);
+		holder = new Table(MyGdxGame.MENUSKIN);
+		holder.setFillParent(true);
 		
-		Label backGround = new Label("", MyGdxGame.MENUSKIN);
+		Label background = new Label("", MyGdxGame.MENUSKINHUD);
 		
-		/**
-		 * Setup the table for the tile name display.
-		 */
 		try {
 			this.resourceName = new Label("Cost to Upgrade " + tile.getResourceID().name() 
 					+ ": ", MyGdxGame.MENUSKIN);
@@ -82,8 +83,13 @@ public class CostOption {
 		this.cancel = new TextButton("CANCEL", MyGdxGame.MENUSKIN);
 		
 		//Checks if tile is upgrade; if true, display approve button, else display message
-		if(this.upgradable == true) {
+		if(this.upgradable == true && type.equals("UPG")) {
 			getContainer().add(this.approve);
+			getContainer().row();
+		}
+		else if(type.equals("NEW")){
+			getContainer().add(this.approve);
+			getContainer().row();
 		}
 		else {
 			Label cantUpg = new Label("Not enough resources.", MyGdxGame.MENUSKIN);
@@ -91,15 +97,42 @@ public class CostOption {
 			getContainer().row();
 		}
 		getContainer().add(this.cancel);
-		
-		setMainTable(new Table(MyGdxGame.MENUSKIN));
-		getMainTable().setFillParent(true);
-		getMainTable().stack(backGround, container);
+		holder.add(getContainer());
 
+		cOption.setFillParent(true);
+		cOption.stack(background, holder);
 		
-		/**
-		 * Creates a listener for the APPROVE button.
-		 */
+		this.setApproveListener();
+		this.setCancelListener();
+	}
+
+
+	private void setCancelListener() {
+		// TODO Auto-generated method stub
+		this.cancel.addListener(new ClickListener() {
+			public void clicked(InputEvent ie, float x, float y) {
+				getContainer().remove();
+				getContainer().invalidateHierarchy();
+				setIsOpen(false);
+			}
+		});
+	}
+
+	public void setStage(Stage s){
+		this.s = s;
+	}
+	
+	public void setIsOpen(boolean b) {
+		// TODO Auto-generated method stub
+		this.isOpen = b;
+	}
+	
+	public Table getCOption(){
+		return this.cOption;
+	}
+	
+	private void setApproveListener() {
+		// TODO Auto-generated method stub
 		this.approve.addListener(new ClickListener() {
 			public void clicked(InputEvent ie, float x, float y) {
 				if(getType() == "UPG") {
@@ -107,6 +140,7 @@ public class CostOption {
 					getPF().updateResourcesPerTurn();
 					getPF().applyUpgradeCost();
 				} else if(getType() == "NEW") {
+					System.out.println(tempResID.getId());
 					getTile().setResourceID(getResID());
 					getPF().claimTile(getTile());
 					getPF().applyUpgradeCost();
@@ -118,119 +152,52 @@ public class CostOption {
 				setIsOpen(false);
 			}
 		});
-		
-		/**
-		 * Creates a listener for the CANCEL button.
-		 */
-		this.cancel.addListener(new ClickListener() {
-			public void clicked(InputEvent ie, float x, float y) {
-				getContainer().remove();
-				getContainer().invalidateHierarchy();
-				setIsOpen(false);
-			}
-		});
 	}
-	
-	/**
-	 * Returns the tile of this object.
-	 * @return A Tile object
-	 */
+
 	public Tile getTile() {
+		// TODO Auto-generated method stub
 		return this.tile;
 	}
 	
-	/**
-	 * Returns the pf of this object.
-	 * @return A PlayerFaction object
-	 */
-	public PlayerFaction getPF() {
-		return this.pf;
-	}
-	
-	/**
-	 * Returns a String representing the type of the uograde. 
-	 * @return A String value
-	 */
-	public String getType() {
-		return this.type;
-	}
-	
-	/**
-	 * Change the ResourceID for this object.
-	 * @param r A reference to a ResourceID
-	 */
-	public void setResID(ResourceID r) {
-		this.tempResID = r;
-	}
-	
-	/**
-	 * Returns the ResourceID in this class.
-	 * @return A ResourceID
-	 */
-	public ResourceID getResID() {
+	public ResourceID getResID(){
 		return this.tempResID;
 	}
 	
-	/**
-	 * Returns the stage of this object. 
-	 * @return A Stage object
-	 */
-	public Stage getStage() {
-		return this.stage;
+	public PlayerFaction getPF(){
+		return this.pf;
 	}
 	
-	/**
-	 * Sets the stage for this class.
-	 * @param stage A reference to a Stage object
-	 */
-	public void setStage(Stage stage) {
-		this.stage = stage;
-	}
-	
-	/**
-	 * Returns the mainTable of this object.
-	 * @return A Table object
-	 */
-	public Table getMainTable() {
-		return this.mainTable;
-	}
-	
-	/**
-	 * Change the mainTable of this object.
-	 * @param table A reference to a Table
-	 */
-	private void setMainTable(Table table) {
-		this.mainTable = table;
-	}
-	/**
-	 * Returns the container.
-	 * @return A Table object
-	 */
-	public Table getContainer() {
-		return this.container;
-	}
-	
-	/**
-	 * Change the container of this object.
-	 * @param c A reference to a Table
-	 */
-	public void setContainer(Table c) {
-		this.container = c;
-	}
-	
-	/**
-	 * Returns a boolean value whether this window is open.
-	 * @return A boolean value
-	 */
-	public boolean getIsOpen() {
-		return isOpen;
+	public String getType() {
+		return this.type;
 	}
 
-	/**
-	 * Change the boolean 
-	 * @param change The new boolean value
-	 */
-	public void setIsOpen(boolean change) {
-		this.isOpen = change;
+	public Label getResourceName() {
+		return resourceName;
 	}
+
+
+	public void setResourceName(Label resourceName) {
+		this.resourceName = resourceName;
+	}
+
+
+	public Label getDescription() {
+		return description;
+	}
+
+
+	public void setDescription(Label description) {
+		this.description = description;
+	}
+
+
+	public Table getContainer() {
+		return container;
+	}
+
+
+	public void setContainer(Table container) {
+		this.container = container;
+	}
+
 }

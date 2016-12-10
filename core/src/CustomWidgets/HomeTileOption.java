@@ -4,7 +4,9 @@ import java.util.ArrayList;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Cell;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
@@ -22,18 +24,22 @@ import map.Tile;
 public class HomeTileOption {
 	
 	private Label resName, tileName, desc;
+	private Stage stage;
 	private TextButton exit, upgrade, buildWorker;
-	//private ArrayList<TextButton> buttons;
 	private Table tOptions, holder, container, buttonsTable;
 	private Tile tile;
 	private boolean isOpen;
+	private CostOption costDisplay;
 	private ArrayList<Faction> factions;
+	private PlayerFaction pf;
 
-	public HomeTileOption(Tile t, ArrayList<Faction> factionList) {
+	public HomeTileOption(Tile t, ArrayList<Faction> factionList, PlayerFaction pf, Stage stage2) {
 		//initialize tile, player faction, whether or not menu is open
 		tile = t;
+		this.stage = stage2;
 		this.factions = factionList;
 		isOpen = false;
+		this.pf = pf;
 		
 		ArrayList<Cell> cells = new ArrayList<Cell>();
 		ArrayList<TextButton> b = new ArrayList<TextButton>();
@@ -140,11 +146,27 @@ public class HomeTileOption {
 	private void setUpgradeListener() {
 		upgrade.addListener(new ClickListener() {
 			public void clicked(InputEvent e,float x,float y){
-				if(tile.getResource() != null){
-					tile.getResource().upgradeTile();
+				try{
+					if(tile.getResource() != null){
+						boolean upgradable = pf.checkCanUpgrade(tile.getResourceID());
+						costDisplay = new CostOption(tile, pf, upgradable, "UPG",tile.getResourceID());
+						costDisplay.getCOption().setFillParent(true);
+						costDisplay.getCOption().center();
+						//costDisplay.getMainTable().setColor(Color.BLACK);
+						getStage().addActor(costDisplay.getCOption());
+						costDisplay.setStage(getStage());
+						costDisplay.setIsOpen(true);
+					}
+				}catch (NullPointerException ne) {
+					Gdx.app.error(null, "Upgrade error.");
 				}
 			}
 		});
+	}
+
+	public Stage getStage() {
+		// TODO Auto-generated method stub
+		return this.stage;
 	}
 
 	private void setExitListener() {
