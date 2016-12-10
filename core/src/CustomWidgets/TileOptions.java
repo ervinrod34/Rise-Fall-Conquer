@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import javax.annotation.Resources;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Cell;
@@ -134,19 +135,26 @@ public class TileOptions {
 		upgrade.addListener(new ClickListener() {
 			public void clicked(InputEvent e,float x,float y){
 				try {
-					//costDisplay = new CostOption(tile, pf);
-					//Stage mainStage = getStage();
-					//mainStage.addActor(costDisplay.getContainer());
-					//costDisplay.setStage(mainStage);
-					//costDisplay.setIsOpen(true);
+					if(tile.getResource() != null) {
+						boolean upgradable = pf.checkCanUpgrade(tile.getResourceID());
+						costDisplay = new CostOption(tile, pf, upgradable, "UPG");
+						costDisplay.getMainTable().setFillParent(true);
+						costDisplay.getMainTable().center();
+						//costDisplay.getMainTable().setColor(Color.BLACK);
+						getStage().addActor(costDisplay.getMainTable());
+						costDisplay.setStage(getStage());
+						costDisplay.setIsOpen(true);
 					
+					}
+					
+					/*
 					if(tile.getResource() != null){
 						if(pf.checkCanUpgrade(tile.getResourceID()) == true) {
 							tile.getResource().upgradeTile(); //this is where tile is getting upgraded, use pf to access res
 							pf.updateResourcesPerTurn();
 							pf.applyUpgradeCost();
 						}
-					}
+					}*/
 				} catch (NullPointerException ne) {
 					//upgrade.setVisible(false);
 					Gdx.app.error(null, "Upgrade error.");
@@ -163,6 +171,26 @@ public class TileOptions {
 					try {
 						for(ResourceID r : ResourceID.values()){
 							if(b.getName().equals(r.name()) && tile.getClaim() == 0){								
+								/*boolean upgradable = pf.checkCanUpgrade(r);
+								System.out.println("line 174 ok");
+								costDisplay = new CostOption(tile, pf, upgradable, "NEW");
+								System.out.println("line 176 ok");
+								costDisplay.setResID(r);
+								System.out.println("line 178 ok");
+								//resName.setText(tile.getResourceID().name());
+								//System.out.println("line 180 ok");
+								
+								costDisplay.getMainTable().setFillParent(true);
+								System.out.println("line 182 ok");
+								costDisplay.getMainTable().center();
+								System.out.println("line 184 ok");
+								getStage().addActor(costDisplay.getMainTable());
+								System.out.println("line 186 ok");
+								costDisplay.setStage(getStage());
+								System.out.println("line 188 ok");
+								costDisplay.setIsOpen(true);*/
+								
+								
 								if(pf.checkCanUpgrade(r) == true) {
 									tile.setResourceID(r);
 								    resName.setText(tile.getResourceID().name());

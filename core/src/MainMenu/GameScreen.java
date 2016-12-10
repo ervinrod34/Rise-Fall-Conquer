@@ -14,6 +14,7 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Timer;
 import com.badlogic.gdx.utils.Timer.Task;
@@ -22,6 +23,7 @@ import com.mygdx.game.MyGdxGame;
 import com.mygdx.game.Navigator;
 
 import CustomWidgets.GameBar;
+import CustomWidgets.ProgressOption;
 import factions.Bar;
 import factions.Faction;
 import factions.PlayerFaction;
@@ -44,6 +46,7 @@ public class GameScreen implements Screen{
 	private ArrayList<Faction> factions;
     private int totalTurns;
     private ScoreBoard scoreBoard;
+    private ProgressOption progressOpt;
     //private String winDisplay;
     
 	private GameBar bar;
@@ -77,7 +80,6 @@ public class GameScreen implements Screen{
 		oGameCam.position.set(factions.get(0).getHomeTile().getLocation().x,factions.get(0).getHomeTile().getLocation().y,0);
 		oGameCam.update();
 		
-		//winDisplay = this.calculateWin();
 		
 		//scoreBoard.printScoreBoard();
 		
@@ -101,6 +103,18 @@ public class GameScreen implements Screen{
 		
 		bar = new GameBar();
 		this.stage.addActor(bar.getTopBar());
+		
+		bar.setProgressClickListener(new ClickListener(){
+			public void clicked(InputEvent event, float x, float y) {
+				progressOpt = new ProgressOption(factions);
+				progressOpt.getMainTable().setBounds(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+				progressOpt.getMainTable().setFillParent(true);
+				progressOpt.getMainTable().center();
+				stage.addActor(progressOpt.getMainTable());
+				progressOpt.setStage(stage);
+				progressOpt.setIsOpen(true);
+			}
+		});
 		
 		//Setup all click listeners for top bar
 		bar.setOptionsClickListener(new ClickListener(){
@@ -132,7 +146,7 @@ public class GameScreen implements Screen{
 				}
 				//sets the player's score in the hud
 				bar.setScore(factions.get(0).getScore().getScoreVal());
-				bar.setWin(tempScreen.calculateWin()); //Display the current city counts, will be changed to win%
+				//bar.setWin(tempScreen.calculateWin()); //Display the current city counts, will be changed to win%
 				
 				final Timer time = new Timer();
 				time.scheduleTask(new Task(){
@@ -347,5 +361,9 @@ public class GameScreen implements Screen{
 		strCityCounts = "Player: " + playerCityCount + "  Other: " + otherCityCount;
 		
 		return strCityCounts.toString();
+	}
+	
+	public ArrayList<Faction> getFactions() {
+		return this.factions;
 	}
 }
