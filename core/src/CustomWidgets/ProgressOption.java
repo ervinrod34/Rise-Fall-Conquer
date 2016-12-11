@@ -121,7 +121,7 @@ public class ProgressOption {
 				playerGotHighScore = currLdrBoard.isTopTen(playerScore);
 				
 				//testing for win
-				EndGameWindow endGame = new EndGameWindow(playerGotHighScore, true);
+				EndGameWindow endGame = new EndGameWindow(playerGotHighScore, true, playerScore);
 				//EndGameWindow endGame = new EndGameWindow(playerGotHighScore, getPlayerWon());
 				
 				endGame.getMainTable().setFillParent(true);
