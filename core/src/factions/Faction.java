@@ -797,8 +797,12 @@ public class Faction {
 					actualBuildRange.add(tile);
 				}
 			}
+			// Check if there is any place we can build
+			if(actualBuildRange.size() == 0){
+				System.out.println(this.getId() + " Faction has no where to build...");
+				return false;
+			}
 			// Pick a random tile in build range to build wheat
-			
 			Tile buildTile = actualBuildRange.get(rand.nextInt(actualBuildRange.size()));
 			buildTile.setResourceID(randRsrc);
 			this.claimTile(buildTile);
