@@ -594,20 +594,17 @@ public class Faction {
 	 * resources, size of territory, and num of units
 	 */
 	public void updateTotalScore() {
-		int points;
-		//points for resources
-		points = this.totalFood * 1;
-		points += this.totalWood * 1;
-		points += this.totalGold * 3;
+		
+		// add 1 pt per food
+		this.score.setScoreVal(this.score.getScoreVal()+this.totalFood);
+		// add 1 pt per wood
+		this.score.setScoreVal(this.score.getScoreVal()+this.totalWood);
 		
 		//territory bonus
-		points += (ClaimedTiles.size());
+		this.score.setScoreVal(this.score.getScoreVal()+(this.ClaimedTiles.size()*3));
 		
 		//unit bonus
-		points += (Units.size());
-		
-		//set the score value
-		this.score.setScoreVal(points);	
+		this.score.setScoreVal(this.score.getScoreVal()+(this.Units.size()*2));
 	}
 	
 	public boolean isTurnOver() {
