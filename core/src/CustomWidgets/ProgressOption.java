@@ -109,10 +109,10 @@ public class ProgressOption {
 				playerGotHighScore = currLdrBoard.isTopTen(playerScore);
 				
 //				//debugging
-//				if(playerGotHighScore)
-//					System.out.println("You got a high score");
-//				else
-//					System.out.println("You didn't get a high score");
+				if(playerGotHighScore)
+					System.out.println("You got a high score");
+				else
+					System.out.println("You didn't get a high score");
 			}
 		});
 		

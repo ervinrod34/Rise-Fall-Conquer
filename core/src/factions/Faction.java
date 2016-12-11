@@ -81,6 +81,9 @@ public class Faction {
 	private int unitFoodCost;
 	private int unitWoodCost;
 	private int unitGoldCost;
+	
+	// represents the faction that last attacked
+	private Faction lastAttacker;
 
 	
 	/**
@@ -99,6 +102,7 @@ public class Faction {
 		Units = new ArrayList<Unit>();
 		this.HomeTile = homeTile;
 		this.claimTile(HomeTile);
+		lastAttacker = null;
 		
 		this.cityCount = this.getCityCount();
 		
@@ -127,6 +131,15 @@ public class Faction {
 	 */
 	public ArrayList<Tile> getClaimedTiles() {
 		return ClaimedTiles;
+	}
+	
+	/**
+	 * returns a random claimed tile of this faction
+	 * @return
+	 */
+	public Tile getRandomClaimedTile() {
+		Random rand = new Random();
+		return ClaimedTiles.get(rand.nextInt(ClaimedTiles.size()));
 	}
 
 	/**
@@ -579,9 +592,9 @@ public class Faction {
 	public void updateTotalScore() {
 		int points;
 		//points for resources
-		points = this.totalFood * 5;
-		points += this.totalWood * 5;
-		points += this.totalGold * 10;
+		points = this.totalFood * 1;
+		points += this.totalWood * 1;
+		points += this.totalGold * 3;
 		
 		//territory bonus
 		points += (ClaimedTiles.size());
@@ -604,9 +617,6 @@ public class Faction {
 	public void AI(ArrayList<Faction> factions){
 		// Loop through this factions unit's looking for enemies
 		for(Unit u : Units){
-
-//			//UNCOMMENT TO TEST TARGETING
-//			u.setTarget(factions.get(0).getHomeTile());
 						
 			// Get each units attack range and movement range
 			//ArrayList<Tile> uAttackRange = u.getAttackRange();
@@ -634,12 +644,28 @@ public class Faction {
 		}
 	}
 	
+	public boolean hasLastAttacker() {
+		if (this.lastAttacker != null)
+			return true;
+		else
+			return false;
+	}
+	public Faction getLastAttacker() {
+		
+		return lastAttacker;
+	}
+
+	public void setLastAttacker(Faction lastAttacker) {
+		this.lastAttacker = lastAttacker;
+	}
+	
 	/**
 	 * This function moves a unit toward it's target
 	 * @param unit
 	 * @author Zach Floyd
 	 */
 	private void moveTowardTarget(Unit unit) {
+
 		// get the movement range of unit
 		ArrayList<Tile> uMovementRange = unit.getMovementRange();
 		// get coordinates of the target
@@ -709,6 +735,9 @@ public class Faction {
 				}
 				// Attack the given unit
 				 u.attack(unitToAttack);
+			     // this faction is unitToAttack's faction's lastAttacker
+				 //unitToAttack.getUnitsFaction().setLastAttacker(this);
+				 System.out.println(unitToAttack.getUnitsFaction().getLastAttacker().toString());
 				 attacked = true;
 				 break;
 			}
