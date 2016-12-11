@@ -225,7 +225,7 @@ public class Faction {
 	 * @param type
 	 * @param location
 	 */
-	public void addUnit(UnitID type, Tile location){
+	private void addUnit(UnitID type, Tile location){
 		this.Units.add(new Unit(type, location, mBoard));
 	}
 	
@@ -238,7 +238,7 @@ public class Faction {
 	 */
 	public void addUnit(UnitID type, Tile location, Faction faction) {
 		Unit unit = new Unit(type, location, mBoard);
-		unit.setUnitFaction(faction);
+		unit.setUnitFaction(this);
 		this.Units.add(unit);
 	}
 	
@@ -617,6 +617,9 @@ public class Faction {
 	public void AI(ArrayList<Faction> factions){
 		// Loop through this factions unit's looking for enemies
 		for(Unit u : Units){
+
+//			//UNCOMMENT TO TEST TARGETING
+			u.setTarget(factions.get(0).getHomeTile());
 						
 			// Get each units attack range and movement range
 			//ArrayList<Tile> uAttackRange = u.getAttackRange();

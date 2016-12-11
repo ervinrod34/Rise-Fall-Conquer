@@ -322,7 +322,7 @@ public class GameScreen implements Screen{
 				//Set the other factions to normal
 				faction = new Faction(FactId, home, mBoard, Color.RED, mBoard.getrayHandler());
 				// Add an enemy at there home tiles
-				faction.addUnit(UnitID.Basic, faction.getHomeTile());
+				faction.addUnit(UnitID.Basic, faction.getHomeTile(), faction);
 				//add a score entry for a non-player faction
 				scoreBoard.addScore(faction.getScore());
 			}
