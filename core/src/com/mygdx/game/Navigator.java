@@ -330,6 +330,8 @@ public class Navigator implements InputProcessor {
 						for (Unit u : f.getUnits()) {
 							if (u.getLocation().equals(tile) == true) {
 								unitOptions.getUnit().attack(u);
+								//the player is the attacked unit's faction's lastAttacker
+								u.getUnitsFaction().setLastAttacker(unitOptions.getUnit().getUnitsFaction());
 								attackedUnit = true;
 								break;
 							}

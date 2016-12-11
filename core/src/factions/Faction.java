@@ -138,8 +138,12 @@ public class Faction {
 	 * @return
 	 */
 	public Tile getRandomClaimedTile() {
-		Random rand = new Random();
-		return ClaimedTiles.get(rand.nextInt(ClaimedTiles.size()));
+		if(ClaimedTiles.size() != 0) {
+			Random rand = new Random();
+			return ClaimedTiles.get(rand.nextInt(ClaimedTiles.size()));
+		} else {
+			return null;
+		}
 	}
 
 	/**
@@ -618,9 +622,11 @@ public class Faction {
 		// Loop through this factions unit's looking for enemies
 		for(Unit u : Units){
 
-//			//UNCOMMENT TO TEST TARGETING
-			u.setTarget(factions.get(0).getHomeTile());
-						
+			if(u.getUnitsFaction().hasLastAttacker()) {
+				if(u.getUnitsFaction().getLastAttacker().getRandomClaimedTile() != null)
+					u.setTarget(u.getUnitsFaction().getLastAttacker().getRandomClaimedTile());
+			}
+				
 			// Get each units attack range and movement range
 			//ArrayList<Tile> uAttackRange = u.getAttackRange();
 			ArrayList<Tile> uMovementRange = u.getMovementRange();
@@ -739,8 +745,7 @@ public class Faction {
 				// Attack the given unit
 				 u.attack(unitToAttack);
 			     // this faction is unitToAttack's faction's lastAttacker
-				 //unitToAttack.getUnitsFaction().setLastAttacker(this);
-				 System.out.println(unitToAttack.getUnitsFaction().getLastAttacker().toString());
+				 unitToAttack.getUnitsFaction().setLastAttacker(this);
 				 attacked = true;
 				 break;
 			}
