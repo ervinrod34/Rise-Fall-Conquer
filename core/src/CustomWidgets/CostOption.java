@@ -117,6 +117,7 @@ public class CostOption{
 		// TODO Auto-generated method stub
 		this.cancel.addListener(new ClickListener() {
 			public void clicked(InputEvent ie, float x, float y) {
+				cOption.remove();
 				getContainer().remove();
 				getContainer().invalidateHierarchy();
 				setIsOpen(false);
@@ -153,6 +154,7 @@ public class CostOption{
 				}
 				
 				//Close the window
+				cOption.remove();
 				getContainer().remove();
 				getContainer().invalidateHierarchy();
 				setIsOpen(false);
