@@ -143,6 +143,7 @@ public class ProgressOption {
 		 */
 		this.close.addListener(new ClickListener() {
 			public void clicked(InputEvent ie, float x, float y) {
+				getMainTable().remove();
 				getContainer().remove();
 				getContainer().invalidateHierarchy();
 				setIsOpen(false);
