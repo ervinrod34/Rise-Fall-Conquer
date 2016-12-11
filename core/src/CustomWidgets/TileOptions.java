@@ -160,12 +160,12 @@ public class TileOptions {
 						for(ResourceID r : ResourceID.values()){
 							if(b.getName().equals(r.name()) && tile.getClaim() == 0){	
 								if(pf.checkCanUpgrade(r) == true) {
-								costDisplay = new CostOption(tile, pf, false, "NEW",r);
-								costDisplay.getCOption().setFillParent(true);
-								costDisplay.getCOption().center();
-								getStage().addActor(costDisplay.getCOption());
-								costDisplay.setStage(getStage());
-								costDisplay.setIsOpen(true);		
+									costDisplay = new CostOption(tile, pf, false, "NEW",r);
+									costDisplay.getCOption().setFillParent(true);
+									costDisplay.getCOption().center();
+									getStage().addActor(costDisplay.getCOption());
+									costDisplay.setStage(getStage());
+									costDisplay.setIsOpen(true);		
 								}
 								/*if(pf.checkCanUpgrade(r) == true) {
 									tile.setResourceID(r);

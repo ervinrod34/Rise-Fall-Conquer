@@ -34,6 +34,7 @@ public class ProgressOption {
 	//mainTable is holder
 	private Table mainTable, container, holder;
 	private boolean playerGotHighScore;
+	private boolean playerWon;
 	private boolean isOpen;
 	private ArrayList<Faction> factions;
 	
@@ -80,6 +81,17 @@ public class ProgressOption {
 		getContainer().add(this.otherCount);
 		
 		/**
+		 * Checks whether player met winning condition:
+		 * Player has at least 1 city, and there are 0
+		 * other cities
+		 */
+		if((factions.get(0).getCityCount() > 1) && (tempCityCount == 0)) {
+			this.playerWon = true;
+		} else {
+			this.playerWon = false;
+		}
+		
+		/**
 		 * Create and add the buttons into the mainTable
 		 */
 		getContainer().row();
@@ -100,13 +112,23 @@ public class ProgressOption {
 		 */
 		this.endGame.addListener(new ClickListener() {
 			public void clicked(InputEvent ie, float x, float y) {
-				MyGdxGame.GAME.setScreen(new MainMenu());
+				//MyGdxGame.GAME.setScreen(new MainMenu());
 				
 				//here we check, if the score is in the top 10
 				Score playerScore = factions.get(0).getScore();
 				ScoreBoard currLdrBoard = new ScoreBoard();
 				currLdrBoard.fillFromDatabase();
 				playerGotHighScore = currLdrBoard.isTopTen(playerScore);
+				
+				//testing for win
+				EndGameWindow endGame = new EndGameWindow(playerGotHighScore, true);
+				//EndGameWindow endGame = new EndGameWindow(playerGotHighScore, getPlayerWon());
+				
+				endGame.getMainTable().setFillParent(true);
+				endGame.getMainTable().center();
+				getStage().addActor(endGame.getMainTable());
+				endGame.setStage(getStage());
+				endGame.setIsOpen(true);
 				
 //				//debugging
 				if(playerGotHighScore)
@@ -194,4 +216,12 @@ public class ProgressOption {
 		this.isOpen = open;
 	}
 	
+	/**
+	 * Return a boolean whether the player met the 
+	 * winning condition of the game. False otherwise.
+	 * @return A boolean value
+	 */
+	public boolean getPlayerWon() {
+		return this.playerWon;
+	}
 }

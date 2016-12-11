@@ -5,6 +5,7 @@ package CustomWidgets;
  * creating or upgrading a resource or unit.
  *  
  * @author Ervin Rodriguez
+ * @author Seth Demasi
  * @version 1.0
  */
 
@@ -21,6 +22,10 @@ import map.Tile;
 import factions.PlayerFaction;
 
 public class CostOption{
+	
+	/**
+	 * Initialize variables
+	 */
 	private Label resourceName, description;
 	private TextButton approve, cancel;
 	private Table cOption, container, holder;
@@ -53,6 +58,7 @@ public class CostOption{
 		
 		Label background = new Label("", MyGdxGame.MENUSKINHUD);
 		
+		/*
 		try {
 			this.resourceName = new Label("Cost to Upgrade " + tile.getResourceID().name() 
 					+ ": ", MyGdxGame.MENUSKIN);
@@ -62,15 +68,15 @@ public class CostOption{
 			this.resourceName = new Label(" ", MyGdxGame.MENUSKIN);
 			getContainer().add(this.resourceName);
 			getContainer().row();
-		}
+		}*/
 		
 		/**
 		 * Setup the table for the cost display
 		 */
-		CharSequence tempCostDisplay = "Cost:" + 
-									   "\nFood: " + this.pf.getResFoodCost() + 
-									   "\nWood: " + this.pf.getResWoodCost() + 
-									   "\nGold: " + this.pf.getResGoldCost();
+		CharSequence tempCostDisplay = "Cost to upgrade:\n" + 
+									   " " + this.pf.getResFoodCost() + " Food\n" +
+									   " " + this.pf.getResWoodCost() + " Wood\n" + 
+									   " " + this.pf.getResGoldCost() + " Gold";
 		this.description = new Label(tempCostDisplay, MyGdxGame.MENUSKIN);
 		getContainer().add(this.description);
 		
@@ -85,11 +91,11 @@ public class CostOption{
 		//Checks if tile is upgrade; if true, display approve button, else display message
 		if(this.upgradable == true && type.equals("UPG")) {
 			getContainer().add(this.approve);
-			getContainer().row();
+			//getContainer().row();
 		}
 		else if(type.equals("NEW")){
 			getContainer().add(this.approve);
-			getContainer().row();
+			//getContainer().row();
 		}
 		else {
 			Label cantUpg = new Label("Not enough resources.", MyGdxGame.MENUSKIN);
