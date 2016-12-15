@@ -214,6 +214,17 @@ public class GameScreen implements Screen{
 		for(Unit u : dead){
 			for(Faction fac : factions){
 				if(fac.getUnits().contains(u) == true){
+					// Dispose of the units light if they have one
+					for(Unit u2 : fac.getUnits()){
+						if(u2.equals(u) == true){
+							if(u2.getPointLight() != null){
+								u2.getPointLight().setActive(false);
+								u2.getPointLight().dispose();
+							}
+							break;
+						}
+					}
+					// Remove the dead unit
 					fac.getUnits().remove(u);
 				}
 			}
@@ -326,6 +337,7 @@ public class GameScreen implements Screen{
 				//add a score entry for a non-player faction
 				scoreBoard.addScore(faction.getScore());
 			}
+			//faction.setTotalGold(10000);
 			//Update all resources per turn
 			faction.updateResourcesPerTurn();
 			//Add a animation to the home tile

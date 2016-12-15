@@ -360,4 +360,8 @@ public class Unit {
 		return attacked;
 	}
 	
+	public PointLight getPointLight(){
+		return this.pLight;
+	}
+	
 }
