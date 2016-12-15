@@ -100,7 +100,11 @@ public class EndGameWindow {
 					
 					setText(getInput().getText());
 					System.out.println("TextField should have: " + getText());
-					playerScore.setName(getText());
+					String name = getText();
+					if (name.length() > 8) {
+						name = name.substring(0, 8);
+					}
+					playerScore.setName(name);
 					playerScore.pushToLeaderBoard();
 					
 					//exit to main when done
