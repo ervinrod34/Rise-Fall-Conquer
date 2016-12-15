@@ -102,6 +102,9 @@ public class EndGameWindow {
 					System.out.println("TextField should have: " + getText());
 					playerScore.setName(getText());
 					playerScore.pushToLeaderBoard();
+					
+					//exit to main when done
+					MyGdxGame.GAME.setScreen(new MainMenu());
 				}
 			});
 		}
